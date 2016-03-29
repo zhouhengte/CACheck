@@ -60,6 +60,46 @@
         [self.window makeKeyAndVisible];
     }
     
+    
+    // ios8后，需要添加这个注册，才能得到授权(还未注册远程推送，以后实现)
+    if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+        UIUserNotificationType type =  UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound;
+        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:type
+                                                                                 categories:nil];
+        [application registerUserNotificationSettings:settings];
+
+    } else {
+
+        [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert|UIRemoteNotificationTypeSound|UIRemoteNotificationTypeBadge];
+    }
+    
+    
+    UILocalNotification *localNotification = [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
+    NSLog(@"localNotification = %@",localNotification);
+    if (localNotification) {
+        NSLog(@"noti:%@",localNotification);
+        
+        // 这里真实需要处理交互的地方
+        // 获取通知所带的数据
+        NSString *notMess = [localNotification.userInfo objectForKey:@"barcode"];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"该产品已过期"
+                                                        message:notMess
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+        
+        // 更新显示的徽章个数
+        NSInteger badge = [UIApplication sharedApplication].applicationIconBadgeNumber;
+        badge--;
+        badge = badge >= 0 ? badge : 0;
+        [UIApplication sharedApplication].applicationIconBadgeNumber = badge;
+        
+        // 在不需要再推送时，可以取消推送
+        [application cancelLocalNotification:localNotification];
+
+    }
+    
     return YES;
 }
 

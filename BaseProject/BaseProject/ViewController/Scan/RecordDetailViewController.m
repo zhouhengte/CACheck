@@ -49,6 +49,9 @@
 @property (nonatomic , strong)UIImageView *imageView;
 @property (nonatomic , strong)UIButton *button;
 
+@property (nonatomic , strong)UIButton *duedataButton;
+@property (nonatomic , strong)UIImageView *duedataImageView;
+
 @end
 
 @implementation RecordDetailViewController
@@ -113,8 +116,7 @@
     
     [self.view addSubview:self.tableView];
     
-    //重新设置导航栏，隐藏原生导航栏，手动绘制新的导航栏，使右滑手势跳转时能让导航栏跟着变化
-    [self setNavigationBar];
+    
     
     self.automaticallyAdjustsScrollViewInsets = NO;
     //表头视图，上方大图
@@ -141,8 +143,10 @@
     [self.tableView registerClass:[EvaluateTableViewCell class] forCellReuseIdentifier:@"evalueateID"];
 
     
+    //重新设置导航栏，隐藏原生导航栏，手动绘制新的导航栏，使右滑手势跳转时能让导航栏跟着变化
     [self setNavigationBar];
-    
+    //设置到期日按钮
+    [self setDuedataButton];
 }
 
 
@@ -201,6 +205,98 @@
     //由于改写了leftBarButtonItem,所以需要重新定义右滑返回手势
     self.navigationController.interactivePopGestureRecognizer.delegate = (id)self;
     
+}
+
+-(void)setDuedataButton
+{
+    self.duedataButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.view addSubview:self.duedataButton];
+    [self.duedataButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(27);
+        make.right.mas_equalTo(-16);
+        make.size.mas_equalTo(CGSizeMake(29, 29));
+    }];
+    [self.duedataButton addTarget:self action:@selector(duedataClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.duedataButton setBackgroundImage:[UIImage imageNamed:@"返回bg"] forState:UIControlStateNormal];
+    
+    self.duedataImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"返回箭头"]];
+    [self.view addSubview:self.duedataImageView];
+    [self.duedataImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(32);
+        make.right.mas_equalTo(-26);
+        make.size.mas_equalTo(CGSizeMake(11, 19));
+    }];
+    
+}
+
+//设置到期日期
+-(void)duedataClick
+{
+    UIAlertController *setDuedataAlertController = [UIAlertController alertControllerWithTitle:@"到期日期" message:@"设置到期日期" preferredStyle:UIAlertControllerStyleAlert];
+    //添加文本框
+    [setDuedataAlertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.font = [UIFont systemFontOfSize:13];
+        textField.textColor = [UIColor blackColor];
+    }];
+    
+    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSString *dateStr = setDuedataAlertController.textFields[0].text;
+        NSLog(@"duedata = %@",dateStr);
+        if ([self validateDate:dateStr]){
+            NSString *duedateStr = [dateStr stringByAppendingString:@" 16:10:00"];
+            NSDateFormatter *dateFormatter=[[NSDateFormatter alloc]init];
+            [dateFormatter setDateFormat:@"yyyy-MM-dd hh-mm-ss"];
+            NSDate *date=[dateFormatter dateFromString:duedateStr];
+            
+            UILocalNotification *notification = [[UILocalNotification alloc] init];
+            // 设置触发通知的时间
+            //NSDate *fireDate = [NSDate dateWithTimeIntervalSinceNow:60];//60秒后触发
+            NSDate *fireDate = date;
+            NSLog(@"fireDate=%@",fireDate);
+            
+            notification.fireDate = fireDate;
+            // 时区
+            notification.timeZone = [NSTimeZone defaultTimeZone];
+            // 设置重复的间隔
+            //notification.repeatInterval = kCFCalendarUnitMinute;
+            
+            // 通知内容
+            notification.alertBody =  @"该产品过期了";
+            notification.applicationIconBadgeNumber = 1;
+            // 通知被触发时播放的声音
+            notification.soundName = UILocalNotificationDefaultSoundName;
+            // 通知参数
+            NSDictionary *userDict = [NSDictionary dictionaryWithObject:self.judgeStr forKey:@"barcode"];
+            notification.userInfo = userDict;
+            // 执行通知
+            [[UIApplication sharedApplication] scheduleLocalNotification:notification];
+        }else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"错误"
+                                                            message:@"日期格式错误"
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+            [alert show];
+
+        }
+        
+
+
+    }];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
+    [setDuedataAlertController addAction:confirmAction];
+    [setDuedataAlertController addAction:cancelAction];
+    
+    [self presentViewController:setDuedataAlertController animated:YES completion:nil];
+    
+}
+
+//日期正则表达式判断
+-(BOOL)validateDate:(NSString *)dataStr
+{
+    NSString *dataRegex = @"^(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)";
+    NSPredicate *dataTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", dataRegex];
+    return [dataTest evaluateWithObject:dataStr];
 }
 
 
@@ -318,31 +414,36 @@
         //         self.navigationController.navigationBar.translucent = YES;
         self.naviView.alpha = 0;
         self.button.alpha = 1.0;
+        self.duedataButton.alpha = 1.0;
         //         self.btn.alpha = 1.0;
     }else if((self.tableView.contentOffset.y>=0)&&(self.tableView.contentOffset.y <= 40)){
         self.naviView.alpha = 0.2;
         self.button.alpha = 0.8;
+        self.duedataButton.alpha = 0.8;
         //         self.btn.alpha = 0.5;
     }else if((self.tableView.contentOffset.y>=40)&&(self.tableView.contentOffset.y <= 80)){
         
         self.naviView.alpha = 0.4;
         self.button.alpha = 0.6;
+        self.duedataButton.alpha = 0.6;
         
     }else if((self.tableView.contentOffset.y>=80)&&(self.tableView.contentOffset.y <= 120)){
         
         self.naviView.alpha = 0.6;
         self.button.alpha = 0.4;
-        
+        self.duedataButton.alpha = 0.4;
         
         
     }else if ((self.tableView.contentOffset.y>=120)&&(self.tableView.contentOffset.y <= 160)){
         
         self.naviView.alpha = 0.8;
         self.button.alpha = 0.2;
+        self.duedataButton.alpha = 0.2;
         
     }else if((self.tableView.contentOffset.y>=160)&&(self.tableView.contentOffset.y <= 200)){
         self.naviView.alpha = 1.0;
         self.button.alpha = 0.1;//保留0.1，不然按钮变透明后无法触发点击事件
+        self.duedataButton.alpha = 0.1;
         //         self.imageView.alpha = 0;
         //         self.btn.alpha = 0;
         //         self.button.alpha = 0;
@@ -355,6 +456,7 @@
         //滑到底部
         self.naviView.alpha = 1.0;
         self.button.alpha = 0.1;
+        self.duedataButton.alpha = 0.1;
     }
 }
 
@@ -393,7 +495,7 @@
     }
     //NSLog(@"%@",self.textArray);
 #pragma 手动增加商品评价
-    //[self.textArray addObject:@"商品评价"];//增加商品评价子标题
+    [self.textArray addObject:@"商品评价"];//增加商品评价子标题
     
     
     NSArray * baseInfoArray = [self.wantDic objectForKey:@"BaseInfo"];

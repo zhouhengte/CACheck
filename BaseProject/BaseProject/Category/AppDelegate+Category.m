@@ -61,11 +61,38 @@
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    //取消徽章
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+//接收到本地通知，下方协议方法会在推送消息被点击(桌面从屏幕上方弹出消息), (锁屏)右滑打开, 当前程序就在前台  时触发
+-(void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
+{
+    NSLog(@"noti:%@",notification);
+    
+    // 这里真实需要处理交互的地方
+    // 获取通知所带的数据
+    NSString *notMess = [notification.userInfo objectForKey:@"barcode"];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"该产品已过期"
+                                                    message:notMess
+                                                   delegate:nil
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [alert show];
+    
+    // 更新显示的徽章个数
+    NSInteger badge = [UIApplication sharedApplication].applicationIconBadgeNumber;
+    badge--;
+    badge = badge >= 0 ? badge : 0;
+    [UIApplication sharedApplication].applicationIconBadgeNumber = badge;
+    
+    // 在不需要再推送时，可以取消推送
+    [application cancelAllLocalNotifications];
+
 }
 
 
