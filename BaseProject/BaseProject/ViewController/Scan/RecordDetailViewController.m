@@ -16,6 +16,7 @@
 #import "EvaluateTableViewCell.h"
 #import "MainViewController.h"
 #import "WebViewController.h"
+#import "DueDateView.h"
 
 
 @interface RecordDetailViewController ()<UITableViewDataSource, UITableViewDelegate,SDCycleScrollViewDelegate>
@@ -219,12 +220,12 @@
     [self.duedataButton addTarget:self action:@selector(duedataClick) forControlEvents:UIControlEventTouchUpInside];
     [self.duedataButton setBackgroundImage:[UIImage imageNamed:@"返回bg"] forState:UIControlStateNormal];
     
-    self.duedataImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"返回箭头"]];
+    self.duedataImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"闹钟2"]];
     [self.view addSubview:self.duedataImageView];
     [self.duedataImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(32);
-        make.right.mas_equalTo(-26);
-        make.size.mas_equalTo(CGSizeMake(11, 19));
+        make.right.mas_equalTo(-20);
+        make.size.mas_equalTo(CGSizeMake(20, 18));
     }];
     
 }
@@ -232,69 +233,223 @@
 //设置到期日期
 -(void)duedataClick
 {
-    UIAlertController *setDuedataAlertController = [UIAlertController alertControllerWithTitle:@"到期日期" message:@"设置到期日期" preferredStyle:UIAlertControllerStyleAlert];
-    //添加文本框
-    [setDuedataAlertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
-        textField.font = [UIFont systemFontOfSize:13];
-        textField.textColor = [UIColor blackColor];
+    //半透明背景
+    UIView *grayTranslucentView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight)];
+    grayTranslucentView.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.5];
+    [self.view addSubview:grayTranslucentView];
+    
+    //设置到期日期界面的容器
+    UIView *bottomView = [[UIView alloc]init];
+    bottomView.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:bottomView];
+    [bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(kScreenHeight);
+        make.left.mas_equalTo(self.view);
+        make.size.mas_equalTo(CGSizeMake(kScreenWidth, 299/586.0*kScreenHeight));
     }];
     
-    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        NSString *dateStr = setDuedataAlertController.textFields[0].text;
-        NSLog(@"duedata = %@",dateStr);
-        if ([self validateDate:dateStr]){
-            NSString *duedateStr = [dateStr stringByAppendingString:@" 16:10:00"];
-            NSDateFormatter *dateFormatter=[[NSDateFormatter alloc]init];
-            [dateFormatter setDateFormat:@"yyyy-MM-dd hh-mm-ss"];
-            NSDate *date=[dateFormatter dateFromString:duedateStr];
-            
-            UILocalNotification *notification = [[UILocalNotification alloc] init];
-            // 设置触发通知的时间
-            //NSDate *fireDate = [NSDate dateWithTimeIntervalSinceNow:60];//60秒后触发
-            NSDate *fireDate = date;
-            NSLog(@"fireDate=%@",fireDate);
-            
-            notification.fireDate = fireDate;
-            // 时区
-            notification.timeZone = [NSTimeZone defaultTimeZone];
-            // 设置重复的间隔
-            //notification.repeatInterval = kCFCalendarUnitMinute;
-            
-            // 通知内容
-            notification.alertBody =  @"该产品过期了";
-            notification.applicationIconBadgeNumber = 1;
-            // 通知被触发时播放的声音
-            notification.soundName = UILocalNotificationDefaultSoundName;
-            // 通知参数
-            NSDictionary *userDict = [NSDictionary dictionaryWithObject:self.judgeStr forKey:@"barcode"];
-            notification.userInfo = userDict;
-            // 执行通知
-            [[UIApplication sharedApplication] scheduleLocalNotification:notification];
-        }else {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"错误"
-                                                            message:@"日期格式错误"
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-            [alert show];
+    [bottomView layoutIfNeeded];
+    
+    //设置到期日期的界面
+    DueDateView *duedateView = [[DueDateView alloc]initWithFrame:bottomView.frame andJudgeStr:nil];
+    [bottomView addSubview:duedateView];
+    [bottomView layoutIfNeeded];
+    //跳出动画
+    [UIView animateWithDuration:0.5 animations:^{
+        [bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(287/586.0*kScreenHeight);
+            make.left.mas_equalTo(self.view);
+            make.size.mas_equalTo(CGSizeMake(kScreenWidth, 299/586.0*kScreenHeight));
+        }];
+        [bottomView setNeedsLayout];
+        [bottomView layoutIfNeeded];
+    }];
+    //设置取消按钮的block
+    duedateView.cancelBlock = ^(){
+        [grayTranslucentView removeFromSuperview];
+        [UIView animateWithDuration:0.5 animations:^{
+            [bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(kScreenHeight);
+                make.left.mas_equalTo(self.view);
+                make.size.mas_equalTo(CGSizeMake(kScreenWidth, 299/586.0*kScreenHeight));
+            }];
+            [bottomView setNeedsLayout];
+            [bottomView layoutIfNeeded];
+        }completion:^(BOOL finished) {
+            //完成后将容器移除
+            [bottomView removeFromSuperview];
+        }];
+    };
+    
+    //设置确认按钮的block
+    duedateView.confirmBlock = ^(NSDate *date)
+    {
+        NSLog(@"到期日期：%@",date);
+        //已完成设置界面的容器
+        UIView *isSettedBottomView = [[UIView alloc]init];
+        isSettedBottomView.backgroundColor = [UIColor clearColor];
+        [self.view addSubview:isSettedBottomView];
+        [isSettedBottomView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(kScreenHeight);
+            make.left.mas_equalTo(self.view);
+            make.size.mas_equalTo(CGSizeMake(kScreenWidth, 311/586.0*kScreenHeight));
+        }];
+        [isSettedBottomView layoutIfNeeded];
+        //设置已完成界面
+        DueDateView *isSettedDueDateView = [[DueDateView alloc]initWithFrame:isSettedBottomView.frame isSetted:YES];
+        [isSettedBottomView addSubview:isSettedDueDateView];
+        [isSettedDueDateView layoutIfNeeded];
+        //设置已完成界面的关闭按钮block
+        isSettedDueDateView.closeBlock = ^(){
+            [grayTranslucentView removeFromSuperview];
+            [UIView animateWithDuration:0.5 animations:^{
+                [isSettedBottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                    make.top.mas_equalTo(kScreenHeight);
+                    make.left.mas_equalTo(self.view);
+                    make.size.mas_equalTo(CGSizeMake(kScreenWidth, 299/586.0*kScreenHeight));
+                }];
+                [isSettedBottomView setNeedsLayout];
+                [isSettedBottomView layoutIfNeeded];
+            }completion:^(BOOL finished) {
+                [isSettedBottomView removeFromSuperview];
+            }];
 
-        }
+        };
+        //移除设置界面的容器，跳出已完成界面的容器
+        [UIView animateWithDuration:0.5 animations:^{
+            [bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(kScreenHeight);
+                make.left.mas_equalTo(self.view);
+                make.size.mas_equalTo(CGSizeMake(kScreenWidth, 299/586.0*kScreenHeight));
+            }];
+            [isSettedBottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(275/586.0*kScreenHeight);
+                make.left.mas_equalTo(self.view);
+                make.size.mas_equalTo(CGSizeMake(kScreenWidth, 299/586.0*kScreenHeight));
+            }];
+            [bottomView setNeedsLayout];
+            [bottomView layoutIfNeeded];
+            [isSettedBottomView setNeedsLayout];
+            [isSettedBottomView layoutIfNeeded];
+        }completion:^(BOOL finished) {
+            [bottomView removeFromSuperview];
+        }];
         
+        //设置本地到期推送
+        UILocalNotification *notification = [[UILocalNotification alloc] init];
+        // 设置触发通知的时间
+        NSDate *fireDate = [NSDate dateWithTimeIntervalSinceNow:30];//60秒后触发
+        //NSDate *fireDate = date;
+        NSLog(@"fireDate=%@",fireDate);
 
+        notification.fireDate = fireDate;
+        // 时区
+        notification.timeZone = [NSTimeZone defaultTimeZone];
+        // 设置重复的间隔
+        //notification.repeatInterval = kCFCalendarUnitMinute;
 
-    }];
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
-    [setDuedataAlertController addAction:confirmAction];
-    [setDuedataAlertController addAction:cancelAction];
+        // 通知内容
+        notification.alertBody =  @"该产品过期了";
+        notification.applicationIconBadgeNumber = 1;
+        // 通知被触发时播放的声音
+        notification.soundName = UILocalNotificationDefaultSoundName;
+        // 通知参数
+        NSDictionary *userDict = [NSDictionary dictionaryWithObject:self.judgeStr forKey:@"barcode"];
+        notification.userInfo = userDict;
+        // 执行通知
+        [[UIApplication sharedApplication] scheduleLocalNotification:notification];
+        
+    };
     
-    [self presentViewController:setDuedataAlertController animated:YES completion:nil];
+
+    
+
+    
+
+    
+    
+//    UIAlertController *setDuedataAlertController = [UIAlertController alertControllerWithTitle:@"到期日期" message:@"设置到期日期" preferredStyle:UIAlertControllerStyleAlert];
+//    //添加文本框
+//    [setDuedataAlertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+//        textField.font = [UIFont systemFontOfSize:13];
+//        textField.textColor = [UIColor blackColor];
+//    }];
+//    
+//    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//        NSString *dateStr = setDuedataAlertController.textFields[0].text;
+//        NSLog(@"duedata = %@",dateStr);
+//        if ([self validateData:dateStr]){
+//            NSString *duedateStr = [dateStr stringByAppendingString:@" 16:10:00"];
+//            NSDateFormatter *dateFormatter=[[NSDateFormatter alloc]init];
+//            [dateFormatter setDateFormat:@"yyyyMMdd hh:mm:ss"];
+//            NSDate *date=[dateFormatter dateFromString:duedateStr];
+//            
+//            //判断日期是否早于当前时间
+//            NSDate *now = [NSDate date];
+//            if ([now isEqualToDate:[now laterDate:date]]){
+//                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"错误"
+//                                                                message:@"到期日期早于当前日期"
+//                                                               delegate:nil
+//                                                      cancelButtonTitle:@"OK"
+//                                                      otherButtonTitles:nil];
+//                [alert show];
+//
+//            }
+//            
+//            UILocalNotification *notification = [[UILocalNotification alloc] init];
+//            // 设置触发通知的时间
+//            NSDate *fireDate = [NSDate dateWithTimeIntervalSinceNow:60];//60秒后触发
+//            //NSDate *fireDate = date;
+//            NSLog(@"fireDate=%@",fireDate);
+//            
+//            notification.fireDate = fireDate;
+//            // 时区
+//            notification.timeZone = [NSTimeZone defaultTimeZone];
+//            // 设置重复的间隔
+//            //notification.repeatInterval = kCFCalendarUnitMinute;
+//            
+//            // 通知内容
+//            notification.alertBody =  @"该产品过期了";
+//            notification.applicationIconBadgeNumber = 1;
+//            // 通知被触发时播放的声音
+//            notification.soundName = UILocalNotificationDefaultSoundName;
+//            // 通知参数
+//            NSDictionary *userDict = [NSDictionary dictionaryWithObject:self.judgeStr forKey:@"barcode"];
+//            notification.userInfo = userDict;
+//            // 执行通知
+//            [[UIApplication sharedApplication] scheduleLocalNotification:notification];
+//        }else {
+//            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"错误"
+//                                                            message:@"日期格式错误"
+//                                                           delegate:nil
+//                                                  cancelButtonTitle:@"OK"
+//                                                  otherButtonTitles:nil];
+//            [alert show];
+//
+//        }
+//        
+//
+//
+//    }];
+//    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
+//    [setDuedataAlertController addAction:confirmAction];
+//    [setDuedataAlertController addAction:cancelAction];
+//    
+//    [self presentViewController:setDuedataAlertController animated:YES completion:nil];
+    
+}
+
+-(void)sendLocalNotification
+{
     
 }
 
 //日期正则表达式判断
--(BOOL)validateDate:(NSString *)dataStr
+-(BOOL)validateData:(NSString *)dataStr
 {
-    NSString *dataRegex = @"^(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)";
+    NSString *dataRegex = @"^(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})(((0[13578]|1[02])(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)(0[1-9]|[12][0-9]|30))|(02(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))0229)";//yyyyMMdd
+//    NSString *dataRegex = @"^(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)";//yyyy-MM-dd
+    //NSString *dataRegex = @"([\\d]{4}(((0[13578]|1[02])((0[1-9])|([12][0-9])|(3[01])))|(((0[469])|11)((0[1-9])|([12][0-9])|30))|(02((0[1-9])|(1[0-9])|(2[0-8])))))|((((([02468][048])|([13579][26]))00)|([0-9]{2}(([02468][048])|([13579][26]))))(((0[13578]|1[02])((0[1-9])|([12][0-9])|(3[01])))|(((0[469])|11)((0[1-9])|([12][0-9])|30))|(02((0[1-9])|(1[0-9])|(2[0-9])))))";//yyyyMMdd
     NSPredicate *dataTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", dataRegex];
     return [dataTest evaluateWithObject:dataStr];
 }

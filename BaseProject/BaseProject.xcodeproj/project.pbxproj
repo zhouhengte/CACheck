@@ -54,6 +54,7 @@
 		2FDDA1581C61F6F100BAEFEB /* SuggestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDDA14F1C61F6F100BAEFEB /* SuggestViewController.m */; };
 		2FDDA15C1C61F78800BAEFEB /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDDA15B1C61F78800BAEFEB /* NSString+MD5.m */; };
 		2FDDA1611C61F79200BAEFEB /* libMobClickLibrary.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FDDA15E1C61F79200BAEFEB /* libMobClickLibrary.a */; };
+		2FDEE2DC1CACC43C00F6FAED /* DueDateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDEE2DB1CACC43C00F6FAED /* DueDateView.m */; };
 		450C90D91C21169500AAC504 /* AppDelegate+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 450C90D81C21169500AAC504 /* AppDelegate+Category.m */; };
 		45333DD31C22A3120016A357 /* NSObject+HUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 45333DD21C22A3120016A357 /* NSObject+HUD.m */; };
 		45333DD81C22EAC40016A357 /* NSObject+MJParse.m in Sources */ = {isa = PBXBuildFile; fileRef = 45333DD51C22EAC40016A357 /* NSObject+MJParse.m */; };
@@ -167,6 +168,8 @@
 		2FDDA15E1C61F79200BAEFEB /* libMobClickLibrary.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libMobClickLibrary.a; sourceTree = "<group>"; };
 		2FDDA15F1C61F79200BAEFEB /* MobClick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobClick.h; sourceTree = "<group>"; };
 		2FDDA1601C61F79200BAEFEB /* MobClickSocialAnalytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MobClickSocialAnalytics.h; sourceTree = "<group>"; };
+		2FDEE2DA1CACC43C00F6FAED /* DueDateView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DueDateView.h; sourceTree = "<group>"; };
+		2FDEE2DB1CACC43C00F6FAED /* DueDateView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DueDateView.m; sourceTree = "<group>"; };
 		33BFF7A3DE723E978291D521 /* libPods-BaseProject.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BaseProject.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3F9041856F731EF849246BB5 /* Pods-BaseProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BaseProject.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BaseProject/Pods-BaseProject.debug.xcconfig"; sourceTree = "<group>"; };
 		450C90D71C21169500AAC504 /* AppDelegate+Category.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AppDelegate+Category.h"; sourceTree = "<group>"; };
@@ -521,6 +524,8 @@
 				2F834D441C464D370050E4A6 /* RecordDetailTableViewCell.m */,
 				2F834D461C464DB70050E4A6 /* EvaluateTableViewCell.h */,
 				2F834D471C464DB70050E4A6 /* EvaluateTableViewCell.m */,
+				2FDEE2DA1CACC43C00F6FAED /* DueDateView.h */,
+				2FDEE2DB1CACC43C00F6FAED /* DueDateView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -682,6 +687,7 @@
 				2FDDA1561C61F6F100BAEFEB /* PreferenceViewController.m in Sources */,
 				2FD9843D1C488EB3000EB94A /* DJRefreshTopView.m in Sources */,
 				2FDDA1321C61F6CC00BAEFEB /* ScanViewController.m in Sources */,
+				2FDEE2DC1CACC43C00F6FAED /* DueDateView.m in Sources */,
 				2F834D351C4648530050E4A6 /* NSData+SDDataCache.m in Sources */,
 				2F834D381C4648530050E4A6 /* TADotView.m in Sources */,
 				2FDDA1541C61F6F100BAEFEB /* PersonalInformationViewController.m in Sources */,

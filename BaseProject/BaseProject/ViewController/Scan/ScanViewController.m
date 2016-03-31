@@ -483,7 +483,7 @@
                     [manager GET:url parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
                         if ([responseObject[@"Result"] integerValue] == 0) {
                             RecordDetailViewController *recordDetailVC = [[RecordDetailViewController alloc] init];
-                            recordDetailVC.barCode = self.barCode;
+                            recordDetailVC.judgeStr = self.barCode;
                             
                             recordDetailVC.onlyStr = @"扫描页";
                             
