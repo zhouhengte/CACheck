@@ -13,8 +13,9 @@
 @property (nonatomic,copy)void (^cancelBlock)();
 @property (nonatomic,copy)void (^confirmBlock)(NSDate *pickDate);
 @property (nonatomic,copy)void (^closeBlock)();
+@property (nonatomic,copy)void (^updateBlock)();
 
 -(instancetype)initWithFrame:(CGRect)frame andJudgeStr:(NSString *)judgeStr;
--(instancetype)initWithFrame:(CGRect)frame isSetted:(BOOL)isSetted;
+-(instancetype)initWithFrame:(CGRect)frame andDate:(NSDate *)date;
 
 @end

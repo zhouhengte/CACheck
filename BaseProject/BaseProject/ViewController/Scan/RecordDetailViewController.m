@@ -53,6 +53,13 @@
 @property (nonatomic , strong)UIButton *duedataButton;
 @property (nonatomic , strong)UIImageView *duedataImageView;
 
+@property (nonatomic , strong)UIView *bottomView;
+@property (nonatomic , strong)UIView *isSettedBottomView;
+@property (nonatomic , strong)DueDateView *duedateView;
+@property (nonatomic , strong)DueDateView *isSettedDueDateView;
+
+@property (nonatomic , strong)NSDate *fireDate;
+
 @end
 
 @implementation RecordDetailViewController
@@ -233,116 +240,241 @@
 //设置到期日期
 -(void)duedataClick
 {
+    __weak typeof(self) weakSelf = self;
     //半透明背景
     UIView *grayTranslucentView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight)];
     grayTranslucentView.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.5];
     [self.view addSubview:grayTranslucentView];
     
+    
+    //找到documents文件所在的路径
+    NSArray *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    //获取第一个文件夹的路径
+    NSString *filePath = [path objectAtIndex:0];
+    //把testPlist文件加入
+    NSString *plistPath = [filePath stringByAppendingPathComponent:@"duedate.plist"];
+    NSMutableArray * array = [NSMutableArray arrayWithCapacity:1];
+    
+    NSArray * arrayFromfile = [NSArray arrayWithContentsOfFile:plistPath];
+    //            [array setArray:arrayFromfile];
+    [array addObjectsFromArray:arrayFromfile];
+    BOOL isExitStr = NO;
+    for (NSDictionary * innerDic in array) {
+        //判断码值
+        NSString * barcode = [innerDic objectForKey:@"barcode"];
+        //如果 已存在通知
+        if ([barcode isEqualToString:self.judgeStr]) {
+            NSDate *date = [innerDic objectForKey:@"firedate"];
+            isExitStr = YES;
+            self.isSettedBottomView = [[UIView alloc]init];
+            self.isSettedBottomView.backgroundColor = [UIColor clearColor];
+            [self.view addSubview:self.isSettedBottomView];
+            [self.isSettedBottomView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(kScreenHeight);
+                make.left.mas_equalTo(weakSelf.view);
+                make.size.mas_equalTo(CGSizeMake(kScreenWidth, 311/586.0*kScreenHeight));
+            }];
+            [self.isSettedBottomView layoutIfNeeded];
+            //设置已完成界面
+            self.isSettedDueDateView = [[DueDateView alloc]initWithFrame:self.isSettedBottomView.frame andDate:date];
+            [self.isSettedBottomView addSubview:self.isSettedDueDateView];
+            [self.isSettedDueDateView layoutIfNeeded];
+            
+            [UIView animateWithDuration:0.5 animations:^{
+                [self.isSettedBottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                    make.top.mas_equalTo(275/586.0*kScreenHeight);
+                    make.left.mas_equalTo(self.view);
+                    make.size.mas_equalTo(CGSizeMake(kScreenWidth, 299/586.0*kScreenHeight));
+                }];
+
+                [self.isSettedBottomView setNeedsLayout];
+                [self.isSettedBottomView layoutIfNeeded];
+            }];
+            
+# warning 此处还有2个block没写，会引起崩溃,考虑将2个view提出去，先初始化，将不传参的block也在初始化后先写好，先这样吧，下班
+
+        }
+    }
+    
+    if (!isExitStr) {
     //设置到期日期界面的容器
-    UIView *bottomView = [[UIView alloc]init];
-    bottomView.backgroundColor = [UIColor whiteColor];
-    [self.view addSubview:bottomView];
-    [bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
+    self.bottomView = [[UIView alloc]init];
+    _bottomView.layer.shadowColor = [UIColor blackColor].CGColor;
+    _bottomView.layer.shadowOffset = CGSizeMake(0, -10);
+    _bottomView.layer.shadowOpacity = 0.3;
+    _bottomView.layer.shadowRadius = 10;
+    _bottomView.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:_bottomView];
+    [_bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(kScreenHeight);
         make.left.mas_equalTo(self.view);
         make.size.mas_equalTo(CGSizeMake(kScreenWidth, 299/586.0*kScreenHeight));
     }];
     
-    [bottomView layoutIfNeeded];
+    [_bottomView layoutIfNeeded];
     
     //设置到期日期的界面
-    DueDateView *duedateView = [[DueDateView alloc]initWithFrame:bottomView.frame andJudgeStr:nil];
-    [bottomView addSubview:duedateView];
-    [bottomView layoutIfNeeded];
+    self.duedateView = [[DueDateView alloc]initWithFrame:_bottomView.frame andJudgeStr:nil];
+    [_bottomView addSubview:_duedateView];
+    [_bottomView layoutIfNeeded];
     //跳出动画
     [UIView animateWithDuration:0.5 animations:^{
-        [bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        [_bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(287/586.0*kScreenHeight);
             make.left.mas_equalTo(self.view);
             make.size.mas_equalTo(CGSizeMake(kScreenWidth, 299/586.0*kScreenHeight));
         }];
-        [bottomView setNeedsLayout];
-        [bottomView layoutIfNeeded];
+        [_bottomView setNeedsLayout];
+        [_bottomView layoutIfNeeded];
     }];
     //设置取消按钮的block
-    duedateView.cancelBlock = ^(){
+    _duedateView.cancelBlock = ^(){
         [grayTranslucentView removeFromSuperview];
         [UIView animateWithDuration:0.5 animations:^{
-            [bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            [weakSelf.bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(kScreenHeight);
-                make.left.mas_equalTo(self.view);
+                make.left.mas_equalTo(weakSelf.view);
                 make.size.mas_equalTo(CGSizeMake(kScreenWidth, 299/586.0*kScreenHeight));
             }];
-            [bottomView setNeedsLayout];
-            [bottomView layoutIfNeeded];
+            [weakSelf.bottomView setNeedsLayout];
+            [weakSelf.bottomView layoutIfNeeded];
         }completion:^(BOOL finished) {
             //完成后将容器移除
-            [bottomView removeFromSuperview];
+            [weakSelf.bottomView removeFromSuperview];
         }];
     };
     
     //设置确认按钮的block
-    duedateView.confirmBlock = ^(NSDate *date)
+    _duedateView.confirmBlock = ^(NSDate *date)
     {
         NSLog(@"到期日期：%@",date);
         //已完成设置界面的容器
-        UIView *isSettedBottomView = [[UIView alloc]init];
-        isSettedBottomView.backgroundColor = [UIColor clearColor];
-        [self.view addSubview:isSettedBottomView];
-        [isSettedBottomView mas_makeConstraints:^(MASConstraintMaker *make) {
+        weakSelf.isSettedBottomView = [[UIView alloc]init];
+        weakSelf.isSettedBottomView.backgroundColor = [UIColor clearColor];
+        [weakSelf.view addSubview:weakSelf.isSettedBottomView];
+        [weakSelf.isSettedBottomView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(kScreenHeight);
-            make.left.mas_equalTo(self.view);
+            make.left.mas_equalTo(weakSelf.view);
             make.size.mas_equalTo(CGSizeMake(kScreenWidth, 311/586.0*kScreenHeight));
         }];
-        [isSettedBottomView layoutIfNeeded];
+        [weakSelf.isSettedBottomView layoutIfNeeded];
         //设置已完成界面
-        DueDateView *isSettedDueDateView = [[DueDateView alloc]initWithFrame:isSettedBottomView.frame isSetted:YES];
-        [isSettedBottomView addSubview:isSettedDueDateView];
-        [isSettedDueDateView layoutIfNeeded];
+        weakSelf.isSettedDueDateView = [[DueDateView alloc]initWithFrame:weakSelf.isSettedBottomView.frame andDate:date];
+        [weakSelf.isSettedBottomView addSubview:weakSelf.isSettedDueDateView];
+        [weakSelf.isSettedDueDateView layoutIfNeeded];
         //设置已完成界面的关闭按钮block
-        isSettedDueDateView.closeBlock = ^(){
+        weakSelf.isSettedDueDateView.closeBlock = ^(){
             [grayTranslucentView removeFromSuperview];
             [UIView animateWithDuration:0.5 animations:^{
-                [isSettedBottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                [weakSelf.isSettedBottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
                     make.top.mas_equalTo(kScreenHeight);
-                    make.left.mas_equalTo(self.view);
+                    make.left.mas_equalTo(weakSelf.view);
                     make.size.mas_equalTo(CGSizeMake(kScreenWidth, 299/586.0*kScreenHeight));
                 }];
-                [isSettedBottomView setNeedsLayout];
-                [isSettedBottomView layoutIfNeeded];
+                [weakSelf.isSettedBottomView setNeedsLayout];
+                [weakSelf.isSettedBottomView layoutIfNeeded];
             }completion:^(BOOL finished) {
-                [isSettedBottomView removeFromSuperview];
+                [weakSelf.isSettedBottomView removeFromSuperview];
             }];
 
         };
+        
+        
+        
+        
         //移除设置界面的容器，跳出已完成界面的容器
         [UIView animateWithDuration:0.5 animations:^{
-            [bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            [weakSelf.bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(kScreenHeight);
-                make.left.mas_equalTo(self.view);
+                make.left.mas_equalTo(weakSelf.view);
                 make.size.mas_equalTo(CGSizeMake(kScreenWidth, 299/586.0*kScreenHeight));
             }];
-            [isSettedBottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            [weakSelf.isSettedBottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(275/586.0*kScreenHeight);
-                make.left.mas_equalTo(self.view);
+                make.left.mas_equalTo(weakSelf.view);
                 make.size.mas_equalTo(CGSizeMake(kScreenWidth, 299/586.0*kScreenHeight));
             }];
-            [bottomView setNeedsLayout];
-            [bottomView layoutIfNeeded];
-            [isSettedBottomView setNeedsLayout];
-            [isSettedBottomView layoutIfNeeded];
+            [weakSelf.bottomView setNeedsLayout];
+            [weakSelf.bottomView layoutIfNeeded];
+            [weakSelf.isSettedBottomView setNeedsLayout];
+            [weakSelf.isSettedBottomView layoutIfNeeded];
         }completion:^(BOOL finished) {
-            [bottomView removeFromSuperview];
+            [weakSelf.bottomView removeFromSuperview];
         }];
+        
+        
+        //拿到 存有 所有 推送的数组
+        NSArray * notiArray = [[UIApplication sharedApplication] scheduledLocalNotifications];
+        //遍历这个数组 根据 key 拿到我们想要的 UILocalNotification
+        for (UILocalNotification * loc in notiArray) {
+            if ([[loc.userInfo objectForKey:@"barcode"] isEqualToString:weakSelf.judgeStr]) {
+                //如果该产品已存在推送，取消该推送
+                [[UIApplication sharedApplication] cancelLocalNotification:loc];
+            }
+        }
+        
+        
+        
+        //找到documents文件所在的路径
+        NSArray *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        //获取第一个文件夹的路径
+        NSString *filePath = [path objectAtIndex:0];
+        //把testPlist文件加入
+        NSString *plistPath = [filePath stringByAppendingPathComponent:@"duedate.plist"];
+        NSMutableArray * array = [NSMutableArray arrayWithCapacity:1];
+        
+        NSArray * arrayFromfile = [NSArray arrayWithContentsOfFile:plistPath];
+        //            [array setArray:arrayFromfile];
+        [array addObjectsFromArray:arrayFromfile];
+        
+        //weakSelf.fireDate = [NSDate dateWithTimeIntervalSinceNow:60];//60秒后触发
+        weakSelf.fireDate = [NSDate dateWithTimeInterval:32400 sinceDate:date];
+        NSDictionary *dict = @{@"barcode":weakSelf.judgeStr,@"firedate":weakSelf.fireDate};
+        NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:dict];
+        
+        BOOL isExitStr = NO;
+        //遍历数组中的每个字典
+        int i = 0;
+        for (NSDictionary * innerDic in array) {
+            //判断码值
+            NSString * barcode = [innerDic objectForKey:@"barcode"];
+            //如果 已存在
+            if ([barcode isEqualToString:weakSelf.judgeStr]) {
+                isExitStr = YES;
+                //移除原通知
+                [array removeObjectAtIndex:i];
+                //判断新通知时间是否重复
+                weakSelf.fireDate = [weakSelf checkFireDate:weakSelf.fireDate withArray:array];
+                [dic setValue:weakSelf.fireDate forKey:@"firedate"];
+                [array insertObject:dic atIndex:0];
+                break;
+            }
+            i++;
+        }
+        
+        //如果不存在， 把dic添加到  array中去
+        if (!isExitStr) {
+            weakSelf.fireDate = [weakSelf checkFireDate:weakSelf.fireDate withArray:array];
+            [dic setValue:weakSelf.fireDate forKey:@"firedate"];
+            [array insertObject:dic atIndex:0];
+            
+        }
+        //如果推送纪录超过100，删除最后一条
+        if (array.count > 100) {
+            [array removeLastObject];
+        }
+        //将纪录存入本地
+        [array writeToFile:plistPath atomically:YES];
+
         
         //设置本地到期推送
         UILocalNotification *notification = [[UILocalNotification alloc] init];
         // 设置触发通知的时间
-        NSDate *fireDate = [NSDate dateWithTimeIntervalSinceNow:30];//60秒后触发
-        //NSDate *fireDate = date;
-        NSLog(@"fireDate=%@",fireDate);
+        
 
-        notification.fireDate = fireDate;
+        NSLog(@"fireDate=%@",weakSelf.fireDate);
+
+        notification.fireDate = weakSelf.fireDate;
         // 时区
         notification.timeZone = [NSTimeZone defaultTimeZone];
         // 设置重复的间隔
@@ -354,12 +486,60 @@
         // 通知被触发时播放的声音
         notification.soundName = UILocalNotificationDefaultSoundName;
         // 通知参数
-        NSDictionary *userDict = [NSDictionary dictionaryWithObject:self.judgeStr forKey:@"barcode"];
+        NSDictionary *userDict = [NSDictionary dictionaryWithObject:weakSelf.judgeStr forKey:@"barcode"];
         notification.userInfo = userDict;
         // 执行通知
         [[UIApplication sharedApplication] scheduleLocalNotification:notification];
         
+
+        
+        
+        //设置已完成界面的修改按钮block
+        weakSelf.isSettedDueDateView.updateBlock = ^(){
+            //设置到期日期界面的容器
+            //weakSelf.bottomView = [[UIView alloc]init];
+            weakSelf.bottomView.layer.shadowColor = [UIColor blackColor].CGColor;
+            weakSelf.bottomView.layer.shadowOffset = CGSizeMake(0, -10);
+            weakSelf.bottomView.layer.shadowOpacity = 0.3;
+            weakSelf.bottomView.layer.shadowRadius = 10;
+            weakSelf.bottomView.backgroundColor = [UIColor whiteColor];
+            [weakSelf.view addSubview:weakSelf.bottomView];
+            [weakSelf.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(kScreenHeight);
+                make.left.mas_equalTo(weakSelf.view);
+                make.size.mas_equalTo(CGSizeMake(kScreenWidth, 299/586.0*kScreenHeight));
+            }];
+            
+            [weakSelf.bottomView layoutIfNeeded];
+            
+            //设置到期日期的界面
+            //self.duedateView = [[DueDateView alloc]initWithFrame:bottomView.frame andJudgeStr:nil];
+            [weakSelf.bottomView addSubview:weakSelf.duedateView];
+            [weakSelf.bottomView layoutIfNeeded];
+            
+            [UIView animateWithDuration:0.5 animations:^{
+                [weakSelf.isSettedBottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                    make.top.mas_equalTo(kScreenHeight);
+                    make.left.mas_equalTo(weakSelf.view);
+                    make.size.mas_equalTo(CGSizeMake(kScreenWidth, 299/586.0*kScreenHeight));
+                }];
+                [weakSelf.bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                    make.top.mas_equalTo(287/586.0*kScreenHeight);
+                    make.left.mas_equalTo(weakSelf.view);
+                    make.size.mas_equalTo(CGSizeMake(kScreenWidth, 299/586.0*kScreenHeight));
+                }];
+                [weakSelf.bottomView setNeedsLayout];
+                [weakSelf.bottomView layoutIfNeeded];
+                [weakSelf.isSettedBottomView setNeedsLayout];
+                [weakSelf.isSettedBottomView layoutIfNeeded];
+            }completion:^(BOOL finished) {
+                [weakSelf.isSettedBottomView removeFromSuperview];
+            }];
+        };
+        
+        
     };
+    }
     
 
     
@@ -439,20 +619,33 @@
     
 }
 
--(void)sendLocalNotification
+//检查推送时间是否重复，重复则顺延15分钟，递归判断
+-(NSDate *)checkFireDate:(NSDate *)date withArray:(NSArray *)array
 {
-    
+    for (NSDictionary *innerDic in array) {
+        NSDate *firedate = [innerDic objectForKey:@"firedate"];
+        if ([firedate isEqualToDate:date]) {
+            date = [firedate dateByAddingTimeInterval:900];
+            date = [self checkFireDate:date withArray:array];
+        }
+    }
+    return date;
 }
 
+//-(void)sendLocalNotification
+//{
+//    
+//}
+
 //日期正则表达式判断
--(BOOL)validateData:(NSString *)dataStr
-{
-    NSString *dataRegex = @"^(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})(((0[13578]|1[02])(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)(0[1-9]|[12][0-9]|30))|(02(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))0229)";//yyyyMMdd
-//    NSString *dataRegex = @"^(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)";//yyyy-MM-dd
-    //NSString *dataRegex = @"([\\d]{4}(((0[13578]|1[02])((0[1-9])|([12][0-9])|(3[01])))|(((0[469])|11)((0[1-9])|([12][0-9])|30))|(02((0[1-9])|(1[0-9])|(2[0-8])))))|((((([02468][048])|([13579][26]))00)|([0-9]{2}(([02468][048])|([13579][26]))))(((0[13578]|1[02])((0[1-9])|([12][0-9])|(3[01])))|(((0[469])|11)((0[1-9])|([12][0-9])|30))|(02((0[1-9])|(1[0-9])|(2[0-9])))))";//yyyyMMdd
-    NSPredicate *dataTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", dataRegex];
-    return [dataTest evaluateWithObject:dataStr];
-}
+//-(BOOL)validateData:(NSString *)dataStr
+//{
+//    NSString *dataRegex = @"^(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})(((0[13578]|1[02])(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)(0[1-9]|[12][0-9]|30))|(02(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))0229)";//yyyyMMdd
+////    NSString *dataRegex = @"^(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)";//yyyy-MM-dd
+//    //NSString *dataRegex = @"([\\d]{4}(((0[13578]|1[02])((0[1-9])|([12][0-9])|(3[01])))|(((0[469])|11)((0[1-9])|([12][0-9])|30))|(02((0[1-9])|(1[0-9])|(2[0-8])))))|((((([02468][048])|([13579][26]))00)|([0-9]{2}(([02468][048])|([13579][26]))))(((0[13578]|1[02])((0[1-9])|([12][0-9])|(3[01])))|(((0[469])|11)((0[1-9])|([12][0-9])|30))|(02((0[1-9])|(1[0-9])|(2[0-9])))))";//yyyyMMdd
+//    NSPredicate *dataTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", dataRegex];
+//    return [dataTest evaluateWithObject:dataStr];
+//}
 
 
 
