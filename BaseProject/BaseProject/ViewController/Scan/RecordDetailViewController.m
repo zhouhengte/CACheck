@@ -60,6 +60,7 @@
 
 @property (nonatomic , strong)NSDate *fireDate;
 @property (nonatomic , strong)NSString *productName;
+@property (nonatomic , strong)NSString *imageUrl;
 
 @end
 
@@ -666,10 +667,19 @@
     
     //获取商品名称
     NSArray *baseInfoArray = [self.wantDic objectForKey:@"BaseInfo"];
+    NSLog(@"!!!!%@",baseInfoArray);
     for (NSDictionary *innerDic in baseInfoArray) {
         if ([[innerDic objectForKey:@"key"] isEqualToString:@"ProductName"]) {
             //NSLog(@"%@",[innerDic objectForKey:@"value"]);
             self.productName = [innerDic objectForKey:@"value"];
+            break;
+        }
+    }
+    //获取商品图片url
+    for (NSDictionary *innerDic in baseInfoArray) {
+        if ([[innerDic objectForKey:@"key"] isEqualToString:@"LabelProof"]) {
+            //NSLog(@"%@",[innerDic objectForKey:@"value"]);
+            self.imageUrl = [innerDic objectForKey:@"value"];
             break;
         }
     }
@@ -685,7 +695,7 @@
     
     //weakSelf.fireDate = [NSDate dateWithTimeIntervalSinceNow:60];//60秒后触发
     self.fireDate = [NSDate dateWithTimeInterval:32400 sinceDate:date];
-    NSDictionary *dict = @{@"barcode":self.judgeStr,@"firedate":self.fireDate,@"productname":self.productName};
+    NSDictionary *dict = @{@"barcode":self.judgeStr,@"firedate":self.fireDate,@"productname":self.productName,@"imageUrl":self.imageUrl};
     NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:dict];
     
     BOOL isExitStr = NO;

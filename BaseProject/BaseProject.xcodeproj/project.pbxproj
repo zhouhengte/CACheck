@@ -26,6 +26,8 @@
 		2FC7DB2E1C476A60005A60BA /* RecordTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FC7DB2D1C476A60005A60BA /* RecordTableViewCell.m */; };
 		2FC7DB311C476C4A005A60BA /* historyModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FC7DB301C476C49005A60BA /* historyModel.m */; };
 		2FC7DB341C4797B5005A60BA /* NewsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FC7DB331C4797B5005A60BA /* NewsViewController.m */; };
+		2FD66A3F1CB3AAE2004FBFD9 /* MessageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD66A3D1CB3AAE2004FBFD9 /* MessageTableViewCell.m */; };
+		2FD66A401CB3AAE2004FBFD9 /* MessageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2FD66A3E1CB3AAE2004FBFD9 /* MessageTableViewCell.xib */; };
 		2FD968B51C43A26600A77AB9 /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD968B41C43A26600A77AB9 /* WelcomeViewController.m */; };
 		2FD968B81C43A38300A77AB9 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD968B71C43A38300A77AB9 /* MainViewController.m */; };
 		2FD9843A1C488EB3000EB94A /* DJRefresh.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2FD9842F1C488EB3000EB94A /* DJRefresh.bundle */; };
@@ -112,6 +114,9 @@
 		2FC7DB301C476C49005A60BA /* historyModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = historyModel.m; sourceTree = "<group>"; };
 		2FC7DB321C4797B5005A60BA /* NewsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsViewController.h; sourceTree = "<group>"; };
 		2FC7DB331C4797B5005A60BA /* NewsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsViewController.m; sourceTree = "<group>"; };
+		2FD66A3C1CB3AAE2004FBFD9 /* MessageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableViewCell.h; sourceTree = "<group>"; };
+		2FD66A3D1CB3AAE2004FBFD9 /* MessageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableViewCell.m; sourceTree = "<group>"; };
+		2FD66A3E1CB3AAE2004FBFD9 /* MessageTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageTableViewCell.xib; sourceTree = "<group>"; };
 		2FD968B31C43A26600A77AB9 /* WelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomeViewController.h; sourceTree = "<group>"; };
 		2FD968B41C43A26600A77AB9 /* WelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WelcomeViewController.m; sourceTree = "<group>"; };
 		2FD968B61C43A38300A77AB9 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
@@ -524,6 +529,9 @@
 				2F834D441C464D370050E4A6 /* RecordDetailTableViewCell.m */,
 				2F834D461C464DB70050E4A6 /* EvaluateTableViewCell.h */,
 				2F834D471C464DB70050E4A6 /* EvaluateTableViewCell.m */,
+				2FD66A3C1CB3AAE2004FBFD9 /* MessageTableViewCell.h */,
+				2FD66A3D1CB3AAE2004FBFD9 /* MessageTableViewCell.m */,
+				2FD66A3E1CB3AAE2004FBFD9 /* MessageTableViewCell.xib */,
 				2FDEE2DA1CACC43C00F6FAED /* DueDateView.h */,
 				2FDEE2DB1CACC43C00F6FAED /* DueDateView.m */,
 			);
@@ -624,6 +632,7 @@
 			files = (
 				8566CE121C1FF378004693F0 /* LaunchScreen.storyboard in Resources */,
 				2FD9843A1C488EB3000EB94A /* DJRefresh.bundle in Resources */,
+				2FD66A401CB3AAE2004FBFD9 /* MessageTableViewCell.xib in Resources */,
 				8566CE0F1C1FF378004693F0 /* Assets.xcassets in Resources */,
 				8566CE0D1C1FF378004693F0 /* Main.storyboard in Resources */,
 			);
@@ -736,6 +745,7 @@
 				2F834D3A1C4648530050E4A6 /* SDCollectionViewCell.m in Sources */,
 				2FD968B51C43A26600A77AB9 /* WelcomeViewController.m in Sources */,
 				45333DD81C22EAC40016A357 /* NSObject+MJParse.m in Sources */,
+				2FD66A3F1CB3AAE2004FBFD9 /* MessageTableViewCell.m in Sources */,
 				2F834D371C4648530050E4A6 /* TAAnimatedDotView.m in Sources */,
 				2F834D3B1C4648530050E4A6 /* SDCycleScrollView.m in Sources */,
 				2FDDA1351C61F6CC00BAEFEB /* WebViewController.m in Sources */,

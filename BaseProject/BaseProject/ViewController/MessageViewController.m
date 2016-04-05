@@ -7,13 +7,15 @@
 //
 
 #import "MessageViewController.h"
+#import "MessageTableViewCell.h"
 
-@interface MessageViewController ()<UIWebViewDelegate>
-@property (weak, nonatomic) IBOutlet UIWebView *webView;
+@interface MessageViewController ()<UITableViewDataSource,UITableViewDelegate>
+
 @property (nonatomic , copy)NSString *url;
 @property (nonatomic , strong)UIActivityIndicatorView *activityIndicator;
-@property (nonatomic , strong) UIButton *btn;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 
+@property (nonatomic , strong) NSMutableArray *messageArray;
 @end
 
 @implementation MessageViewController
@@ -22,49 +24,29 @@
     [super viewDidLoad];
     //去除上方留白
     self.automaticallyAdjustsScrollViewInsets=NO;
-    self.webView.delegate = self;
-    self.webView.backgroundColor = [UIColor groupTableViewBackgroundColor];
     
     
     //重新设置导航栏，隐藏原生导航栏，手动绘制新的导航栏，使右滑手势跳转时能让导航栏跟着变化
     [self setNavigationBar];
+
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+
+    //[self.tableView registerClass:[MessageTableViewCell class] forCellReuseIdentifier:@"messagecell"];
+    [self.tableView registerNib:[UINib nibWithNibName:@"MessageTableViewCell" bundle:nil] forCellReuseIdentifier:@"messagecell"];
     
-    //顶部刷新
-    __weak UIWebView *wb = _webView;
-    [self.webView.scrollView addHeaderRefresh:^{
-        [wb reload];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [wb.scrollView endHeaderRefresh];
-        });
-    }];
+    //找到documents文件所在的路径
+    NSArray *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    //获取第一个文件夹的路径
+    NSString *filePath = [path objectAtIndex:0];
+    //把testPlist文件加入
+    NSString *plistPath = [filePath stringByAppendingPathComponent:@"duedate.plist"];
+    self.messageArray = [NSMutableArray arrayWithCapacity:1];
     
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/plain"];
-    
-    NSString *url = [NSString stringWithFormat:@"%@/%@",kUrl,kWelcomeUrl];
-    
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    NSString *catoken = [userDefaults stringForKey:@"CA-Token"];
-    
-    [manager.requestSerializer setValue:catoken forHTTPHeaderField:@"CA-Token"];
-    
-    
-    
-    [manager POST:url parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        self.url = responseObject[@"emergency_msg_link"];
-        NSString  *str = [NSString stringWithFormat:@"%@/%@",kUrl,self.url];
-        NSURL *url = [NSURL URLWithString:str];
-        NSURLRequest *request =[NSURLRequest requestWithURL:url];
-        //        [self.view addSubview: self.webView];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.webView loadRequest:request];
-        });
-        
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        NSLog(@"%@",error);
-    }];
-    
-    
+    NSArray * arrayFromfile = [NSArray arrayWithContentsOfFile:plistPath];
+    //            [array setArray:arrayFromfile];
+    [self.messageArray addObjectsFromArray:arrayFromfile];
+    [self.tableView reloadData];
     
 }
 
@@ -122,6 +104,26 @@
     
 }
 
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return 1;
+}
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return self.messageArray.count;
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    MessageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"messagecell"];
+    cell.messageDic = self.messageArray[indexPath.row];
+    return cell;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 127;
+}
+
 
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -173,61 +175,12 @@
     // Dispose of any resources that can be recreated.
 }
 - (void)backToMainViewController:(id)sender {
-    if ([self.webView canGoBack]) {
-        
-        [self.webView goBack];
-        
-    } else {
         [self.navigationController popViewControllerAnimated:YES];
-    }
 }
 
-#pragma mark --- UIWebViewDelegate
-//开始加载网页
-- (void)webViewDidStartLoad:(UIWebView *)webView {
-    //设置状态条(status bar)的activityIndicatorView开始动画
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-    
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 64, kScreenWidth, kScreenHeight-64)];
-    [view setTag:108];
-    [view setBackgroundColor:[UIColor colorWithRed:241/255.0 green:241/255.0 blue:241/255.0 alpha:1]];
-    
-    [self.view addSubview:view];
-    
-    self.activityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 32.0f, 32.0f)];
-        [_activityIndicator setCenter:CGPointMake(kScreenWidth/2.0, (kScreenHeight-64)/2.0)];
-    
-    [_activityIndicator setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleGray];
-    
-    [view addSubview:_activityIndicator];
-    
-    [_activityIndicator startAnimating];
-    
-}
 
-//成功加载完毕
-- (void)webViewDidFinishLoad:(UIWebView *)webView {
-    [self performSelector:@selector(loadEnd) withObject:nil afterDelay:0];
-    
-}
 
--(void)loadEnd
-{
-    //设置indicatorView动画停止
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-    [self.activityIndicator stopAnimating];
-    UIView *view = (UIView*)[self.view viewWithTag:108];
-    [view removeFromSuperview];
-}
-//加载失败
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
-    //停止动画
-    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-    [self.activityIndicator stopAnimating];
-    UIView *view = (UIView*)[self.view viewWithTag:108];
-    [view removeFromSuperview];
-    NSLog(@"加载失败:%@", error.userInfo);
-}
+
 
 
 
