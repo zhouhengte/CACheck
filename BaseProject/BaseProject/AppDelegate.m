@@ -10,6 +10,9 @@
 #import "AppDelegate+Category.h"
 #import "MobClick.h"
 #import "WelcomeViewController.h"
+#import "RecordDetailViewController.h"
+#import "ScanRecordViewController.h"
+#import "MainViewController.h"
 
 @interface AppDelegate ()
 
@@ -74,20 +77,59 @@
     }
     
     
+    
+//    if (launchOptions != nil) {
+//        NSDictionary *userInfo = [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
+//        if (userInfo != nil) {
+//            NSString *notMess = [userInfo objectForKey:@"barcode"];
+//            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"该产品已过期"
+//                                                            message:notMess
+//                                                           delegate:nil
+//                                                  cancelButtonTitle:@"OK"
+//                                                  otherButtonTitles:nil];
+//            [alert show];
+//    
+//            // 更新显示的徽章个数
+//            NSInteger badge = [UIApplication sharedApplication].applicationIconBadgeNumber;
+//            badge--;
+//            badge = badge >= 0 ? badge : 0;
+//            [UIApplication sharedApplication].applicationIconBadgeNumber = badge;
+//
+//        }
+//        //NSLog(@"local notification:%@",userInfo);
+//    }
+    
+    //判断是否从本地推送点击进入app
     UILocalNotification *localNotification = [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
     NSLog(@"localNotification = %@",localNotification);
     if (localNotification) {
         NSLog(@"noti:%@",localNotification);
-        
         // 这里真实需要处理交互的地方
         // 获取通知所带的数据
-        NSString *notMess = [localNotification.userInfo objectForKey:@"barcode"];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"该产品已过期"
-                                                        message:notMess
-                                                       delegate:nil
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-        [alert show];
+//        NSString *notMess = [localNotification.userInfo objectForKey:@"barcode"];
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"该产品已过期"
+//                                                        message:notMess
+//                                                       delegate:nil
+//                                              cancelButtonTitle:@"OK"
+//                                              otherButtonTitles:nil];
+//        [alert show];
+        
+        
+        self.window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen]bounds]];
+        //手动拼接navigationcontrollers
+        UINavigationController *naviVC = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"contentViewController"];
+        self.window.rootViewController = naviVC;
+        RecordDetailViewController *recordDetailVC = [[RecordDetailViewController alloc] init];
+        recordDetailVC.judgeStr = [localNotification.userInfo objectForKey:@"barcode"];
+        recordDetailVC.sugueStr = @"list";
+        recordDetailVC.onlyStr = @"消息";
+        ScanRecordViewController *scanRecordVC = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"scanRecordViewController"];
+        MainViewController *mainVC = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"mainViewController"];
+        NSArray *controllerArray = @[mainVC,scanRecordVC,recordDetailVC];
+        [naviVC setViewControllers:controllerArray];
+        [self.window makeKeyAndVisible];
+        
+        
         
         // 更新显示的徽章个数
         NSInteger badge = [UIApplication sharedApplication].applicationIconBadgeNumber;
@@ -96,12 +138,13 @@
         [UIApplication sharedApplication].applicationIconBadgeNumber = badge;
         
         // 在不需要再推送时，可以取消推送
-        [application cancelLocalNotification:localNotification];
+        //[application cancelLocalNotification:localNotification];
 
     }
     
     return YES;
 }
+
 
 
 @end

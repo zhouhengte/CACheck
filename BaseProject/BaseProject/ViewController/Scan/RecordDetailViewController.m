@@ -157,6 +157,10 @@
     [self setNavigationBar];
     //设置到期日按钮
     [self setDuedataButton];
+    //如果是从消息页面跳转过来，直接点击到期日按钮
+    if ([self.onlyStr isEqualToString:@"消息"]) {
+        [self duedataClick];
+    }
 }
 
 
@@ -281,7 +285,7 @@
             [self.isSettedBottomView addSubview:self.isSettedDueDateView];
             [self.isSettedDueDateView layoutIfNeeded];
             
-            [UIView animateWithDuration:0.5 animations:^{
+            [UIView animateWithDuration:0.25 animations:^{
                 [self.isSettedBottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
                     make.top.mas_equalTo(275/586.0*kScreenHeight);
                     make.left.mas_equalTo(self.view);
@@ -295,7 +299,7 @@
 
             self.isSettedDueDateView.closeBlock = ^(){
                 [grayTranslucentView removeFromSuperview];
-                [UIView animateWithDuration:0.5 animations:^{
+                [UIView animateWithDuration:0.25 animations:^{
                     [weakSelf.isSettedBottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
                         make.top.mas_equalTo(kScreenHeight);
                         make.left.mas_equalTo(weakSelf.view);
@@ -322,7 +326,7 @@
                 [weakSelf.bottomView layoutIfNeeded];
                 
                 //跳出动画
-                [UIView animateWithDuration:0.5 animations:^{
+                [UIView animateWithDuration:0.25 animations:^{
                     [weakSelf.isSettedBottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
                         make.top.mas_equalTo(kScreenHeight);
                         make.left.mas_equalTo(weakSelf.view);
@@ -343,7 +347,7 @@
                 
                 weakSelf.duedateView.cancelBlock = ^(){
                     [grayTranslucentView removeFromSuperview];
-                    [UIView animateWithDuration:0.5 animations:^{
+                    [UIView animateWithDuration:0.25 animations:^{
                         [weakSelf.bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
                             make.top.mas_equalTo(kScreenHeight);
                             make.left.mas_equalTo(weakSelf.view);
@@ -366,7 +370,7 @@
                     [weakSelf.isSettedDueDateView layoutIfNeeded];
 
                     //移除设置界面的容器，跳出已完成界面的容器
-                    [UIView animateWithDuration:0.5 animations:^{
+                    [UIView animateWithDuration:0.25 animations:^{
                         [weakSelf.bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
                             make.top.mas_equalTo(kScreenHeight);
                             make.left.mas_equalTo(weakSelf.view);
@@ -416,7 +420,7 @@
     [_bottomView addSubview:_duedateView];
     [_bottomView layoutIfNeeded];
     //跳出动画
-    [UIView animateWithDuration:0.5 animations:^{
+    [UIView animateWithDuration:0.25 animations:^{
         [_bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(287/586.0*kScreenHeight);
             make.left.mas_equalTo(self.view);
@@ -428,7 +432,7 @@
     //设置取消按钮的block
     _duedateView.cancelBlock = ^(){
         [grayTranslucentView removeFromSuperview];
-        [UIView animateWithDuration:0.5 animations:^{
+        [UIView animateWithDuration:0.25 animations:^{
             [weakSelf.bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(kScreenHeight);
                 make.left.mas_equalTo(weakSelf.view);
@@ -464,7 +468,7 @@
         //设置已完成界面的关闭按钮block
         weakSelf.isSettedDueDateView.closeBlock = ^(){
             [grayTranslucentView removeFromSuperview];
-            [UIView animateWithDuration:0.5 animations:^{
+            [UIView animateWithDuration:0.25 animations:^{
                 [weakSelf.isSettedBottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
                     make.top.mas_equalTo(kScreenHeight);
                     make.left.mas_equalTo(weakSelf.view);
@@ -482,7 +486,7 @@
         
         
         //移除设置界面的容器，跳出已完成界面的容器
-        [UIView animateWithDuration:0.5 animations:^{
+        [UIView animateWithDuration:0.25 animations:^{
             [weakSelf.bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(kScreenHeight);
                 make.left.mas_equalTo(weakSelf.view);
@@ -542,7 +546,7 @@
             [weakSelf.bottomView addSubview:weakSelf.duedateView];
             [weakSelf.bottomView layoutIfNeeded];
             
-            [UIView animateWithDuration:0.5 animations:^{
+            [UIView animateWithDuration:0.25 animations:^{
                 [weakSelf.isSettedBottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
                     make.top.mas_equalTo(kScreenHeight);
                     make.left.mas_equalTo(weakSelf.view);
@@ -684,6 +688,15 @@
         }
     }
     
+//    NSDate *now = [NSDate date];
+//    NSTimeInterval timeInterval = [date timeIntervalSinceDate:now];
+//    int remainingDays = 0;
+//    if (timeInterval <= 0) {
+//        remainingDays = 0;
+//    }else{
+//        remainingDays = ((int)timeInterval)/(3600*24)+1;
+//    }
+    
     
     //把testPlist文件加入
     NSString *plistPath = [filePath stringByAppendingPathComponent:@"duedate.plist"];
@@ -693,9 +706,11 @@
     //            [array setArray:arrayFromfile];
     [array addObjectsFromArray:arrayFromfile];
     
-    //weakSelf.fireDate = [NSDate dateWithTimeIntervalSinceNow:60];//60秒后触发
-    self.fireDate = [NSDate dateWithTimeInterval:32400 sinceDate:date];
-    NSDictionary *dict = @{@"barcode":self.judgeStr,@"firedate":self.fireDate,@"productname":self.productName,@"imageUrl":self.imageUrl};
+    
+    //self.fireDate = [NSDate dateWithTimeIntervalSinceNow:60];//60秒后触发
+    //self.fireDate = [NSDate dateWithTimeInterval:32400 sinceDate:date];//过期日9点
+    self.fireDate = [NSDate dateWithTimeInterval:-831600 sinceDate:date];//提前10天9点
+    NSDictionary *dict = @{@"barcode":self.judgeStr,@"firedate":self.fireDate,@"productname":self.productName,@"imageUrl":self.imageUrl,@"duedate":date};
     NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:dict];
     
     BOOL isExitStr = NO;
@@ -1076,7 +1091,7 @@
         self.str = self.barCode;
         self.requestUrl = [NSString stringWithFormat:@"%@/%@%@",kUrl,kbarCodeUrl,self.barCode];
         self.paramDic = nil;
-       // NSLog(@"%@",self.requestUrl);
+        NSLog(@"!!!!%@",self.requestUrl);
     }
     
     

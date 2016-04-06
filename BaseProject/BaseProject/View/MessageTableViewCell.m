@@ -21,7 +21,18 @@
 -(void)setMessageDic:(NSDictionary *)messageDic
 {
     _messageDic = messageDic;
-    self.titleLabel.text = [NSString stringWithFormat:@"请注意您扫描过的\"%@\"保质期还剩xx天", messageDic[@"productname"]];
+    NSDate *duedate = messageDic[@"duedate"];
+    NSDate *now = [NSDate date];
+    NSTimeInterval timeInterval = [duedate timeIntervalSinceDate:now];
+    int remainingDays = 0;
+    if (timeInterval <= 0) {
+        remainingDays = 0;
+        self.titleLabel.text = [NSString stringWithFormat:@"请注意您扫描过的\"%@\"已过期", messageDic[@"productname"]];
+    }else{
+        remainingDays = ((int)timeInterval)/(3600*24)+1;
+        self.titleLabel.text = [NSString stringWithFormat:@"请注意您扫描过的\"%@\"保质期还剩%d天", messageDic[@"productname"],remainingDays];
+    }
+    
     NSString *imageUrl = messageDic[@"imageUrl"];
     NSURL *url = [NSURL URLWithString:imageUrl];
     [self.leftImageView setImageWithURL:url placeholderImage:[UIImage imageNamed:@"icon1024"]];

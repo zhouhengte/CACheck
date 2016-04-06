@@ -8,6 +8,7 @@
 
 #import "MessageViewController.h"
 #import "MessageTableViewCell.h"
+#import "RecordDetailViewController.h"
 
 @interface MessageViewController ()<UITableViewDataSource,UITableViewDelegate>
 
@@ -117,6 +118,16 @@
     MessageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"messagecell"];
     cell.messageDic = self.messageArray[indexPath.row];
     return cell;
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    RecordDetailViewController *recordDetailVC = [[RecordDetailViewController alloc] init];
+    recordDetailVC.judgeStr = self.messageArray[indexPath.row][@"barcode"];
+    recordDetailVC.sugueStr = @"list";
+    recordDetailVC.onlyStr = @"消息";
+    [self.navigationController pushViewController:recordDetailVC animated:YES];
 }
 
 -(CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath

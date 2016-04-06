@@ -362,7 +362,7 @@
             if ([obj.stringValue rangeOfString:@"http"].location != NSNotFound)
             {
 //                NSLog(@"有http");
-//                NSLog(@"%@",obj.stringValue);
+                NSLog(@"...%@",obj.stringValue);
                 NSString *productInfoId = nil;
                 NSString *token = @"c=";
                 NSRange range = [obj.stringValue rangeOfString:token];
@@ -386,6 +386,7 @@
                     
                     RecordDetailViewController *recordDetailVC = [self.storyboard instantiateViewControllerWithIdentifier:@"recordDetailViewController"];
                     recordDetailVC.judgeStr = self.authCode;
+                    recordDetailVC.codeStr = productInfoId;//防止二维码码值没有28位导致调用错误的接口
                     recordDetailVC.sugueStr = @"scan";
                     recordDetailVC.date = [self getNowDate];
                     recordDetailVC.onlyStr = @"扫描页";

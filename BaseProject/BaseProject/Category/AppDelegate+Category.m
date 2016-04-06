@@ -77,7 +77,7 @@
     // 这里真实需要处理交互的地方
     // 获取通知所带的数据
     NSString *notMess = [notification.userInfo objectForKey:@"barcode"];
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"该产品已过期"
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"该产品快过期或者已过期"
                                                     message:notMess
                                                    delegate:nil
                                           cancelButtonTitle:@"OK"
@@ -91,7 +91,7 @@
     [UIApplication sharedApplication].applicationIconBadgeNumber = badge;
     
     // 在不需要再推送时，可以取消推送
-    [application cancelAllLocalNotifications];
+    //[application cancelLocalNotification:notification];
 
 }
 
