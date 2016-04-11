@@ -28,6 +28,7 @@
 		2FC7DB341C4797B5005A60BA /* NewsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FC7DB331C4797B5005A60BA /* NewsViewController.m */; };
 		2FD66A3F1CB3AAE2004FBFD9 /* MessageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD66A3D1CB3AAE2004FBFD9 /* MessageTableViewCell.m */; };
 		2FD66A401CB3AAE2004FBFD9 /* MessageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2FD66A3E1CB3AAE2004FBFD9 /* MessageTableViewCell.xib */; };
+		2FD8C5231CB5EEC800D0A8F1 /* JSBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD8C5221CB5EEC800D0A8F1 /* JSBadgeView.m */; };
 		2FD968B51C43A26600A77AB9 /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD968B41C43A26600A77AB9 /* WelcomeViewController.m */; };
 		2FD968B81C43A38300A77AB9 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD968B71C43A38300A77AB9 /* MainViewController.m */; };
 		2FD9843A1C488EB3000EB94A /* DJRefresh.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 2FD9842F1C488EB3000EB94A /* DJRefresh.bundle */; };
@@ -117,6 +118,8 @@
 		2FD66A3C1CB3AAE2004FBFD9 /* MessageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableViewCell.h; sourceTree = "<group>"; };
 		2FD66A3D1CB3AAE2004FBFD9 /* MessageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableViewCell.m; sourceTree = "<group>"; };
 		2FD66A3E1CB3AAE2004FBFD9 /* MessageTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageTableViewCell.xib; sourceTree = "<group>"; };
+		2FD8C5211CB5EEC800D0A8F1 /* JSBadgeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSBadgeView.h; sourceTree = "<group>"; };
+		2FD8C5221CB5EEC800D0A8F1 /* JSBadgeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSBadgeView.m; sourceTree = "<group>"; };
 		2FD968B31C43A26600A77AB9 /* WelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomeViewController.h; sourceTree = "<group>"; };
 		2FD968B41C43A26600A77AB9 /* WelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WelcomeViewController.m; sourceTree = "<group>"; };
 		2FD968B61C43A38300A77AB9 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
@@ -519,6 +522,8 @@
 		85C0AE511C20F58C0016268A /* View */ = {
 			isa = PBXGroup;
 			children = (
+				2FD8C5211CB5EEC800D0A8F1 /* JSBadgeView.h */,
+				2FD8C5221CB5EEC800D0A8F1 /* JSBadgeView.m */,
 				2F834D491C4651AA0050E4A6 /* BigImageView.h */,
 				2F834D4A1C4651AA0050E4A6 /* BigImageView.m */,
 				2F834D4C1C4651CD0050E4A6 /* zoomScrollView.h */,
@@ -696,6 +701,7 @@
 				2FDDA1561C61F6F100BAEFEB /* PreferenceViewController.m in Sources */,
 				2FD9843D1C488EB3000EB94A /* DJRefreshTopView.m in Sources */,
 				2FDDA1321C61F6CC00BAEFEB /* ScanViewController.m in Sources */,
+				2FD8C5231CB5EEC800D0A8F1 /* JSBadgeView.m in Sources */,
 				2FDEE2DC1CACC43C00F6FAED /* DueDateView.m in Sources */,
 				2F834D351C4648530050E4A6 /* NSData+SDDataCache.m in Sources */,
 				2F834D381C4648530050E4A6 /* TADotView.m in Sources */,

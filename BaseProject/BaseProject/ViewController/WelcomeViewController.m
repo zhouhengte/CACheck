@@ -21,6 +21,7 @@
     [super viewDidLoad];
     
     [self setUpScrollView];
+    [self setUpPageControl];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -67,19 +68,24 @@
     self.pageControl = pageControl;
     
     //2.设置pageControl的位置和大小
-    pageControl.frame = CGRectMake(0, self.view.bounds.size.height-50, self.view.bounds.size.width, 30);
+    //pageControl.frame = CGRectMake(0, self.view.bounds.size.height-50, self.view.bounds.size.width, 30);
     
     //3.添加pageControl到控制器的view中
     [self.view addSubview:pageControl];
+    [pageControl mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.mas_equalTo(self.view);
+        make.size.mas_equalTo(CGSizeMake(49, 5));
+        make.bottom.mas_equalTo(-12);
+    }];
     
     //4.配置pageControl
-    pageControl.numberOfPages = 3;
+    pageControl.numberOfPages = 5;
     
     //5.配置提示符的颜色
-    pageControl.pageIndicatorTintColor = [UIColor blueColor];
+    pageControl.pageIndicatorTintColor = UIColorFromRGB(0xcccccc);
     
     //6.配置选中的提示符的颜色
-    pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
+    pageControl.currentPageIndicatorTintColor = UIColorFromRGB(0x1fb0ff);
     
     //7.关闭圆点与用户的交互功能
     pageControl.userInteractionEnabled = NO;
@@ -102,7 +108,7 @@
     sv.frame = self.view.bounds;
     
     //3.向滚动视图中添加多个图片子视图
-    for (int i =0; i<3; i++) {
+    for (int i =0; i<5; i++) {
         //格式化图片的名称
         NSString *imageName = [NSString stringWithFormat:@"引导%d.png",i+1];
         
@@ -119,7 +125,7 @@
         //将图片视图添加到滚动视图中
         [sv addSubview:imageView];
         
-        if (i == 2) {
+        if (i == 4) {
             //向此时的最后一屏图片视图中添加按钮
             [self addEnterButton:imageView];
             
@@ -128,7 +134,7 @@
     }
     
     //4.设置滚动视图的内容大小
-    sv.contentSize = CGSizeMake(3*sv.bounds.size.width, sv.bounds.size.height);
+    sv.contentSize = CGSizeMake(5*sv.bounds.size.width, sv.bounds.size.height);
     //配置滚动视图到达边缘时不弹跳
     sv.bounces = NO;
     //配置滚动视图整页滚动
@@ -150,15 +156,26 @@
     UIButton *button = [[UIButton alloc]init];
     
     //2.设置按钮的frame
-    //button.frame = CGRectMake((iv.bounds.size.width-150)/2, iv.bounds.size.height*0.6, 150, 40);
-    button.frame = CGRectMake(0, 0, iv.bounds.size.width, iv.bounds.size.height);
+    //button.frame = CGRectMake((iv.bounds.size.width-150)/2, iv.bounds.size.height*0.75, 150, 40);
+    //button.frame = CGRectMake(0, 0, iv.bounds.size.width, iv.bounds.size.height);
     
     //按钮的其他配置
     //[button setTitle:@"进入应用" forState:UIControlStateNormal];
     button.backgroundColor = [UIColor clearColor];
+    [button setTitle:@"点击进入" forState:UIControlStateNormal];
+    button.font = [UIFont systemFontOfSize:16];
+    //button.layer.borderWidth = 2;
+    //button.layer.borderColor = [UIColor whiteColor].CGColor;
+    [button setTitleColor:UIColorFromRGB(0x21afff) forState:UIControlStateNormal];
+    [button setBackgroundImage:[UIImage imageNamed:@"进入应用"] forState:UIControlStateNormal];
     
     //3.将按钮添加到图片视图中
     [iv addSubview:button];
+    [button mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.mas_equalTo(iv);
+        make.bottom.mas_equalTo(-54);
+        make.size.mas_equalTo(CGSizeMake(162, 35));
+    }];
     
     //4.为按钮添加事件响应
     [button addTarget:self action:@selector(enterApp) forControlEvents:UIControlEventTouchUpInside];

@@ -32,6 +32,7 @@
 
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
+    self.tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
 
     //[self.tableView registerClass:[MessageTableViewCell class] forCellReuseIdentifier:@"messagecell"];
     [self.tableView registerNib:[UINib nibWithNibName:@"MessageTableViewCell" bundle:nil] forCellReuseIdentifier:@"messagecell"];
@@ -47,7 +48,36 @@
     NSArray * arrayFromfile = [NSArray arrayWithContentsOfFile:plistPath];
     //            [array setArray:arrayFromfile];
     [self.messageArray addObjectsFromArray:arrayFromfile];
+    NSMutableArray *mutableArray = [NSMutableArray arrayWithArray:self.messageArray];
+    NSDate *now = [NSDate date];
+    //如果还没到该消息发送的时间，则隐藏该消息
+    for (NSDictionary *innerDic in mutableArray) {
+        NSDate *firedate = innerDic[@"firedate"];
+        if ([firedate isEqualToDate:[firedate laterDate:now]]) {
+            [self.messageArray removeObject:innerDic];
+        }
+    }
     [self.tableView reloadData];
+    
+    if (self.messageArray.count == 0) {
+        [self.tableView removeFromSuperview];
+        UIImageView *imageView = [[UIImageView alloc] init];
+        //    UIImageView *imageView = [[UIImageView alloc] init];
+        
+        //    imageView.backgroundColor= [UIColor redColor];
+        
+        imageView.image = [UIImage imageNamed:@"消息-暂无内容"];
+        [self.view addSubview:imageView];
+        
+        [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerX.equalTo(self.view);
+            //        make.centerY.equalTo(self.view);
+            //        make.top.equalTo(imageViewBig1).with.offset(37/568.0*kScreenHeight);
+            make.top.equalTo(self.view).with.offset(0.4*kScreenHeight);
+            make.size.mas_equalTo(CGSizeMake(60, 77.5));
+        }];
+
+    }
     
 }
 
@@ -117,11 +147,13 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     MessageTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"messagecell"];
     cell.messageDic = self.messageArray[indexPath.row];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     RecordDetailViewController *recordDetailVC = [[RecordDetailViewController alloc] init];
     recordDetailVC.judgeStr = self.messageArray[indexPath.row][@"barcode"];
@@ -130,10 +162,24 @@
     [self.navigationController pushViewController:recordDetailVC animated:YES];
 }
 
+
+
 -(CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 127;
+    return 142;
 }
+
+//-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+//{
+//    return 12;
+//}
+//
+//-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+//{
+//    return 1;
+//}
+
+
 
 
 -(void)viewWillAppear:(BOOL)animated

@@ -44,6 +44,9 @@
     //网络活动发生变化时，会发送下方key的通知，可用在通知中心中添加检测
 //    [[NSNotificationCenter defaultCenter]addObserver:nil selector:nil name:AFNetworkingReachabilityDidChangeNotification object:nil];
     
+
+
+    
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -62,7 +65,7 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     //取消徽章
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+    //[[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
@@ -73,22 +76,24 @@
 -(void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
 {
     NSLog(@"noti:%@",notification);
-    
+//    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+//    [userDefaults setObject:@"no" forKey:@"messageisclick"];
     // 这里真实需要处理交互的地方
     // 获取通知所带的数据
-    NSString *notMess = [notification.userInfo objectForKey:@"barcode"];
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"该产品快过期或者已过期"
-                                                    message:notMess
+    NSString *productName = [notification.userInfo objectForKey:@"productname"];
+    NSString *notiMess = [NSString stringWithFormat:@"请注意您扫描过的\"%@\"即将过期",productName];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"过期提醒"
+                                                    message:notiMess
                                                    delegate:nil
                                           cancelButtonTitle:@"OK"
                                           otherButtonTitles:nil];
     [alert show];
     
     // 更新显示的徽章个数
-    NSInteger badge = [UIApplication sharedApplication].applicationIconBadgeNumber;
-    badge--;
-    badge = badge >= 0 ? badge : 0;
-    [UIApplication sharedApplication].applicationIconBadgeNumber = badge;
+//    NSInteger badge = [UIApplication sharedApplication].applicationIconBadgeNumber;
+//    badge--;
+//    badge = badge >= 0 ? badge : 0;
+//    [UIApplication sharedApplication].applicationIconBadgeNumber = badge;
     
     // 在不需要再推送时，可以取消推送
     //[application cancelLocalNotification:notification];

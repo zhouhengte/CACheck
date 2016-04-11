@@ -46,16 +46,16 @@
             [dateStr addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:16.0] range:yearRange];
             [dateStr addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:16.0] range:dayRange];
             _duedateLabel.attributedText = dateStr;
-        }else if (totaldays >= 30){
-            int mouths = totaldays/30;
-            int days = totaldays%30;
-            NSString *str = [NSString stringWithFormat:@"%d个月 %d天",mouths,days];
-            NSMutableAttributedString *dateStr = [[NSMutableAttributedString alloc]initWithString:str];
-            NSRange mouthRange = [str rangeOfString:@"个月"];
-            NSRange dayRange = [str rangeOfString:@"天"];
-            [dateStr addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:16.0] range:mouthRange];
-            [dateStr addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:16.0] range:dayRange];
-            _duedateLabel.attributedText = dateStr;
+//        }else if (totaldays >= 30){
+//            int mouths = totaldays/30;
+//            int days = totaldays%30;
+//            NSString *str = [NSString stringWithFormat:@"%d个月 %d天",mouths,days];
+//            NSMutableAttributedString *dateStr = [[NSMutableAttributedString alloc]initWithString:str];
+//            NSRange mouthRange = [str rangeOfString:@"个月"];
+//            NSRange dayRange = [str rangeOfString:@"天"];
+//            [dateStr addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:16.0] range:mouthRange];
+//            [dateStr addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:16.0] range:dayRange];
+//            _duedateLabel.attributedText = dateStr;
         }else{
             NSString *str = [NSString stringWithFormat:@"%d天",totaldays];
             NSMutableAttributedString *dateStr = [[NSMutableAttributedString alloc]initWithString:str];
@@ -91,6 +91,18 @@
     _datePicker.minimumDate = [NSDate dateWithTimeIntervalSinceNow:86400];
     _datePicker.center = CGPointMake(self.center.x, _datePicker.center.y);
     [self addSubview:_datePicker];
+    
+    //拿到 存有 所有 推送的数组
+    NSArray * notiArray = [[UIApplication sharedApplication] scheduledLocalNotifications];
+    //遍历这个数组 根据 key 拿到我们想要的 UILocalNotification
+    for (UILocalNotification * loc in notiArray) {
+        if ([[loc.userInfo objectForKey:@"barcode"] isEqualToString:judgeStr]) {
+            //如果该产品已存在推送，显示推送日期
+            if ([loc.userInfo objectForKey:@"duedate"]) {
+                _datePicker.date = [loc.userInfo objectForKey:@"duedate"];
+            }
+        }
+    }
     
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     button.backgroundColor = UIColorFromRGB(0x34b5fe);
@@ -131,22 +143,24 @@
         make.bottom.mas_equalTo(48);
     }];
     
-    UILabel *label = [[UILabel alloc]init];
-    [self addSubview:label];
-    label.textAlignment = NSTextAlignmentCenter;
-    label.text = @"此商品离过期还有";
-    label.font = [UIFont systemFontOfSize:20];
-    [label mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(100);
-        make.centerX.mas_equalTo(self);
-    }];
+
     
     UIImageView *imageView = [[UIImageView alloc]init];
     [self addSubview:imageView];
     [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(150);
+        make.center.mas_equalTo(self);
+        //make.centerX.mas_equalTo(self);
+        make.size.mas_equalTo(CGSizeMake(206, 62));
+    }];
+    
+    UILabel *label = [[UILabel alloc]init];
+    [self addSubview:label];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.text = @"此商品离过期还有";
+    label.font = [UIFont systemFontOfSize:18];
+    [label mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(imageView.mas_top).mas_equalTo(-20);
         make.centerX.mas_equalTo(self);
-        make.size.mas_equalTo(CGSizeMake(200, 60));
     }];
     
     imageView.contentMode = UIViewContentModeCenter;
@@ -176,16 +190,16 @@
             [dateStr addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:16.0] range:yearRange];
             [dateStr addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:16.0] range:dayRange];
             _duedateLabel.attributedText = dateStr;
-        }else if (totaldays >= 30){
-            int mouths = totaldays/30;
-            int days = totaldays%30;
-            NSString *str = [NSString stringWithFormat:@"%d个月 %d天",mouths,days];
-            NSMutableAttributedString *dateStr = [[NSMutableAttributedString alloc]initWithString:str];
-            NSRange mouthRange = [str rangeOfString:@"个月"];
-            NSRange dayRange = [str rangeOfString:@"天"];
-            [dateStr addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:16.0] range:mouthRange];
-            [dateStr addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:16.0] range:dayRange];
-            _duedateLabel.attributedText = dateStr;
+//        }else if (totaldays >= 30){
+//            int mouths = totaldays/30;
+//            int days = totaldays%30;
+//            NSString *str = [NSString stringWithFormat:@"%d个月 %d天",mouths,days];
+//            NSMutableAttributedString *dateStr = [[NSMutableAttributedString alloc]initWithString:str];
+//            NSRange mouthRange = [str rangeOfString:@"个月"];
+//            NSRange dayRange = [str rangeOfString:@"天"];
+//            [dateStr addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:16.0] range:mouthRange];
+//            [dateStr addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:16.0] range:dayRange];
+//            _duedateLabel.attributedText = dateStr;
         }else{
             
             NSString *str = [NSString stringWithFormat:@"%d天",totaldays];
@@ -201,8 +215,8 @@
     }
     [self addSubview:_duedateLabel];
     [_duedateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(160);
-        make.centerX.mas_equalTo(self);
+        //make.top.mas_equalTo(157);
+        make.center.mas_equalTo(self);
         make.size.mas_equalTo(CGSizeMake(180, 40));
     }];
     

@@ -45,6 +45,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    //定位
+    //初始化manager对象
+    self.myLocationManager = [[CLLocationManager alloc] init];
+    //设置代理
+    self.myLocationManager.delegate = self;
+    [self.myLocationManager startUpdatingLocation];
+    
     
     //获取后置摄像头的管理对象,capture:捕获
     AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];

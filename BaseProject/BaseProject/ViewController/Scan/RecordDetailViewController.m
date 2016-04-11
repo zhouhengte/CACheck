@@ -17,6 +17,7 @@
 #import "MainViewController.h"
 #import "WebViewController.h"
 #import "DueDateView.h"
+#import "JSBadgeView.h"
 
 
 @interface RecordDetailViewController ()<UITableViewDataSource, UITableViewDelegate,SDCycleScrollViewDelegate>
@@ -57,10 +58,13 @@
 @property (nonatomic , strong)UIView *isSettedBottomView;
 @property (nonatomic , strong)DueDateView *duedateView;
 @property (nonatomic , strong)DueDateView *isSettedDueDateView;
+@property (nonatomic , strong)UIView *grayTranslucentView;
 
 @property (nonatomic , strong)NSDate *fireDate;
 @property (nonatomic , strong)NSString *productName;
 @property (nonatomic , strong)NSString *imageUrl;
+@property (nonatomic , strong)JSBadgeView *duedateBadgeView;
+@property (nonatomic , strong)UIImageView *redPointImageView;//自定义红点，用于缩小后的红点，需要手动添加和移除
 
 @end
 
@@ -135,6 +139,12 @@
     self.tableView.tableHeaderView.backgroundColor = [UIColor whiteColor];
     
     
+    
+    //重新设置导航栏，隐藏原生导航栏，手动绘制新的导航栏，使右滑手势跳转时能让导航栏跟着变化
+    [self setNavigationBar];
+    //设置到期日按钮
+    [self setDuedataButton];
+    
     if ([self.sugueStr isEqualToString:@"list"]) {
         [self getLocalData];
     }else{
@@ -153,14 +163,9 @@
     [self.tableView registerClass:[EvaluateTableViewCell class] forCellReuseIdentifier:@"evalueateID"];
 
     
-    //重新设置导航栏，隐藏原生导航栏，手动绘制新的导航栏，使右滑手势跳转时能让导航栏跟着变化
-    [self setNavigationBar];
-    //设置到期日按钮
-    [self setDuedataButton];
-    //如果是从消息页面跳转过来，直接点击到期日按钮
-    if ([self.onlyStr isEqualToString:@"消息"]) {
-        [self duedataClick];
-    }
+    
+
+
 }
 
 
@@ -233,11 +238,44 @@
     [self.duedataButton setBackgroundImage:[UIImage imageNamed:@"返回bg"] forState:UIControlStateNormal];
     
     self.duedataImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"闹钟2"]];
+    
+    //红点
+    self.duedateBadgeView = [[JSBadgeView alloc]initWithParentView:self.duedataImageView alignment:JSBadgeViewAlignmentTopRight];
+//    self.duedateBadgeView.badgeMinWidth = 0.1f;
+//    self.duedateBadgeView.badgeStrokeWidth = 0.2f;
+    self.duedateBadgeView.badgeBackgroundColor = [UIColor clearColor];
+    UIImage *redPoint = [UIImage imageNamed:@"椭圆 2"];
+    self.redPointImageView = [[UIImageView alloc]initWithImage:redPoint];
+    [self.duedateBadgeView addSubview:_redPointImageView];
+    _redPointImageView.frame = CGRectMake(3, 1, 12, 12);
+    self.duedateBadgeView.badgeText = @" ";//加上红点
+    
+    //找到documents文件所在的路径
+    NSArray *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    //获取第一个文件夹的路径
+    NSString *filePath = [path objectAtIndex:0];
+    //把didsettedduedatePlist文件加入
+    NSString *plistPath = [filePath stringByAppendingPathComponent:@"clickedduedate.plist"];
+    NSMutableArray * array = [NSMutableArray arrayWithCapacity:1];
+    NSArray * arrayFromfile = [NSArray arrayWithContentsOfFile:plistPath];
+    //            [array setArray:arrayFromfile];
+    [array addObjectsFromArray:arrayFromfile];
+    for (NSDictionary * innerDic in array) {
+        //判断码值
+        NSString * barcode = [innerDic objectForKey:@"barcode"];
+        //如果 已点击过
+        if ([barcode isEqualToString:self.judgeStr]) {
+            self.duedateBadgeView.badgeText = @"";//去除红点
+            [self.redPointImageView removeFromSuperview];
+        }
+    }
+    
+    
     [self.view addSubview:self.duedataImageView];
     [self.duedataImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(32);
         make.right.mas_equalTo(-20);
-        make.size.mas_equalTo(CGSizeMake(20, 18));
+        make.size.mas_equalTo(CGSizeMake(22, 18));
     }];
     
 }
@@ -245,18 +283,54 @@
 //设置到期日期
 -(void)duedataClick
 {
-    __weak typeof(self) weakSelf = self;
-    //半透明背景
-    UIView *grayTranslucentView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight)];
-    grayTranslucentView.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.5];
-    [self.view addSubview:grayTranslucentView];
+    self.duedateBadgeView.badgeText = @"";//去除红点
+    [self.redPointImageView removeFromSuperview];
     
-    
+    //本地标记已点击
     //找到documents文件所在的路径
     NSArray *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     //获取第一个文件夹的路径
     NSString *filePath = [path objectAtIndex:0];
-    //把testPlist文件加入
+    //把clickedduedatePlist文件加入
+    NSString *clickPlistPath = [filePath stringByAppendingPathComponent:@"clickedduedate.plist"];
+    NSMutableArray * clickArray = [NSMutableArray arrayWithCapacity:1];
+    NSArray * clickArrayFromfile = [NSArray arrayWithContentsOfFile:clickPlistPath];
+    //            [array setArray:arrayFromfile];
+    [clickArray addObjectsFromArray:clickArrayFromfile];
+    BOOL isclick = NO;
+    for (NSDictionary * innerDic in clickArray) {
+        //判断码值
+        NSString * barcode = [innerDic objectForKey:@"barcode"];
+        //如果 已点击过
+        if ([barcode isEqualToString:self.judgeStr]) {
+            isclick = YES;
+        }
+    }
+    if (!isclick) {//如果未点击，本地标记已点击
+        [clickArray addObject:@{@"barcode":self.judgeStr}];
+        if (clickArray.count > 100) {
+            [clickArray removeLastObject];
+        }
+        [clickArray writeToFile:clickPlistPath atomically:YES];
+    }
+    
+    
+    __weak typeof(self) weakSelf = self;
+    //半透明背景
+    self.grayTranslucentView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight)];
+    _grayTranslucentView.backgroundColor = [UIColor colorWithWhite:0.2 alpha:0.5];
+    [self.view addSubview:_grayTranslucentView];
+    
+    //给半透明背景添加点击事件
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(cancelClick)];
+    [_grayTranslucentView addGestureRecognizer:tap];
+    
+    
+//    //找到documents文件所在的路径
+//    NSArray *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//    //获取第一个文件夹的路径
+//    NSString *filePath = [path objectAtIndex:0];
+    //把duedatePlist文件加入
     NSString *plistPath = [filePath stringByAppendingPathComponent:@"duedate.plist"];
     NSMutableArray * array = [NSMutableArray arrayWithCapacity:1];
     
@@ -269,7 +343,7 @@
         NSString * barcode = [innerDic objectForKey:@"barcode"];
         //如果 已存在通知
         if ([barcode isEqualToString:self.judgeStr]) {
-            NSDate *date = [innerDic objectForKey:@"firedate"];
+            NSDate *date = [innerDic objectForKey:@"duedate"];
             isExitStr = YES;
             self.isSettedBottomView = [[UIView alloc]init];
             self.isSettedBottomView.backgroundColor = [UIColor clearColor];
@@ -298,7 +372,7 @@
             
 
             self.isSettedDueDateView.closeBlock = ^(){
-                [grayTranslucentView removeFromSuperview];
+                [weakSelf.grayTranslucentView removeFromSuperview];
                 [UIView animateWithDuration:0.25 animations:^{
                     [weakSelf.isSettedBottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
                         make.top.mas_equalTo(kScreenHeight);
@@ -321,7 +395,7 @@
                     make.size.mas_equalTo(CGSizeMake(kScreenWidth, 299/586.0*kScreenHeight));
                 }];
                 [weakSelf.bottomView layoutIfNeeded];
-                weakSelf.duedateView = [[DueDateView alloc]initWithFrame:weakSelf.bottomView.frame andJudgeStr:nil];
+                weakSelf.duedateView = [[DueDateView alloc]initWithFrame:weakSelf.bottomView.frame andJudgeStr:weakSelf.judgeStr];
                 [weakSelf.bottomView addSubview:weakSelf.duedateView];
                 [weakSelf.bottomView layoutIfNeeded];
                 
@@ -342,11 +416,11 @@
                     [weakSelf.isSettedBottomView setNeedsLayout];
                     [weakSelf.isSettedBottomView layoutIfNeeded];
                 }completion:^(BOOL finished) {
-                    [weakSelf.isSettedBottomView removeFromSuperview];
+                    //[weakSelf.isSettedBottomView removeFromSuperview];
                 }];
                 
                 weakSelf.duedateView.cancelBlock = ^(){
-                    [grayTranslucentView removeFromSuperview];
+                    [weakSelf.grayTranslucentView removeFromSuperview];
                     [UIView animateWithDuration:0.25 animations:^{
                         [weakSelf.bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
                             make.top.mas_equalTo(kScreenHeight);
@@ -386,7 +460,7 @@
                         [weakSelf.isSettedBottomView setNeedsLayout];
                         [weakSelf.isSettedBottomView layoutIfNeeded];
                     }completion:^(BOOL finished) {
-                        [weakSelf.bottomView removeFromSuperview];
+                        //[weakSelf.bottomView removeFromSuperview];
                     }];
 
                     [weakSelf sendLocalNotificationWithDate:date];
@@ -416,7 +490,7 @@
     [_bottomView layoutIfNeeded];
     
     //设置到期日期的界面
-    self.duedateView = [[DueDateView alloc]initWithFrame:_bottomView.frame andJudgeStr:nil];
+    self.duedateView = [[DueDateView alloc]initWithFrame:_bottomView.frame andJudgeStr:weakSelf.judgeStr];
     [_bottomView addSubview:_duedateView];
     [_bottomView layoutIfNeeded];
     //跳出动画
@@ -431,7 +505,7 @@
     }];
     //设置取消按钮的block
     _duedateView.cancelBlock = ^(){
-        [grayTranslucentView removeFromSuperview];
+        [weakSelf.grayTranslucentView removeFromSuperview];
         [UIView animateWithDuration:0.25 animations:^{
             [weakSelf.bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(kScreenHeight);
@@ -467,7 +541,7 @@
         
         //设置已完成界面的关闭按钮block
         weakSelf.isSettedDueDateView.closeBlock = ^(){
-            [grayTranslucentView removeFromSuperview];
+            [weakSelf.grayTranslucentView removeFromSuperview];
             [UIView animateWithDuration:0.25 animations:^{
                 [weakSelf.isSettedBottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
                     make.top.mas_equalTo(kScreenHeight);
@@ -502,19 +576,11 @@
             [weakSelf.isSettedBottomView setNeedsLayout];
             [weakSelf.isSettedBottomView layoutIfNeeded];
         }completion:^(BOOL finished) {
-            [weakSelf.bottomView removeFromSuperview];
+            //[weakSelf.bottomView removeFromSuperview];
         }];
         
         
-        //拿到 存有 所有 推送的数组
-        NSArray * notiArray = [[UIApplication sharedApplication] scheduledLocalNotifications];
-        //遍历这个数组 根据 key 拿到我们想要的 UILocalNotification
-        for (UILocalNotification * loc in notiArray) {
-            if ([[loc.userInfo objectForKey:@"barcode"] isEqualToString:weakSelf.judgeStr]) {
-                //如果该产品已存在推送，取消该推送
-                [[UIApplication sharedApplication] cancelLocalNotification:loc];
-            }
-        }
+
         
         
         
@@ -562,7 +628,7 @@
                 [weakSelf.isSettedBottomView setNeedsLayout];
                 [weakSelf.isSettedBottomView layoutIfNeeded];
             }completion:^(BOOL finished) {
-                [weakSelf.isSettedBottomView removeFromSuperview];
+                //[weakSelf.isSettedBottomView removeFromSuperview];
             }];
         };
         
@@ -648,6 +714,37 @@
     
 }
 
+-(void)cancelClick
+{
+    NSLog(@"点击了空白处");
+    [UIView animateWithDuration:0.25 animations:^{
+        if (self.isSettedBottomView.superview == self.view) {
+            [self.isSettedBottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(kScreenHeight);
+                make.left.mas_equalTo(self.view);
+                make.size.mas_equalTo(CGSizeMake(kScreenWidth, 299/586.0*kScreenHeight));
+            }];
+        }
+        if (self.bottomView.superview == self.view) {
+            [self.bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(kScreenHeight);
+                make.left.mas_equalTo(self.view);
+                make.size.mas_equalTo(CGSizeMake(kScreenWidth, 299/586.0*kScreenHeight));
+            }];
+        }
+
+        [self.bottomView setNeedsLayout];
+        [self.bottomView layoutIfNeeded];
+        [self.isSettedBottomView setNeedsLayout];
+        [self.isSettedBottomView layoutIfNeeded];
+    }completion:^(BOOL finished) {
+        [self.isSettedBottomView removeFromSuperview];
+        [self.bottomView removeFromSuperview];
+        [self.grayTranslucentView removeFromSuperview];
+    }];
+
+}
+
 //检查推送时间是否重复，重复则顺延15分钟，递归判断
 -(NSDate *)checkFireDate:(NSDate *)date withArray:(NSArray *)array
 {
@@ -664,6 +761,18 @@
 
 -(void)sendLocalNotificationWithDate:(NSDate *)date
 {
+    
+    //拿到 存有 所有 推送的数组
+    NSArray * notiArray = [[UIApplication sharedApplication] scheduledLocalNotifications];
+    //遍历这个数组 根据 key 拿到我们想要的 UILocalNotification
+    for (UILocalNotification * loc in notiArray) {
+        if ([[loc.userInfo objectForKey:@"barcode"] isEqualToString:self.judgeStr]) {
+            //如果该产品已存在推送，取消该推送
+            [[UIApplication sharedApplication] cancelLocalNotification:loc];
+        }
+    }
+    
+    
     //找到documents文件所在的路径
     NSArray *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     //获取第一个文件夹的路径
@@ -688,14 +797,8 @@
         }
     }
     
-//    NSDate *now = [NSDate date];
-//    NSTimeInterval timeInterval = [date timeIntervalSinceDate:now];
-//    int remainingDays = 0;
-//    if (timeInterval <= 0) {
-//        remainingDays = 0;
-//    }else{
-//        remainingDays = ((int)timeInterval)/(3600*24)+1;
-//    }
+
+
     
     
     //把testPlist文件加入
@@ -706,10 +809,19 @@
     //            [array setArray:arrayFromfile];
     [array addObjectsFromArray:arrayFromfile];
     
+    //判断保质期是不是在10天内
+    NSDate *now = [NSDate date];
+    NSTimeInterval timeInterval = [date timeIntervalSinceDate:now];
+    int remainingDays = ((int)timeInterval)/(3600*24)+1;
+    if (remainingDays <= 11) {
+        //在10天内，则发送日期为第二天9点
+        self.fireDate = [NSDate dateWithTimeInterval:32400-(remainingDays-1)*86400 sinceDate:date];
+        //self.fireDate = [NSDate dateWithTimeIntervalSinceNow:60];//60秒后触发
+    }else{
+        //self.fireDate = [NSDate dateWithTimeInterval:32400 sinceDate:date];//过期日9点
+        self.fireDate = [NSDate dateWithTimeInterval:-831600 sinceDate:date];//提前10天9点
+    }
     
-    //self.fireDate = [NSDate dateWithTimeIntervalSinceNow:60];//60秒后触发
-    //self.fireDate = [NSDate dateWithTimeInterval:32400 sinceDate:date];//过期日9点
-    self.fireDate = [NSDate dateWithTimeInterval:-831600 sinceDate:date];//提前10天9点
     NSDictionary *dict = @{@"barcode":self.judgeStr,@"firedate":self.fireDate,@"productname":self.productName,@"imageUrl":self.imageUrl,@"duedate":date};
     NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:dict];
     
@@ -762,12 +874,13 @@
     //notification.repeatInterval = kCFCalendarUnitMinute;
     
     // 通知内容
-    notification.alertBody =  @"该产品过期了";
+    notification.alertBody =  @"产品即将过期";
     notification.applicationIconBadgeNumber = 1;
     // 通知被触发时播放的声音
     notification.soundName = UILocalNotificationDefaultSoundName;
     // 通知参数
-    NSDictionary *userDict = [NSDictionary dictionaryWithObject:self.judgeStr forKey:@"barcode"];
+    NSDictionary *userDict = [NSDictionary dictionaryWithObjectsAndKeys:self.judgeStr,@"barcode",self.productName,@"productname",date,@"duedate", nil];
+
     notification.userInfo = userDict;
     // 执行通知
     [[UIApplication sharedApplication] scheduleLocalNotification:notification];
@@ -874,6 +987,16 @@
     
 }
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    //如果是从消息页面跳转过来，直接点击到期日按钮
+    if ([self.onlyStr isEqualToString:@"消息"]) {
+        [NSThread sleepForTimeInterval:0.2];//停0.2秒，强化用户体验
+        [self duedataClick];
+        self.onlyStr = nil;
+    }
+}
 
 -(void)viewWillDisappear:(BOOL)animated
 {
@@ -966,7 +1089,7 @@
             
         }
     }
-    NSLog(@"!!!!%@",[array firstObject]);
+    //NSLog(@"!!!!%@",[array firstObject]);
     //相同c码或条码的数据，只获取第一个
     self.wantDic = [array firstObject];
     
@@ -979,7 +1102,7 @@
     }
     //NSLog(@"%@",self.textArray);
 #pragma 手动增加商品评价
-    [self.textArray addObject:@"商品评价"];//增加商品评价子标题
+//    [self.textArray addObject:@"商品评价"];//增加商品评价子标题
     
     
     NSArray * baseInfoArray = [self.wantDic objectForKey:@"BaseInfo"];
@@ -1020,6 +1143,12 @@
         //NSLog(@"%@",dataArray);
         for (NSDictionary *innerDic in dataArray) {
             ProductInfoModel *productModel = [[ProductInfoModel alloc] initWithDict:innerDic];
+            //如果存在过期日期，则删除到期日期按钮
+//            if ([productModel.key isEqual:@"ExpireDate"]) {
+//                [self.duedataButton removeFromSuperview];
+//                [self.duedataImageView removeFromSuperview];
+//            }
+            
             //如果改model中有中文标签的话， 就不加到数组中（如果key ＝ CNProofSample 则删除该cell 并且显示中文标签，并将该url放在中文标签中）
             if ([productModel.key isEqual:@"CNProofSample"]) {
                 
@@ -1091,7 +1220,7 @@
         self.str = self.barCode;
         self.requestUrl = [NSString stringWithFormat:@"%@/%@%@",kUrl,kbarCodeUrl,self.barCode];
         self.paramDic = nil;
-        NSLog(@"!!!!%@",self.requestUrl);
+        //NSLog(@"!!!!%@",self.requestUrl);
     }
     
     
@@ -1103,8 +1232,10 @@
     NSString *stringInt = [NSString stringWithFormat:@"%d",0];
     [manager.requestSerializer setValue:stringInt forHTTPHeaderField:@"Client-Flag"];
     [manager POST:self.requestUrl parameters:self.paramDic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        //NSLog(@"%@",responseObject);
-        
+        //NSLog(@"!!%@",responseObject);
+        if ([responseObject[@"Result"]integerValue] !=0 ) {
+            return ;
+        }
         self.textArray = [NSMutableArray array];
         NSArray * a = [responseObject objectForKey:@"ProductInfo"];
         for (NSDictionary *dict in a) {
@@ -1115,6 +1246,9 @@
 #pragma mark - 手动添加商品详情
         //[self.textArray addObject:@"商品详情"];
         //        NSString * urlStr = nil;
+#pragma 手动增加商品评价
+//        [self.textArray addObject:@"商品评价"];//增加商品评价子标题
+        
         NSArray * baseInfoArray = [responseObject objectForKey:@"BaseInfo"];
         for (NSDictionary * innerDic in baseInfoArray) {
             if ([[innerDic objectForKey:@"key"] isEqualToString:@"MultiLabelProof"]) {
@@ -1211,7 +1345,22 @@
         [dateArray writeToFile:datePlistPath atomically:YES];
         
         
-        
+        NSArray * arrayFromfile = [NSArray arrayWithContentsOfFile:plistPath];
+        //获取本地所有数据，只为了获取wantDic用来设置到期推送
+        self.localArray = [NSMutableArray arrayWithArray: arrayFromfile];
+        NSMutableArray *mutalbeArray = [NSMutableArray array];
+        for (NSDictionary *dic in self.localArray) {
+            //当key为传入的c码或条码时，存入array
+            NSDictionary *dataDic = [dic objectForKey:self.judgeStr];
+            if (dataDic == nil) {
+                ;
+            }else{
+                [mutalbeArray addObject:dataDic];
+            }
+        }
+        //NSLog(@"!!!!%@",[array firstObject]);
+        //相同c码或条码的数据，只获取第一个
+        self.wantDic = [mutalbeArray firstObject];
         
         
         //如果saleFag值为1，已经完成涂层验证，0:未完成涂层验证
@@ -1234,8 +1383,54 @@
         for (NSDictionary *dic in arr) {
             NSMutableArray *smallArr = [NSMutableArray arrayWithCapacity:1];
             NSArray *dataArray = [dic objectForKey:@"data"];
-            for (NSDictionary *innerDic in dataArray) {
+            NSDate *date = [[NSDate alloc]init];
+            NSDate *productDate = [[NSDate alloc]init];
+            NSString *shelfLifeDays = [[NSString alloc]init];
+            shelfLifeDays = nil;
+            date = nil;
+            productDate = nil;
+            for (NSDictionary *innerDic in dataArray)
+            {
                 ProductInfoModel *productModel = [[ProductInfoModel alloc] initWithDict:innerDic];
+                
+                //获取生产日期和保质期
+                if ([productModel.key isEqual:@"ProductDate"]) {
+                    NSString *productTime = productModel.value;
+                    if (productTime.length > 7) {
+                        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                        [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+                        productDate = [dateFormatter dateFromString:productTime];
+                        //NSLog(@"111111%@",productDate);
+                    }else{
+                        NSString *productTime = [productModel.value stringByAppendingString:@"-01"];
+                        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                        [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+                        productDate = [dateFormatter dateFromString:productTime];
+                        //NSLog(@"222222%@",productDate);
+                    }
+                }
+                if ([productModel.key isEqual:@"ShelfLife"]) {
+                    NSString *shelfLife = productModel.value;
+                    NSRange range = [shelfLife rangeOfString:@"(日)"];
+                    if (range.location != NSNotFound) {
+                        shelfLifeDays = [shelfLife substringWithRange:NSMakeRange(0, range.location)];
+                    }else{
+                        shelfLifeDays = nil;
+                    }
+                    //NSLog(@"33333333%@",shelfLifeDays);
+                }
+                
+                //获取到期日期
+                if ([productModel.key isEqual:@"ExpireDate"]) {
+                    //删除到期日期按钮
+//                    [self.duedataButton removeFromSuperview];
+//                    [self.duedataImageView removeFromSuperview];
+                    NSString *dueDateStr = productModel.value;
+                    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+                    date = [dateFormatter dateFromString:dueDateStr];
+                }
+                
                 //如果改model中有中文标签的话， 就不加到数组中（如果key ＝ CNProofSample 则删除该cell 并且显示中文标签，并将该url放在中文标签中）
                 if ([productModel.key isEqual:@"CNProofSample"]) {
                     
@@ -1248,6 +1443,21 @@
                 }
                 
             }
+            
+            //如果存在保质期和生产日期，计算并设置过期日期
+            if (productDate && shelfLifeDays) {
+                NSInteger days = shelfLifeDays.integerValue;
+                NSDate *date = [productDate dateByAddingTimeInterval:days*24*60*60];
+                //NSLog(@"!!!!%@",date);
+                [self sendLocalNotificationWithDate:date];
+            }
+            //如果存在过期日期，直接设置过期日期
+            if (date) {
+                //NSLog(@"~~~~%@",date);
+                [self sendLocalNotificationWithDate:date];
+            }
+
+            
             [self.productInfoArray addObject:smallArr];
             //NSLog(@"%@",self.productInfoArray);
             
@@ -1638,9 +1848,9 @@
         return 0;
     }
     
-    if (section == 3) {
-        return 55;
-    }
+//    if (section == 3) {
+//        return 55;
+//    }
     if (section == tableView.numberOfSections - 1   ) {
         return 10;
     }
@@ -1655,9 +1865,9 @@
     
     
     
-    if (indexPath.section ==3) {
-        return 110;
-    }
+//    if (indexPath.section ==3) {
+//        return 110;
+//    }
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
             return 35;
@@ -1697,12 +1907,13 @@
     if (section == tableView.numberOfSections - 1) {//最后一个section
         
         
-        if (self.url == nil) {
-            return 0;
-        }else{
-            
-            return 1;
-        }
+//        if (self.url == nil) {
+//            return 0;
+//        }else{
+//            
+//            return 1;
+//        }
+        return  self.sectionArray.count;
     }
     
     if(section == 1){
@@ -1710,9 +1921,9 @@
         
         return [self.productInfoArray.firstObject count];
     }
-    if (section == 3) {//商品评价返回的cell个数;
-        return 1;
-    }
+//    if (section == 3) {//商品评价返回的cell个数;
+//        return 1;
+//    }
     
     else  {
         if (self.productInfoArray.count == 1) {
@@ -1753,7 +1964,7 @@
         cell = [[RecordDetailTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID];
     }
     
-    if (indexPath.section == 4)
+    if (indexPath.section == 3)
     {//中文标签行
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         cell.titleLabel.font = [UIFont boldSystemFontOfSize:14];
@@ -1892,28 +2103,31 @@
     {
         if (self.productInfoArray.count == 1) {
             ;
-        }else{
-            if (indexPath.section == 3) {
-                
-                EvaluateTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"evalueateID"];
-                
-                //                  cell.backgroundColor = [UIColor cyanColor];
-                cell.starImage.image = [UIImage imageNamed:@"星星"];
-                cell.comment.text = @"挺不错的";
-                NSString *str = @"18236953178";
-                
-                NSString *subStr = [str substringWithRange:NSMakeRange(3,4)];
-                cell.phoneNumber.text = [str stringByReplacingOccurrencesOfString:subStr withString:@"****"];
-                
-                cell.date.text = @"2015-01-02";
-                [cell.button setTitle:@"查看所有评价" forState:UIControlStateNormal];
-                
-                [cell.button addTarget:self action:@selector(cellButtonAction:) forControlEvents:UIControlEventTouchUpInside];
-                //                    cell.userInteractionEnabled = NO;
-                //                    cell.backgroundColor = [UIColor cyanColor];
-                return cell;
-            }else
-            {//报检信息
+        }
+//        else{
+//            if (indexPath.section == 3) {
+//                
+//                EvaluateTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"evalueateID"];
+//                
+//                //                  cell.backgroundColor = [UIColor cyanColor];
+//                cell.starImage.image = [UIImage imageNamed:@"星星"];
+//                cell.comment.text = @"挺不错的";
+//                NSString *str = @"18236953178";
+//                
+//                NSString *subStr = [str substringWithRange:NSMakeRange(3,4)];
+//                cell.phoneNumber.text = [str stringByReplacingOccurrencesOfString:subStr withString:@"****"];
+//                
+//                cell.date.text = @"2015-01-02";
+//                [cell.button setTitle:@"查看所有评价" forState:UIControlStateNormal];
+//                
+//                [cell.button addTarget:self action:@selector(cellButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+//                //                    cell.userInteractionEnabled = NO;
+//                //                    cell.backgroundColor = [UIColor cyanColor];
+//                return cell;
+//            }
+            else
+            {
+                //报检信息
                 //section == 2
                 ProductInfoModel *productModel = self.productInfoArray.lastObject[indexPath.row];
                 if (productModel.url != nil) {
@@ -1929,7 +2143,7 @@
                 [cell setTitleLabelText:productModel.text];
                 [cell setContentLabelText:productModel.value];
             }
-        }
+        //}
         [cell calculateheight];
     }
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
@@ -1979,12 +2193,13 @@
 //            }
         }
         
-    }else if (indexPath.section == 3){
-        
-//        //NSLog(@"点击l第三个section");
-//        cell.selectionStyle =UITableViewCellSelectionStyleNone;
-        
     }
+//    else if (indexPath.section == 3){
+//        
+////        //NSLog(@"点击l第三个section");
+////        cell.selectionStyle =UITableViewCellSelectionStyleNone;
+//        
+//    }
     
     else{
         //NSLog(@"%@",cell.titleLabel.text);

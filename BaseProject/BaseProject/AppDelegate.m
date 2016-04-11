@@ -13,9 +13,10 @@
 #import "RecordDetailViewController.h"
 #import "ScanRecordViewController.h"
 #import "MainViewController.h"
+#import <CoreLocation/CoreLocation.h>
 
 @interface AppDelegate ()
-
+@property (nonatomic, strong) CLLocationManager *manager;
 @end
 
 @implementation AppDelegate
@@ -38,6 +39,23 @@
     
     //初始化方法
     [self initializeWithApplication:application];
+    
+    //初始化manager对象
+    self.manager = [[CLLocationManager alloc] init];
+    //设置代理
+    //self.manager.delegate = self;
+    //征求用户的同意(假定同意)
+    //iOS8+才开始征求用户的同意
+    if ([[UIDevice currentDevice].systemVersion doubleValue] > 8.0) {
+        //征求用户是否愿意前台和后台都定位
+        //        [self.manager requestAlwaysAuthorization];
+        //征求用户是否愿意只在前台定位(Info.plist添加key)
+        [self.manager requestWhenInUseAuthorization];
+    } else {
+        //直接定位(不需要征求用户同意)
+        //[self.manager startUpdatingLocation];
+    }
+
     
     //设置第一次启动进入欢迎页面
     NSUserDefaults * settings1 = [NSUserDefaults standardUserDefaults];

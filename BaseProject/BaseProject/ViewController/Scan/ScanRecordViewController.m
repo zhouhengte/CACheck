@@ -180,7 +180,7 @@
 -(void)addPic
 {
     [self.tableView removeFromSuperview];
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(50, 200, 103.5, 79)];
+    UIImageView *imageView = [[UIImageView alloc] init];
     //    UIImageView *imageView = [[UIImageView alloc] init];
     
     //    imageView.backgroundColor= [UIColor redColor];

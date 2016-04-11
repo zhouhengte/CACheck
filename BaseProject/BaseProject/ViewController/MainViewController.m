@@ -7,6 +7,7 @@
 //
 
 #import "MainViewController.h"
+#import "JSBadgeView.h"
 
 #define kScreenScale (self.view.bounds.size.height/568.0)
 
@@ -23,6 +24,7 @@
 @property (strong, nonatomic) UILabel *messageLabel;
 @property (strong, nonatomic) UIImageView *horiztonImageView;
 @property (strong, nonatomic) UIImageView *verticalImageView;
+@property (strong, nonatomic) JSBadgeView *messageBadgeView;
 
 @property (nonatomic ,strong)NSUserDefaults *userDefaults;
 
@@ -88,6 +90,12 @@
             make.right.mas_equalTo(self.view).mas_equalTo(-53*kScreenScale);
             make.size.mas_equalTo(self.scanRecordButton);
         }];
+        
+        self.messageBadgeView = [[JSBadgeView alloc]initWithParentView:_messageButton alignment:JSBadgeViewAlignmentTopRight];
+        self.messageBadgeView.badgeBackgroundColor = [UIColor clearColor];
+        self.messageBadgeView.badgePositionAdjustment = CGPointMake(-15, 15);
+        //self.messageBadgeView.badgeStrokeWidth = 2;
+        
     }
     return _messageButton;
 }
@@ -230,7 +238,7 @@
     [self horiztonImageView];
     [self verticalImageView];
     
-    
+    NSLog(@"%f,%f",kScreenHeight,kScreenWidth);
     //友盟获取测试用设备识别信息的代码
 //    Class cls = NSClassFromString(@"UMANUtil");
 //    SEL deviceIDSelector = @selector(openUDIDString);
@@ -252,6 +260,29 @@
     [MobClick beginLogPageView:@"主页面"];//("PageOne"为页面名称，可自定义)
     
     [self.navigationController setNavigationBarHidden:YES];
+    
+    
+    NSInteger badge = [UIApplication sharedApplication].applicationIconBadgeNumber;
+    if (badge > 0) {
+        self.messageBadgeView.badgeText = @" ";
+        UIImage *redPoint = [UIImage imageNamed:@"椭圆 2"];
+        UIImageView *redPointImageView = [[UIImageView alloc]initWithImage:redPoint];
+        [self.messageBadgeView addSubview:redPointImageView];
+        redPointImageView.frame = CGRectMake(11, -7, 12, 12);
+
+    }else{
+        self.messageBadgeView.badgeText = @"";
+        self.messageBadgeView.hidden = YES;
+    }
+    
+//    self.userDefaults = [NSUserDefaults standardUserDefaults];
+//    NSString *isClick = [self.userDefaults objectForKey:@"messageisclick"];
+//    if ([isClick isEqualToString:@"yes"]) {
+//        self.messageBadgeView.badgeText = @"";
+//    }else{
+//        self.messageBadgeView.badgeText = @" ";
+//    }
+    
     
 }
 
@@ -338,6 +369,10 @@
 
 -(void)goToMessageViewController
 {
+    self.messageBadgeView.badgeText = @"";
+    self.messageBadgeView.hidden = YES;
+    //[self.userDefaults setObject:@"yes" forKey:@"messageisclick"];
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     [self.navigationController pushViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"messageViewController"] animated:YES];
 }
 -(void)goToPreferenceViewController
