@@ -26,6 +26,7 @@
 -(void)setDate:(NSDate *)date
 {
     _date = date;
+    
     NSDate *now = [NSDate date];
     NSTimeInterval timeInterval = [date timeIntervalSinceDate:now];
     if (timeInterval <= 0) {
