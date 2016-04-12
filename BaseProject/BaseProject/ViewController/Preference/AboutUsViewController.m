@@ -92,6 +92,25 @@
     [super viewWillAppear:animated];
     [MobClick beginLogPageView:@"关于我们"];//("PageOne"为页面名称，可自定义)
     
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    if ([[userDefaults objectForKey:@"suggest"]isEqualToString:@"提交成功"]){
+        MBProgressHUD *Hud = [[MBProgressHUD alloc] initWithView:self.view];
+        [self.view addSubview:Hud];
+        Hud.labelText = @"提交成功";
+        Hud.labelFont = [UIFont systemFontOfSize:14];
+        Hud.mode = MBProgressHUDModeText;
+        //            hud.yOffset = 250;
+        [Hud showAnimated:YES whileExecutingBlock:^{
+            sleep(1.5);
+            
+        } completionBlock:^{
+            [Hud removeFromSuperview];
+            [userDefaults setObject:@"" forKey:@"suggest"];
+            
+        }];
+        
+    }
+    
 //    self.btn = [UIButton buttonWithType:UIButtonTypeCustom];
 //    self.btn.frame = CGRectMake(0, 0, 80, 44);
 //    self.btn.userInteractionEnabled = YES;

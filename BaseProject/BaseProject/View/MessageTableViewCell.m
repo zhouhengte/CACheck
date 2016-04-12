@@ -42,6 +42,8 @@
     NSString *imageUrl = messageDic[@"imageUrl"];
     NSURL *url = [NSURL URLWithString:imageUrl];
     [self.leftImageView setImageWithURL:url placeholderImage:[UIImage imageNamed:@"icon1024"]];
+    self.leftImageView.contentMode = UIViewContentModeScaleAspectFill;
+    self.leftImageView.clipsToBounds = YES;
     
     NSDate *date = messageDic[@"firedate"];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];

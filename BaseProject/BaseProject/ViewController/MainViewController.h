@@ -9,5 +9,5 @@
 #import "ViewController.h"
 
 @interface MainViewController : ViewController
-
+@property(nonatomic ,strong) NSString *from;
 @end

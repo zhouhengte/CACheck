@@ -10,6 +10,7 @@
 #import "PetnameViewController.h"
 #import "GenderViewController.h"
 #import "PasswordViewController.h"
+#import "MainViewController.h"
 
 @interface PersonalInformationViewController () <UITableViewDataSource,UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -208,7 +209,8 @@
         [[NSUserDefaults standardUserDefaults] setObject:@"退出登录" forKey:@"logout"];
         [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"login"];
         
-        ViewController *mainVC =[self.storyboard instantiateViewControllerWithIdentifier:@"mainViewController"];
+        MainViewController *mainVC =[self.storyboard instantiateViewControllerWithIdentifier:@"mainViewController"];
+        mainVC.from = @"退出登录";
         [self.navigationController pushViewController:mainVC animated:YES];
 //        //将mainVC设为导航栏唯一页面，使其无法右滑返回
 //        [self.navigationController setViewControllers:@[mainVC]];

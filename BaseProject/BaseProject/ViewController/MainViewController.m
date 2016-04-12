@@ -240,18 +240,18 @@
     
     NSLog(@"%f,%f",kScreenHeight,kScreenWidth);
     //友盟获取测试用设备识别信息的代码
-//    Class cls = NSClassFromString(@"UMANUtil");
-//    SEL deviceIDSelector = @selector(openUDIDString);
-//    NSString *deviceID = nil;
-//    if(cls && [cls respondsToSelector:deviceIDSelector]){
-//        deviceID = [cls performSelector:deviceIDSelector];
-//    }
-//    NSData* jsonData = [NSJSONSerialization dataWithJSONObject:@{@"oid" : deviceID}
-//                                                       options:NSJSONWritingPrettyPrinted
-//                                                         error:nil];
-//    
-//    NSLog(@"%@", [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]);
-
+    //    Class cls = NSClassFromString(@"UMANUtil");
+    //    SEL deviceIDSelector = @selector(openUDIDString);
+    //    NSString *deviceID = nil;
+    //    if(cls && [cls respondsToSelector:deviceIDSelector]){
+    //        deviceID = [cls performSelector:deviceIDSelector];
+    //    }
+    //    NSData* jsonData = [NSJSONSerialization dataWithJSONObject:@{@"oid" : deviceID}
+    //                                                       options:NSJSONWritingPrettyPrinted
+    //                                                         error:nil];
+    //
+    //    NSLog(@"%@", [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding]);
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -269,19 +269,19 @@
         UIImageView *redPointImageView = [[UIImageView alloc]initWithImage:redPoint];
         [self.messageBadgeView addSubview:redPointImageView];
         redPointImageView.frame = CGRectMake(11, -7, 12, 12);
-
+        
     }else{
         self.messageBadgeView.badgeText = @"";
         self.messageBadgeView.hidden = YES;
     }
     
-//    self.userDefaults = [NSUserDefaults standardUserDefaults];
-//    NSString *isClick = [self.userDefaults objectForKey:@"messageisclick"];
-//    if ([isClick isEqualToString:@"yes"]) {
-//        self.messageBadgeView.badgeText = @"";
-//    }else{
-//        self.messageBadgeView.badgeText = @" ";
-//    }
+    //    self.userDefaults = [NSUserDefaults standardUserDefaults];
+    //    NSString *isClick = [self.userDefaults objectForKey:@"messageisclick"];
+    //    if ([isClick isEqualToString:@"yes"]) {
+    //        self.messageBadgeView.badgeText = @"";
+    //    }else{
+    //        self.messageBadgeView.badgeText = @" ";
+    //    }
     
     
 }
@@ -292,56 +292,63 @@
     
     if (self.navigationController.viewControllers.count > 1) {
         self.userDefaults = [NSUserDefaults standardUserDefaults];
-        
-        //        if ([[self.userDefaults objectForKey:@"regist"] isEqualToString:@"注册成功"]) {
-        //            MBProgressHUD *Hud = [[MBProgressHUD alloc] initWithView:self.view];
-        //            [self.view addSubview:Hud];
-        //            Hud.labelText = @"注册成功";
-        //            Hud.labelFont = [UIFont systemFontOfSize:14];
-        //            Hud.mode = MBProgressHUDModeText;
-        //
-        //            //            hud.yOffset = 250;
-        //
-        //
-        //            [Hud showAnimated:YES whileExecutingBlock:^{
-        //                sleep(1.5);
-        //
-        //            } completionBlock:^{
-        //                [Hud removeFromSuperview];
-        //
-        //
-        //            }];
-        //
-        //        }
-        
-        if ([[self.userDefaults objectForKey:@"login"] isEqualToString: @"登录成功"]) {
-            MBProgressHUD *Hud = [[MBProgressHUD alloc] initWithView:self.view];
-            [self.view addSubview:Hud];
-            Hud.labelText = @"登录成功";
-            Hud.labelFont = [UIFont systemFontOfSize:14];
-            Hud.mode = MBProgressHUDModeText;
-            //            hud.yOffset = 250;
-            [Hud showAnimated:YES whileExecutingBlock:^{
-                sleep(1.5);
+        if ([self.from isEqualToString:@"注册"]) {
+            if ([[self.userDefaults objectForKey:@"regist"] isEqualToString:@"注册成功"]) {
+                MBProgressHUD *Hud = [[MBProgressHUD alloc] initWithView:self.view];
+                [self.view addSubview:Hud];
+                Hud.labelText = @"注册成功";
+                Hud.labelFont = [UIFont systemFontOfSize:14];
+                Hud.mode = MBProgressHUDModeText;
+                //            hud.yOffset = 250;
+                [Hud showAnimated:YES whileExecutingBlock:^{
+                    sleep(1.5);
+                    
+                } completionBlock:^{
+                    [Hud removeFromSuperview];
+                    self.from = nil;
+                    
+                }];
                 
-            } completionBlock:^{
-                [Hud removeFromSuperview];
-            }];
+            }
+            
         }
-        if ([[self.userDefaults objectForKey:@"logout"] isEqualToString:@"退出登录"]) {
-            MBProgressHUD *Hud = [[MBProgressHUD alloc] initWithView:self.view];
-            [self.view addSubview:Hud];
-            Hud.labelText = @"已退出登录";
-            Hud.labelFont = [UIFont systemFontOfSize:14];
-            Hud.mode = MBProgressHUDModeText;
-            //            hud.yOffset = 250;
-            [Hud showAnimated:YES whileExecutingBlock:^{
-                sleep(1.5);
-                
-            } completionBlock:^{
-                [Hud removeFromSuperview];
-            }];
+        
+        if ([self.from isEqualToString:@"登录成功"]) {
+            if ([[self.userDefaults objectForKey:@"login"] isEqualToString: @"登录成功"]) {
+                MBProgressHUD *Hud = [[MBProgressHUD alloc] initWithView:self.view];
+                [self.view addSubview:Hud];
+                Hud.labelText = @"登录成功";
+                Hud.labelFont = [UIFont systemFontOfSize:14];
+                Hud.mode = MBProgressHUDModeText;
+                //            hud.yOffset = 250;
+                [Hud showAnimated:YES whileExecutingBlock:^{
+                    sleep(1.5);
+                    
+                } completionBlock:^{
+                    [Hud removeFromSuperview];
+                    self.from = nil;
+                }];
+            }
         }
+        if ([self.from isEqualToString:@"退出登录"]) {
+            if ([[self.userDefaults objectForKey:@"logout"] isEqualToString:@"退出登录"])
+            {
+                MBProgressHUD *Hud = [[MBProgressHUD alloc] initWithView:self.view];
+                [self.view addSubview:Hud];
+                Hud.labelText = @"已退出登录";
+                Hud.labelFont = [UIFont systemFontOfSize:14];
+                Hud.mode = MBProgressHUDModeText;
+                //            hud.yOffset = 250;
+                [Hud showAnimated:YES whileExecutingBlock:^{
+                    sleep(1.5);
+                    
+                } completionBlock:^{
+                    [Hud removeFromSuperview];
+                    self.from = nil;
+                }];
+            }
+        }
+        
     }
     //从navigationController中删除别的视图控制器，使该页面无法右滑跳转
     [self.navigationController setViewControllers:@[self]];
@@ -391,13 +398,13 @@
 }
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end

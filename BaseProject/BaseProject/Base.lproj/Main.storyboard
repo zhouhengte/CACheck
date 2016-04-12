@@ -360,12 +360,18 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="wFe-yx-s3p" firstAttribute="centerY" secondItem="BX9-ev-PWE" secondAttribute="centerY" id="0Ub-2a-bES"/>
+                                    <constraint firstItem="q2F-up-xjy" firstAttribute="leading" secondItem="wFe-yx-s3p" secondAttribute="trailing" constant="20" id="4r3-Ai-1EB"/>
                                     <constraint firstItem="q2F-up-xjy" firstAttribute="centerY" secondItem="BX9-ev-PWE" secondAttribute="centerY" id="GRz-w7-lUR"/>
                                     <constraint firstItem="q2F-up-xjy" firstAttribute="width" secondItem="BX9-ev-PWE" secondAttribute="width" multiplier="0.7" id="ICH-DT-6iA"/>
                                     <constraint firstItem="wFe-yx-s3p" firstAttribute="leading" secondItem="BX9-ev-PWE" secondAttribute="leading" constant="20" id="MN5-LX-9FF"/>
                                     <constraint firstAttribute="trailing" secondItem="q2F-up-xjy" secondAttribute="trailing" constant="30" id="h9Q-fs-IhF"/>
                                     <constraint firstAttribute="height" constant="50" id="phc-6n-0vm"/>
                                 </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="ICH-DT-6iA"/>
+                                    </mask>
+                                </variation>
                             </view>
                             <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IDP-tC-nIZ">
                                 <rect key="frame" x="0.0" y="135" width="600" height="50"/>
@@ -389,8 +395,11 @@
                                             </mask>
                                         </variation>
                                     </textField>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sbd-WR-A22">
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sbd-WR-A22">
                                         <rect key="frame" x="420" y="11" width="150" height="28"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="100" id="yld-EX-ppe"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                         <state key="normal" title="点击获取">
                                             <color key="titleColor" red="0.18383777070000001" green="0.62696141080000001" blue="0.99388415399999996" alpha="1" colorSpace="calibratedRGB"/>
@@ -406,15 +415,19 @@
                                     <constraint firstItem="sbd-WR-A22" firstAttribute="width" secondItem="IDP-tC-nIZ" secondAttribute="width" multiplier="0.25" id="AZg-fC-BBf"/>
                                     <constraint firstAttribute="trailing" secondItem="sbd-WR-A22" secondAttribute="trailing" constant="30" id="Chw-V9-hd8"/>
                                     <constraint firstItem="W7y-Rc-cNJ" firstAttribute="leading" secondItem="IDP-tC-nIZ" secondAttribute="leading" constant="20" id="Roa-3A-SO3"/>
+                                    <constraint firstItem="Q2K-hf-rqc" firstAttribute="leading" secondItem="W7y-Rc-cNJ" secondAttribute="trailing" constant="20" id="SKk-84-PH8"/>
                                     <constraint firstItem="Q2K-hf-rqc" firstAttribute="centerY" secondItem="IDP-tC-nIZ" secondAttribute="centerY" id="ZRZ-Py-ukQ"/>
                                     <constraint firstItem="sbd-WR-A22" firstAttribute="centerY" secondItem="IDP-tC-nIZ" secondAttribute="centerY" id="eiS-DV-KeG"/>
                                     <constraint firstItem="W7y-Rc-cNJ" firstAttribute="centerY" secondItem="IDP-tC-nIZ" secondAttribute="centerY" id="obY-7v-gXy"/>
+                                    <constraint firstItem="sbd-WR-A22" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Q2K-hf-rqc" secondAttribute="trailing" constant="10" id="rdc-6m-vjU"/>
                                     <constraint firstAttribute="trailing" secondItem="sbd-WR-A22" secondAttribute="trailing" constant="30" id="s0J-Z8-vPe"/>
                                     <constraint firstItem="sbd-WR-A22" firstAttribute="height" secondItem="IDP-tC-nIZ" secondAttribute="height" multiplier="0.2" id="xwu-qc-dbh"/>
                                     <constraint firstAttribute="height" constant="50" id="zaf-d2-A89"/>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
+                                        <exclude reference="2D8-c2-Bod"/>
+                                        <exclude reference="AZg-fC-BBf"/>
                                         <exclude reference="Chw-V9-hd8"/>
                                         <exclude reference="xwu-qc-dbh"/>
                                     </mask>
@@ -442,8 +455,14 @@
                                     <constraint firstItem="FUd-KP-qoR" firstAttribute="width" secondItem="UrM-wr-a47" secondAttribute="width" multiplier="0.7" id="cyD-I9-5ec"/>
                                     <constraint firstAttribute="height" constant="50" id="fyx-Oj-M2m"/>
                                     <constraint firstAttribute="trailing" secondItem="FUd-KP-qoR" secondAttribute="trailing" constant="30" id="gLw-nZ-ypu"/>
+                                    <constraint firstItem="FUd-KP-qoR" firstAttribute="leading" secondItem="JAS-RF-11D" secondAttribute="trailing" constant="20" id="hLs-h4-WR3"/>
                                     <constraint firstItem="FUd-KP-qoR" firstAttribute="centerY" secondItem="UrM-wr-a47" secondAttribute="centerY" id="wa4-hd-0Zh"/>
                                 </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="cyD-I9-5ec"/>
+                                    </mask>
+                                </variation>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IsR-S7-e8M">
                                 <rect key="frame" x="30" y="266" width="540" height="40"/>
@@ -475,6 +494,11 @@
                             <constraint firstAttribute="trailing" secondItem="IDP-tC-nIZ" secondAttribute="trailing" id="uH9-iy-dRe"/>
                             <constraint firstItem="IsR-S7-e8M" firstAttribute="leading" secondItem="neA-Cg-c6V" secondAttribute="leadingMargin" constant="10" id="xSA-wB-yaN"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="bnH-RC-Rjy"/>
+                            </mask>
+                        </variation>
                     </view>
                     <connections>
                         <outlet property="passwordTextField" destination="FUd-KP-qoR" id="SQh-Vu-vKu"/>

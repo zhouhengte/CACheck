@@ -8,6 +8,7 @@
 
 #import "RegistViewController.h"
 #import "NSString+MD5.h"
+#import "MainViewController.h"
 
 @interface RegistViewController ()
 @property (weak, nonatomic) IBOutlet UIButton *registButton;
@@ -221,17 +222,18 @@
         NSLog(@"%@",responseObject);
         NSString *str = responseObject[@"FailInfo"];
         if ([responseObject[@"Result"] integerValue] == 0) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"注册成功" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-            [alert show];
-            NSLog(@"注册成功!");
+//            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"注册成功" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+//            [alert show];
+//            NSLog(@"注册成功!");
             //存储用户信息
             [self saveNSUserDefaultsWithResponseObject:responseObject andTask:task];
             NSUserDefaults *userDefault = [NSUserDefaults standardUserDefaults];
             [userDefault setObject:responseObject[@"username"] forKey:@"username"];
             [userDefault setObject:responseObject[@"roleid"] forKey:@"roleid"];
-//            ViewController *mainVC =[self.storyboard instantiateViewControllerWithIdentifier:@"mainViewController"];
-//            [self.navigationController pushViewController:mainVC animated:YES];
-            //
+            MainViewController *mainVC =[self.storyboard instantiateViewControllerWithIdentifier:@"mainViewController"];
+            mainVC.from = @"注册";
+            [self.navigationController pushViewController:mainVC animated:YES];
+            
             NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
             [userDefaults setObject:@"注册成功" forKey:@"regist"];
             
