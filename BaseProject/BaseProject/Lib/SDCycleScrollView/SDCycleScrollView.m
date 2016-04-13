@@ -75,6 +75,7 @@ NSString * const ID = @"cycleCell";
     _pageControlDotSize = CGSizeMake(10, 10);
     _pageControlStyle = SDCycleScrollViewPageContolStyleAnimated;
     
+    
     self.backgroundColor = [UIColor lightGrayColor];
     
 }

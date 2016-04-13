@@ -51,6 +51,10 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
+    self.tableView.tableFooterView = [[UIView alloc] init];
+    self.tableView.separatorColor = UIColorFromRGB(0xe8e8e5);
+    // tableViewCell 分割线
+    //self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     //重新设置导航栏，隐藏原生导航栏，手动绘制新的导航栏，使右滑手势跳转时能让导航栏跟着变化
     [self setNavigationBar];

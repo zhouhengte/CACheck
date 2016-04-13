@@ -18,6 +18,7 @@
 #import "WebViewController.h"
 #import "DueDateView.h"
 #import "JSBadgeView.h"
+//#import "HYBMoveDetailController.h"
 
 
 @interface RecordDetailViewController ()<UITableViewDataSource, UITableViewDelegate,SDCycleScrollViewDelegate>
@@ -65,6 +66,8 @@
 @property (nonatomic , strong)NSString *imageUrl;
 @property (nonatomic , strong)JSBadgeView *duedateBadgeView;
 @property (nonatomic , strong)UIImageView *redPointImageView;//自定义红点，用于缩小后的红点，需要手动添加和移除
+
+@property (nonatomic , assign)CGSize titleSize;//标题大小
 
 @end
 
@@ -126,7 +129,11 @@
     self.tableView.dataSource = self;
     self.tableView.alwaysBounceVertical = YES;
     self.tableView.bounces = NO;
-    self.tableView.tableFooterView = [[UIView alloc] init];
+
+//    UIView *footView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenHeight)];
+//    footView.backgroundColor = [UIColor groupTableViewBackgroundColor];
+//    [self.tableView setTableFooterView:footView];
+//    //self.tableView.tableFooterView = [[UIView alloc] init];
     
     [self.view addSubview:self.tableView];
     
@@ -228,14 +235,26 @@
 -(void)setDuedataButton
 {
     self.duedataButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    //self.duedataButton.backgroundColor = [UIColor yellowColor];
     [self.view addSubview:self.duedataButton];
     [self.duedataButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(27);
-        make.right.mas_equalTo(-16);
-        make.size.mas_equalTo(CGSizeMake(29, 29));
+        make.top.right.mas_equalTo(0);
+        //make.right.mas_equalTo(-11);
+        make.size.mas_equalTo(CGSizeMake(51, 61));
     }];
     [self.duedataButton addTarget:self action:@selector(duedataClick) forControlEvents:UIControlEventTouchUpInside];
-    [self.duedataButton setBackgroundImage:[UIImage imageNamed:@"返回bg"] forState:UIControlStateNormal];
+    //[self.duedataButton setBackgroundImage:[UIImage imageNamed:@"返回bg"] forState:UIControlStateNormal];
+    
+    UIImageView *buttonBackgroundImageView = [[UIImageView alloc]init];
+    buttonBackgroundImageView.image = [UIImage imageNamed:@"返回bg"];
+    [self.duedataButton addSubview:buttonBackgroundImageView];
+    [buttonBackgroundImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(6.5);
+        make.bottom.mas_equalTo(-6.5);
+        make.size.mas_equalTo(CGSizeMake(29, 29));
+    }];
+    
+    //self.duedataButton.contentEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10);
     
     self.duedataImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"闹钟2"]];
     
@@ -273,8 +292,8 @@
     
     [self.view addSubview:self.duedataImageView];
     [self.duedataImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(32);
-        make.right.mas_equalTo(-20);
+        make.top.mas_equalTo(31);
+        make.right.mas_equalTo(-19);
         make.size.mas_equalTo(CGSizeMake(22, 18));
     }];
     
@@ -1069,6 +1088,16 @@
 
 
 -(void)getLocalData{
+    
+    //此处加判断， 如果传过来的str超过20位 则赋值给codeStr，否则赋给barStr
+    if (self.judgeStr != nil) {
+        if (self.judgeStr.length >= 20) {
+            self.codeStr = self.judgeStr;
+        }else{
+            self.barCode = self.judgeStr;
+        }
+    }
+    
     NSArray *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     
     NSString *filePath = [path objectAtIndex:0];
@@ -1172,9 +1201,9 @@
 
 -(void)getDataUrl
 {
-    //此处加判断， 如果传过来的str带有28位 则赋值给codeStr，否则赋给barStr
+    //此处加判断， 如果传过来的str超过20位 则赋值给codeStr，否则赋给barStr
     if (self.judgeStr != nil) {
-        if (self.judgeStr.length == 28) {
+        if (self.judgeStr.length >= 20) {
             self.codeStr = self.judgeStr;
         }else{
             self.barCode = self.judgeStr;
@@ -1385,8 +1414,8 @@
             NSArray *dataArray = [dic objectForKey:@"data"];
             NSDate *date = [[NSDate alloc]init];
             NSDate *productDate = [[NSDate alloc]init];
-            NSString *shelfLifeDays = [[NSString alloc]init];
-            shelfLifeDays = nil;
+            //NSString *shelfLifeDays = [[NSString alloc]init];
+            int shelfLifeDays = 0;
             date = nil;
             productDate = nil;
             for (NSDictionary *innerDic in dataArray)
@@ -1402,20 +1431,37 @@
                         productDate = [dateFormatter dateFromString:productTime];
                         //NSLog(@"111111%@",productDate);
                     }else{
-                        NSString *productTime = [productModel.value stringByAppendingString:@"-01"];
-                        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-                        [dateFormatter setDateFormat:@"yyyy-MM-dd"];
-                        productDate = [dateFormatter dateFromString:productTime];
-                        //NSLog(@"222222%@",productDate);
+                        if (productTime.length > 4) {
+                            NSString *productTime = [productModel.value stringByAppendingString:@"-01"];
+                            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                            [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+                            productDate = [dateFormatter dateFromString:productTime];
+                            //NSLog(@"222222%@",productDate);
+                        }else{
+                            NSString *productTime = [productModel.value stringByAppendingString:@"-01-01"];
+                            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                            [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+                            productDate = [dateFormatter dateFromString:productTime];
+                        }
+
                     }
                 }
                 if ([productModel.key isEqual:@"ShelfLife"]) {
                     NSString *shelfLife = productModel.value;
                     NSRange range = [shelfLife rangeOfString:@"(日)"];
                     if (range.location != NSNotFound) {
-                        shelfLifeDays = [shelfLife substringWithRange:NSMakeRange(0, range.location)];
+                        shelfLifeDays = [shelfLife substringWithRange:NSMakeRange(0, range.location)].intValue;
                     }else{
-                        shelfLifeDays = nil;
+                        range = [shelfLife rangeOfString:@"(月)"];
+                        if (range.location != NSNotFound) {
+                            shelfLifeDays = [shelfLife substringWithRange:NSMakeRange(0, range.location)].intValue * 30;
+                        }else{
+                            range = [shelfLife rangeOfString:@"(年)"];
+                            if (range.location != NSNotFound) {
+                                shelfLifeDays = [shelfLife substringWithRange:NSMakeRange(0, range.location)].intValue * 365;
+                            }
+                        }
+                        
                     }
                     //NSLog(@"33333333%@",shelfLifeDays);
                 }
@@ -1445,8 +1491,8 @@
             }
             
             //如果存在保质期和生产日期，计算并设置过期日期
-            if (productDate && shelfLifeDays) {
-                NSInteger days = shelfLifeDays.integerValue;
+            if (productDate && shelfLifeDays != 0) {
+                NSInteger days = shelfLifeDays;
                 NSDate *date = [productDate dateByAddingTimeInterval:days*24*60*60];
                 //NSLog(@"!!!!%@",date);
                 [self sendLocalNotificationWithDate:date];
@@ -1682,6 +1728,10 @@
     }
     //NSLog(@"%@",self.picArray);
     
+    
+//    id navigationDelegate = self.navigationController.delegate;
+//    HYBMoveDetailController *vc = [[HYBMoveDetailController alloc] init];
+//    vc.image = [UIImage image]
 }
 
 
@@ -1761,6 +1811,7 @@
     cycleScrollView2.delegate = self;
     
     cycleScrollView2.backgroundColor = [UIColor colorWithRed:234/255.0 green:234/255.0 blue:234/255.0 alpha:1.0];
+    //[cycleScrollView2 setDotColor:[UIColor redColor]];
     
     
     UIImageView *imageViewBg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 219/586.0*kScreenHeight, [UIScreen mainScreen].bounds.size.width, 68/586.0*kScreenHeight)];
@@ -1858,6 +1909,38 @@
     
 }
 
+-(CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if(self.baseArray.count == 0) {
+        return 	0;
+    }
+    
+    
+    
+    //    if (indexPath.section ==3) {
+    //        return 110;
+    //    }
+    if (indexPath.section == 0) {
+        if (indexPath.row == 0) {
+            return 55;
+            
+        }else{
+            return 35;
+        }
+        
+        
+    }else if(indexPath.section == 1||indexPath.section == 2){
+        RecordDetailTableViewCell *cell = (RecordDetailTableViewCell *)[self tableView:self.tableView cellForRowAtIndexPath: indexPath];
+        [cell calculateheight];
+        return cell.frame.size.height;
+        //        return 44;
+    }else
+    {
+        return 44;
+    }
+
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if(self.baseArray.count == 0) {
         return 	0;
@@ -1870,7 +1953,7 @@
 //    }
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
-            return 35;
+            return self.titleSize.height+10;
             
         }else{
             return 35;
@@ -2006,19 +2089,31 @@
         if (indexPath.row == 0)
         {
             cell.textLabel.numberOfLines = 0;
+            //cell.textLabel.frame = CGRectMake(0, 0, kScreenWidth-50, 50);
+            cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
+            cell.textLabel.text = baseModel.value;
+            cell.textLabel.font = [UIFont systemFontOfSize:17];
 #warning 修改
-            CGSize size =[cell.textLabel.text sizeWithAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17]}];
-            if (cell.textLabel.text == nil)
+            CGSize size = CGSizeMake(kScreenWidth, 2000);
+            CGSize labelSize =[cell.textLabel.text sizeWithFont:[UIFont systemFontOfSize:17] constrainedToSize:size lineBreakMode:NSLineBreakByWordWrapping];
+            self.titleSize = labelSize;
+            //CGSize size = cell.textLabel.frame.size;
+            
+//            NSString *sizestr = NSStringFromCGSize(labelSize);
+//            NSLog(@"!!!%@",sizestr);
+            if (cell.textLabel.text == nil || self.barCode != nil)
             {
-                ;//如果cell.textLabel为nil就不添加蓝色盾牌
+                ;//如果cell.textLabel为nil或者是扫描条码就不添加蓝色盾牌
             }else{
                 if ([self.countKey isEqualToString:@"1"])
                 {
-                    UIImageView * aImageView = [[UIImageView alloc] initWithFrame:CGRectMake(cell.textLabel.frame.origin.x + size.width + 3, 6,12, 14)];
-                    if (size.width > 320.0/375.0*kScreenWidth)
+                    UIImageView * aImageView = [[UIImageView alloc] initWithFrame:CGRectMake(cell.textLabel.frame.origin.x + labelSize.width + 20, 6,12, 14)];
+                    NSLog(@"aImageView.frame = %@",NSStringFromCGRect(aImageView.frame));
+                    NSLog(@"width:%f",labelSize.width);
+                    if (labelSize.width > 320.0/375.0*kScreenWidth)
                     {
-                        size.width = size.width - 25/375.0*kScreenWidth;
-                        aImageView.frame =CGRectMake(cell.textLabel.frame.origin.x + size.width + 3, cell.textLabel.frame.origin.y,14, 16);
+                        labelSize.width = labelSize.width - 25/375.0*kScreenWidth;
+                        aImageView.frame =CGRectMake(cell.textLabel.frame.origin.x + labelSize.width + 10, 6,14, 16);
                     }
                     aImageView.image = [UIImage imageNamed:@"蓝色盾牌"];
                     [cell.contentView addSubview:aImageView];
@@ -2033,10 +2128,12 @@
         }
 #pragma mark - 此处做的变更
         //如果type值为1则展示， type值为2则图片链接
-        if ([baseModel.type isEqual:@"1"]) {
+        if ([baseModel.type isEqual:@"1"])
+        {
             cell.textLabel.text = baseModel.value;
             //如果key值为count，则删除该行
-            if ([baseModel.key isEqual:@"Count"]) {
+            if ([baseModel.key isEqual:@"Count"])
+            {
                 //NSLog(@"%@",baseModel.value);
                 cell.userInteractionEnabled = NO;
                 cell.textLabel.text = baseModel.value;
@@ -2063,8 +2160,6 @@
                 
             }
             cell.textLabel.text = baseModel.value;
-            
-            
             //            NSLog(@"%@",baseModel.value);
         }
         
@@ -2211,6 +2306,7 @@
     
     
 }
+
 
 
 
