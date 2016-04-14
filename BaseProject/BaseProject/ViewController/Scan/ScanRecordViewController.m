@@ -20,7 +20,7 @@
 @property (nonatomic , strong)NSMutableArray *keyArray;
 @property (nonatomic , copy)NSString *keyStr;
 
-@property (nonatomic, strong)UIButton *btn;
+@property (nonatomic , strong)UIButton *btn;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 @end
@@ -53,6 +53,7 @@
     self.tableView.dataSource = self;
     self.tableView.tableFooterView = [[UIView alloc] init];
     self.tableView.separatorColor = UIColorFromRGB(0xe8e8e5);
+    self.view.backgroundColor = UIColorFromRGB(0xf0f0f0);
     // tableViewCell 分割线
     //self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
@@ -119,6 +120,10 @@
         make.top.mas_equalTo(20);
         make.size.mas_equalTo(CGSizeMake(80, 44));
     }];
+    //手动添加highlight效果
+    button.tag = 101;
+    [button addTarget:self action:@selector(tapBack:) forControlEvents:UIControlEventTouchDown];
+    [button addTarget:self action:@selector(tapUp:) forControlEvents:UIControlEventTouchUpOutside];
     
     UIImage *image = [UIImage imageNamed:@"返回箭头"];
     UIImageView *imageView = [[UIImageView alloc] init];
@@ -133,6 +138,23 @@
     //由于改写了leftBarButtonItem,所以需要重新定义右滑返回手势
     self.navigationController.interactivePopGestureRecognizer.delegate = (id)self;
     
+}
+
+-(void)tapBack:(UIButton *)button
+{
+    if (button.tag == 102) {
+        button.backgroundColor = UIColorFromRGB(0x1787c7);
+    }else{
+        button.alpha = 0.5;
+    }
+}
+-(void)tapUp:(UIButton *)button
+{
+    if (button.tag == 102) {
+        button.backgroundColor = [UIColor colorWithRed:52/255.0 green:181/255.0 blue:254/255.0 alpha:1.0];
+    }else{
+        button.alpha = 1;
+    }
 }
 
 
@@ -189,20 +211,29 @@
     
     //    imageView.backgroundColor= [UIColor redColor];
     
-    imageView.image = [UIImage imageNamed:@"扫描记录-记录为空"];
+    imageView.image = [UIImage imageNamed:@"扫描记录空"];
     [self.view addSubview:imageView];
     
     [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.view);
         //        make.centerY.equalTo(self.view);
         //        make.top.equalTo(imageViewBig1).with.offset(37/568.0*kScreenHeight);
-        make.top.equalTo(self.view).with.offset(0.4*kScreenHeight);
-        make.size.mas_equalTo(CGSizeMake(103.5, 79));
+        make.top.equalTo(self.view).with.offset(0.38*kScreenHeight);
+        make.size.mas_equalTo(CGSizeMake(70, 60));
     }];
     
+    UILabel *label = [[UILabel alloc]init];
+    [self.view addSubview:label];
+    label.text = @"还未扫描过商品";
+    label.textColor = UIColorFromRGB(0xc3c3c3);
+    label.font = [UIFont systemFontOfSize:17];
+    [label mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.mas_equalTo(0);
+        make.top.mas_equalTo(imageView.mas_bottom).mas_equalTo(18);
+    }];
     
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn.backgroundColor = [UIColor orangeColor];
+    //btn.backgroundColor = [UIColor orangeColor];
     [btn setTitle:@"去扫码" forState:UIControlStateNormal];
     
     [self.view addSubview:btn];
@@ -210,14 +241,16 @@
     [btn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.view);
         
-        make.size.mas_equalTo(CGSizeMake(103.5, 40));
-        make.top.equalTo(imageView.mas_bottom).offset(15);
+        make.size.mas_equalTo(CGSizeMake(125, 46));
+        make.top.equalTo(imageView.mas_bottom).offset(55);
     }];
     btn.backgroundColor = [UIColor colorWithRed:52/255.0 green:181/255.0 blue:254/255.0 alpha:1.0];
     
     [btn.layer setCornerRadius:6.0];
     [btn addTarget:self action:@selector(goToScanViewController) forControlEvents:UIControlEventTouchUpInside];
-    
+    btn.tag = 102;
+    [btn addTarget:self action:@selector(tapBack:) forControlEvents:UIControlEventTouchDown];
+    [btn addTarget:self action:@selector(tapUp:) forControlEvents:UIControlEventTouchUpOutside];
 //    NSLog(@"%@",self.view.subviews);
 }
 

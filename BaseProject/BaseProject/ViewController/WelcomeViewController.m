@@ -111,6 +111,9 @@
     for (int i =0; i<5; i++) {
         //格式化图片的名称
         NSString *imageName = [NSString stringWithFormat:@"引导%d.png",i+1];
+        if (kScreenHeight <= 481) {
+            imageName = [NSString stringWithFormat:@"4s引导%d.png",i+1];
+        }
         
         //创建一个图片视图对象
         UIImageView *imageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:imageName]];

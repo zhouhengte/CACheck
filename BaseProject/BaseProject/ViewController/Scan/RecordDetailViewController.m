@@ -302,6 +302,7 @@
 //设置到期日期
 -(void)duedataClick
 {
+    [MobClick event:@"EnterClock"];
     self.duedateBadgeView.badgeText = @"";//去除红点
     [self.redPointImageView removeFromSuperview];
     
@@ -455,6 +456,7 @@
                 };
                 
                 weakSelf.duedateView.confirmBlock = ^(NSDate *date){
+                    [MobClick event:@"ConfirmClock"];
                     
                     [weakSelf.view addSubview:weakSelf.isSettedBottomView];
                     //设置已完成界面
@@ -542,7 +544,8 @@
     //设置确认按钮的block
     _duedateView.confirmBlock = ^(NSDate *date)
     {
-        NSLog(@"到期日期：%@",date);
+        [MobClick event:@"ConfirmClock"];
+        //NSLog(@"到期日期：%@",date);
         //已完成设置界面的容器
         weakSelf.isSettedBottomView = [[UIView alloc]init];
         weakSelf.isSettedBottomView.backgroundColor = [UIColor clearColor];

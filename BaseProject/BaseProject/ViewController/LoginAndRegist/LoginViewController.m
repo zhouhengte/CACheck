@@ -76,6 +76,10 @@
         make.top.mas_equalTo(20);
         make.size.mas_equalTo(CGSizeMake(80, 44));
     }];
+    //手动添加highlight效果
+    button.tag = 101;
+    [button addTarget:self action:@selector(tapBack:) forControlEvents:UIControlEventTouchDown];
+    [button addTarget:self action:@selector(tapUp:) forControlEvents:UIControlEventTouchUpOutside];
     
     UIImage *image = [UIImage imageNamed:@"返回箭头"];
     UIImageView *imageView = [[UIImageView alloc] init];
@@ -92,6 +96,14 @@
     
 }
 
+-(void)tapBack:(UIButton *)button
+{
+    button.alpha = 0.5;
+}
+-(void)tapUp:(UIButton *)button
+{
+    button.alpha = 1;
+}
 
 
 

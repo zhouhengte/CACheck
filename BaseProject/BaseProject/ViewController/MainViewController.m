@@ -10,9 +10,11 @@
 #import "JSBadgeView.h"
 
 #define kScreenScale (self.view.bounds.size.height/568.0)
+#define kScreenWidthScale (self.view.bounds.size.width/320.0)
 
 @interface MainViewController ()
 @property (strong, nonatomic) UIImageView *backgroundImageView;
+@property (strong, nonatomic) UIView *bottomView;
 @property (strong, nonatomic) UIButton *scanIconButton;
 @property (strong, nonatomic) UIButton *scanRecordButton;
 @property (strong, nonatomic) UIButton *messageButton;
@@ -32,6 +34,20 @@
 
 @implementation MainViewController
 
+-(UIView *)bottomView
+{
+    if (_bottomView == nil) {
+        _bottomView = [[UIView alloc]init];
+        [self.view addSubview:_bottomView];
+        _bottomView.backgroundColor = UIColorFromRGB(0xf5f5eb);
+        [_bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.bottom.right.mas_equalTo(0);
+            make.height.mas_equalTo(282*kScreenScale);
+        }];
+    }
+    return _bottomView;
+}
+
 -(UIImageView *)backgroundImageView
 {
     if (_backgroundImageView ==nil) {
@@ -41,7 +57,7 @@
             make.left.mas_equalTo(self.view);
             make.top.mas_equalTo(self.view);
             make.right.mas_equalTo(self.view);
-            make.bottom.mas_equalTo(self.view).mas_equalTo((-263)*kScreenScale);
+            make.bottom.mas_equalTo(self.view).mas_equalTo((-282)*kScreenScale);
         }];
     }
     return _backgroundImageView;
@@ -51,12 +67,13 @@
     if (_scanIconButton == nil) {
         _scanIconButton = [[UIButton alloc]init];
         [_scanIconButton setImage:[UIImage imageNamed:@"扫一扫"] forState:UIControlStateNormal];
+        _scanIconButton.contentMode = UIViewContentModeScaleToFill;
         [_scanIconButton addTarget:self action:@selector(goToScanViewController) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:_scanIconButton];
         [_scanIconButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerX.mas_equalTo(self.backgroundImageView);
-            make.top.mas_equalTo(self.backgroundImageView).mas_equalTo(100*kScreenScale);
-            make.size.mas_equalTo(CGSizeMake(105*kScreenScale, 105*kScreenScale));
+            make.centerX.mas_equalTo(0);
+            make.centerY.mas_equalTo(self.backgroundImageView).mas_equalTo(-10);
+            make.size.mas_equalTo(CGSizeMake(106*kScreenWidthScale, 106*kScreenWidthScale));
         }];
     }
     return _scanIconButton;
@@ -66,13 +83,13 @@
     if (_scanRecordButton == nil) {
         _scanRecordButton = [[UIButton alloc]init];
         [_scanRecordButton setImage:[UIImage imageNamed:@"扫描记录"] forState:UIControlStateNormal];
-        [_scanRecordButton setImage:[UIImage imageNamed:@"扫描记录1"] forState:UIControlStateHighlighted];
         [_scanRecordButton addTarget:self action:@selector(goToScanRecordViewController) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:_scanRecordButton];
         [_scanRecordButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.view).mas_equalTo(53*kScreenScale);
+            //make.left.mas_equalTo(self.view).mas_equalTo(44.5*kScreenWidthScale);
+            make.right.mas_equalTo(self.view).mas_equalTo(-(kScreenWidth/2)-39*kScreenWidthScale);
             make.top.mas_equalTo(self.backgroundImageView.mas_bottom).mas_equalTo(23*kScreenScale);
-            make.size.mas_equalTo(CGSizeMake(66*kScreenScale, 66*kScreenScale));
+            make.size.mas_equalTo(CGSizeMake(76*kScreenScale, 76*kScreenScale));
         }];
     }
     return _scanRecordButton;
@@ -82,12 +99,11 @@
     if (_messageButton == nil) {
         _messageButton = [[UIButton alloc]init];
         [_messageButton setImage:[UIImage imageNamed:@"消息"] forState:UIControlStateNormal];
-        [_messageButton setImage:[UIImage imageNamed:@"消息1"] forState:UIControlStateHighlighted];
         [_messageButton addTarget:self action:@selector(goToMessageViewController) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:_messageButton];
         [_messageButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.mas_equalTo(self.scanRecordButton);
-            make.right.mas_equalTo(self.view).mas_equalTo(-53*kScreenScale);
+            make.centerX.mas_equalTo(self.scanRecordButton);
+            make.bottom.mas_equalTo(-43*kScreenScale);
             make.size.mas_equalTo(self.scanRecordButton);
         }];
         
@@ -104,12 +120,13 @@
     if (_newsButton == nil) {
         _newsButton = [[UIButton alloc]init];
         [_newsButton setImage:[UIImage imageNamed:@"新闻知识"] forState:UIControlStateNormal];
-        [_newsButton setImage:[UIImage imageNamed:@"新闻知识1"] forState:UIControlStateHighlighted];
         [_newsButton addTarget:self action:@selector(goToNewsViewController) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:_newsButton];
         [_newsButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerX.mas_equalTo(self.scanRecordButton);
-            make.top.mas_equalTo(self.scanRecordButton.mas_bottom).mas_equalTo(71*kScreenScale);
+            
+            make.centerY.mas_equalTo(self.scanRecordButton);
+            //make.right.mas_equalTo(self.view).mas_equalTo(-44.5*kScreenWidthScale);
+            make.left.mas_equalTo(self.view).mas_equalTo(kScreenWidth/2+39*kScreenWidthScale);
             make.size.mas_equalTo(self.scanRecordButton);
         }];
     }
@@ -120,12 +137,11 @@
     if (_preferenceButton == nil) {
         _preferenceButton = [[UIButton alloc]init];
         [_preferenceButton setImage:[UIImage imageNamed:@"设置"] forState:UIControlStateNormal];
-        [_preferenceButton setImage:[UIImage imageNamed:@"设置1"] forState:UIControlStateHighlighted];
         [_preferenceButton addTarget:self action:@selector(goToPreferenceViewController) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:_preferenceButton];
         [_preferenceButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerX.mas_equalTo(self.messageButton);
-            make.centerY.mas_equalTo(self.newsButton);
+            make.centerX.mas_equalTo(self.newsButton);
+            make.centerY.mas_equalTo(self.messageButton);
             make.size.mas_equalTo(self.scanRecordButton);
         }];
     }
@@ -136,11 +152,12 @@
     if (_scanRecordLabel == nil) {
         _scanRecordLabel = [[UILabel alloc]init];
         _scanRecordLabel.text = @"扫描记录";
-        [_scanRecordLabel setFont:[UIFont systemFontOfSize:13]];
+        [_scanRecordLabel setFont:[UIFont systemFontOfSize:12]];
+        _scanRecordLabel.textColor = UIColorFromRGB(0x363636);
         [self.view addSubview:_scanRecordLabel];
         [_scanRecordLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerX.mas_equalTo(self.scanRecordButton);
-            make.top.mas_equalTo(self.scanRecordButton.mas_bottom).mas_equalTo(10*kScreenScale);
+            make.top.mas_equalTo(self.scanRecordButton.mas_bottom).mas_equalTo(9*kScreenScale);
         }];
     }
     return _scanRecordLabel;
@@ -150,11 +167,12 @@
     if (_messageLabel == nil) {
         _messageLabel = [[UILabel alloc]init];
         _messageLabel.text = @"消息";
-        [_messageLabel setFont:[UIFont systemFontOfSize:13]];
+        [_messageLabel setFont:[UIFont systemFontOfSize:12]];
+        _messageLabel.textColor = UIColorFromRGB(0x363636);
         [self.view addSubview:_messageLabel];
         [_messageLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerX.mas_equalTo(self.messageButton);
-            make.centerY.mas_equalTo(self.scanRecordLabel);
+            make.bottom.mas_equalTo(-21*kScreenScale);
         }];
     }
     return _messageLabel;
@@ -164,12 +182,12 @@
     if (_newsLabel == nil) {
         _newsLabel = [[UILabel alloc]init];
         _newsLabel.text = @"新闻知识";
-        [_newsLabel setFont:[UIFont systemFontOfSize:13]];
+        [_newsLabel setFont:[UIFont systemFontOfSize:12]];
+        _newsLabel.textColor = UIColorFromRGB(0x363636);
         [self.view addSubview:_newsLabel];
         [_newsLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerX.mas_equalTo(self.scanRecordLabel);
-            make.top.mas_equalTo(self.newsButton.mas_bottom).mas_equalTo(10*kScreenScale);
-            make.bottom.mas_equalTo(self.view).mas_equalTo(-21*kScreenScale);
+            make.centerX.mas_equalTo(self.newsButton);
+            make.centerY.mas_equalTo(self.scanRecordLabel);
         }];
     }
     return _newsLabel;
@@ -179,12 +197,12 @@
     if (_preferenceLabel == nil) {
         _preferenceLabel = [[UILabel alloc]init];
         _preferenceLabel.text = @"设置";
-        [_preferenceLabel setFont:[UIFont systemFontOfSize:13]];
+        [_preferenceLabel setFont:[UIFont systemFontOfSize:12]];
+        _preferenceLabel.textColor = UIColorFromRGB(0x363636);
         [self.view addSubview:_preferenceLabel];
         [_preferenceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerX.mas_equalTo(self.preferenceButton);
-            make.centerY.mas_equalTo(self.newsLabel);
-            make.bottom.mas_equalTo(self.view).mas_equalTo(-21*kScreenScale);
+            make.centerY.mas_equalTo(self.messageLabel);
         }];
     }
     return _preferenceLabel;
@@ -193,11 +211,11 @@
 {
     if (_horiztonImageView == nil) {
         _horiztonImageView = [[UIImageView alloc]init];
-        _horiztonImageView.backgroundColor = UIColorFromRGB(0xebebeb);
+        _horiztonImageView.backgroundColor = UIColorFromRGB(0xe8e6db);
         [self.view addSubview:_horiztonImageView];
         [_horiztonImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.scanRecordButton).mas_equalTo(40*kScreenScale);
-            make.size.mas_equalTo(CGSizeMake(200, 1));
+            make.bottom.mas_equalTo(self.scanRecordButton).mas_equalTo(43*kScreenScale);
+            make.size.mas_equalTo(CGSizeMake(234*kScreenWidthScale, 1));
             make.centerX.mas_equalTo(self.view);
         }];
     }
@@ -207,12 +225,12 @@
 {
     if (_verticalImageView == nil) {
         _verticalImageView = [[UIImageView alloc]init];
-        _verticalImageView.backgroundColor = UIColorFromRGB(0xebebeb);
+        _verticalImageView.backgroundColor = UIColorFromRGB(0xe8e6db);
         [self.view addSubview:_verticalImageView];
         [_verticalImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerX.mas_equalTo(self.view);
             make.centerY.mas_equalTo(self.horiztonImageView);
-            make.size.mas_equalTo(CGSizeMake(1, 200));
+            make.size.mas_equalTo(CGSizeMake(1, 196*kScreenScale));
         }];
     }
     return _verticalImageView;
@@ -224,7 +242,8 @@
     
     //[[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleLightContent];
     
-    self.view.backgroundColor = [UIColor colorWithRed:245/255.0 green:245/255.0 blue:235/255.0 alpha:1.0];
+    self.view.backgroundColor = UIColorFromRGB(0xf5f5eb);
+    //[self bottomView];
     [self backgroundImageView];
     [self scanIconButton];
     [self scanRecordButton];

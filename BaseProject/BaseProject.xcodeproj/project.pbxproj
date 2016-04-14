@@ -885,7 +885,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.zjuiti.acscan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "d7df86e6-2410-411e-9b3f-63b362dbcc84";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -908,7 +908,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.zjuiti.acscan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "d7df86e6-2410-411e-9b3f-63b362dbcc84";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

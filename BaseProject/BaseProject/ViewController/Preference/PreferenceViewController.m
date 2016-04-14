@@ -27,6 +27,7 @@
     self.tableView.dataSource = self;
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.tableView.separatorColor = UIColorFromRGB(0xe8e8e5);
+
     
     //重新设置导航栏，隐藏原生导航栏，手动绘制新的导航栏，使右滑手势跳转时能让导航栏跟着变化
     [self setNavigationBar];
@@ -71,6 +72,10 @@
         make.top.mas_equalTo(20);
         make.size.mas_equalTo(CGSizeMake(80, 44));
     }];
+    //手动添加highlight效果
+    button.tag = 101;
+    [button addTarget:self action:@selector(tapBack:) forControlEvents:UIControlEventTouchDown];
+    [button addTarget:self action:@selector(tapUp:) forControlEvents:UIControlEventTouchUpOutside];
     
     UIImage *image = [UIImage imageNamed:@"返回箭头"];
     UIImageView *imageView = [[UIImageView alloc] init];
@@ -85,6 +90,15 @@
     //由于改写了leftBarButtonItem,所以需要重新定义右滑返回手势
     self.navigationController.interactivePopGestureRecognizer.delegate = (id)self;
     
+}
+
+-(void)tapBack:(UIButton *)button
+{
+    button.alpha = 0.5;
+}
+-(void)tapUp:(UIButton *)button
+{
+    button.alpha = 1;
 }
 
 
@@ -144,6 +158,7 @@
     if (indexPath.section == 0) {
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
         cell.textLabel.text = @"个人账号";
+        cell.textLabel.textColor = [UIColor colorWithRed:50/255.0 green:50/255.0 blue:50/255.0 alpha:1];
         self.valueStr = [[NSUserDefaults standardUserDefaults] stringForKey:@"username"];
         
         if (self.valueStr == nil) {
@@ -160,6 +175,8 @@
     if (indexPath.section == 1) {
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell2"];
         cell.textLabel.text = @"消息通知";
+        cell.textLabel.font = [UIFont systemFontOfSize:15];
+        cell.textLabel.textColor = [UIColor colorWithRed:50/255.0 green:50/255.0 blue:50/255.0 alpha:1];
         _notificationSwitch = [[UISwitch alloc]initWithFrame:CGRectZero];
         [_notificationSwitch addTarget:self action:@selector(clickNotificationSwitch) forControlEvents:UIControlEventValueChanged];
         cell.accessoryView = _notificationSwitch;
@@ -168,6 +185,7 @@
     }else{
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
         cell.textLabel.text = @"关于我们";
+        cell.textLabel.textColor = [UIColor colorWithRed:50/255.0 green:50/255.0 blue:50/255.0 alpha:1];
         cell.detailTextLabel.text = @"";
         return cell;
     }
@@ -175,13 +193,25 @@
 
 }
 
--(NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+-(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
     if (section == 1) {
-        return @"如果关闭，收到新消息时将不再通知你";
+        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(10, 10, kScreenWidth-20, 10)];
+        label.text = @"    如果关闭，收到新消息时将不再通知你";
+        label.textColor = UIColorFromRGB(0x909090);
+        label.font = [UIFont systemFontOfSize:13];
+        return label;
     }
     return nil;
 }
+
+//-(NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
+//{
+//    if (section == 1) {
+//        return @"如果关闭，收到新消息时将不再通知你";
+//    }
+//    return nil;
+//}
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -203,12 +233,12 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
     if (section == 1) {
-        return 25;
+        return 30;
     }
     return 3;
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    return 15;
+    return 10;
 }
 //-(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
 //    if (section == 1) {

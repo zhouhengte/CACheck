@@ -89,6 +89,11 @@
         make.size.mas_equalTo(CGSizeMake(80, 44));
     }];
     
+    //手动添加highlight效果
+    leftButton.tag = 101;
+    [leftButton addTarget:self action:@selector(tapBack:) forControlEvents:UIControlEventTouchDown];
+    [leftButton addTarget:self action:@selector(tapUp:) forControlEvents:UIControlEventTouchUpOutside];
+    
     UIImage *image = [UIImage imageNamed:@"返回箭头"];
     UIImageView *imageView = [[UIImageView alloc] init];
     imageView.image = image;
@@ -109,9 +114,23 @@
         make.size.mas_equalTo(CGSizeMake(50, 44));
     }];
     
+    //手动添加highlight效果
+    rightButton.tag = 102;
+    [rightButton addTarget:self action:@selector(tapBack:) forControlEvents:UIControlEventTouchDown];
+    [rightButton addTarget:self action:@selector(tapUp:) forControlEvents:UIControlEventTouchUpOutside];
+    
     //由于改写了leftBarButtonItem,所以需要重新定义右滑返回手势
     self.navigationController.interactivePopGestureRecognizer.delegate = (id)self;
     
+}
+
+-(void)tapBack:(UIButton *)button
+{
+    button.alpha = 0.5;
+}
+-(void)tapUp:(UIButton *)button
+{
+    button.alpha = 1;
 }
 
 

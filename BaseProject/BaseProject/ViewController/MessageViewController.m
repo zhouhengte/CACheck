@@ -30,6 +30,7 @@
     //重新设置导航栏，隐藏原生导航栏，手动绘制新的导航栏，使右滑手势跳转时能让导航栏跟着变化
     [self setNavigationBar];
 
+    self.view.backgroundColor = UIColorFromRGB(0xf0f0f0);
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.tableView.backgroundColor = [UIColor groupTableViewBackgroundColor];
@@ -66,7 +67,7 @@
         
         //    imageView.backgroundColor= [UIColor redColor];
         
-        imageView.image = [UIImage imageNamed:@"消息-暂无内容"];
+        imageView.image = [UIImage imageNamed:@"消息空"];
         [self.view addSubview:imageView];
         
         [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -74,7 +75,17 @@
             //        make.centerY.equalTo(self.view);
             //        make.top.equalTo(imageViewBig1).with.offset(37/568.0*kScreenHeight);
             make.top.equalTo(self.view).with.offset(0.4*kScreenHeight);
-            make.size.mas_equalTo(CGSizeMake(60, 77.5));
+            make.size.mas_equalTo(CGSizeMake(65, 60));
+        }];
+        
+        UILabel *label = [[UILabel alloc]init];
+        [self.view addSubview:label];
+        label.textColor = UIColorFromRGB(0xc3c3c3);
+        label.text = @"暂无内容";
+        label.font = [UIFont systemFontOfSize:17];
+        [label mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerX.mas_equalTo(0);
+            make.top.mas_equalTo(imageView.mas_bottom).mas_equalTo(10);
         }];
 
     }
@@ -119,6 +130,10 @@
         make.top.mas_equalTo(20);
         make.size.mas_equalTo(CGSizeMake(80, 44));
     }];
+    //手动添加highlight效果
+    button.tag = 101;
+    [button addTarget:self action:@selector(tapBack:) forControlEvents:UIControlEventTouchDown];
+    [button addTarget:self action:@selector(tapUp:) forControlEvents:UIControlEventTouchUpOutside];
     
     UIImage *image = [UIImage imageNamed:@"返回箭头"];
     UIImageView *imageView = [[UIImageView alloc] init];
@@ -133,6 +148,15 @@
     //由于改写了leftBarButtonItem,所以需要重新定义右滑返回手势
     self.navigationController.interactivePopGestureRecognizer.delegate = (id)self;
     
+}
+
+-(void)tapBack:(UIButton *)button
+{
+    button.alpha = 0.5;
+}
+-(void)tapUp:(UIButton *)button
+{
+    button.alpha = 1;
 }
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
