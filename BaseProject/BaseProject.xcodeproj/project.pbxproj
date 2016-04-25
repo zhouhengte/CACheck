@@ -28,6 +28,9 @@
 		2FC7DB341C4797B5005A60BA /* NewsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FC7DB331C4797B5005A60BA /* NewsViewController.m */; };
 		2FD66A3F1CB3AAE2004FBFD9 /* MessageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD66A3D1CB3AAE2004FBFD9 /* MessageTableViewCell.m */; };
 		2FD66A401CB3AAE2004FBFD9 /* MessageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2FD66A3E1CB3AAE2004FBFD9 /* MessageTableViewCell.xib */; };
+		2FD88C551CCDB955007BE374 /* HZPhotoBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD88C4F1CCDB955007BE374 /* HZPhotoBrowser.m */; };
+		2FD88C561CCDB955007BE374 /* HZPhotoBrowserView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD88C521CCDB955007BE374 /* HZPhotoBrowserView.m */; };
+		2FD88C571CCDB955007BE374 /* HZWaitingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD88C541CCDB955007BE374 /* HZWaitingView.m */; };
 		2FD8C5231CB5EEC800D0A8F1 /* JSBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD8C5221CB5EEC800D0A8F1 /* JSBadgeView.m */; };
 		2FD968B51C43A26600A77AB9 /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD968B41C43A26600A77AB9 /* WelcomeViewController.m */; };
 		2FD968B81C43A38300A77AB9 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD968B71C43A38300A77AB9 /* MainViewController.m */; };
@@ -118,6 +121,13 @@
 		2FD66A3C1CB3AAE2004FBFD9 /* MessageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableViewCell.h; sourceTree = "<group>"; };
 		2FD66A3D1CB3AAE2004FBFD9 /* MessageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableViewCell.m; sourceTree = "<group>"; };
 		2FD66A3E1CB3AAE2004FBFD9 /* MessageTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageTableViewCell.xib; sourceTree = "<group>"; };
+		2FD88C4E1CCDB955007BE374 /* HZPhotoBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZPhotoBrowser.h; sourceTree = "<group>"; };
+		2FD88C4F1CCDB955007BE374 /* HZPhotoBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZPhotoBrowser.m; sourceTree = "<group>"; };
+		2FD88C501CCDB955007BE374 /* HZPhotoBrowserConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZPhotoBrowserConfig.h; sourceTree = "<group>"; };
+		2FD88C511CCDB955007BE374 /* HZPhotoBrowserView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZPhotoBrowserView.h; sourceTree = "<group>"; };
+		2FD88C521CCDB955007BE374 /* HZPhotoBrowserView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZPhotoBrowserView.m; sourceTree = "<group>"; };
+		2FD88C531CCDB955007BE374 /* HZWaitingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZWaitingView.h; sourceTree = "<group>"; };
+		2FD88C541CCDB955007BE374 /* HZWaitingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZWaitingView.m; sourceTree = "<group>"; };
 		2FD8C5211CB5EEC800D0A8F1 /* JSBadgeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSBadgeView.h; sourceTree = "<group>"; };
 		2FD8C5221CB5EEC800D0A8F1 /* JSBadgeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSBadgeView.m; sourceTree = "<group>"; };
 		2FD968B31C43A26600A77AB9 /* WelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomeViewController.h; sourceTree = "<group>"; };
@@ -283,6 +293,20 @@
 				2F834D2E1C4648530050E4A6 /* TAPageControl.m */,
 			);
 			path = PageControl;
+			sourceTree = "<group>";
+		};
+		2FD88C4D1CCDB947007BE374 /* BrowserView */ = {
+			isa = PBXGroup;
+			children = (
+				2FD88C4E1CCDB955007BE374 /* HZPhotoBrowser.h */,
+				2FD88C4F1CCDB955007BE374 /* HZPhotoBrowser.m */,
+				2FD88C501CCDB955007BE374 /* HZPhotoBrowserConfig.h */,
+				2FD88C511CCDB955007BE374 /* HZPhotoBrowserView.h */,
+				2FD88C521CCDB955007BE374 /* HZPhotoBrowserView.m */,
+				2FD88C531CCDB955007BE374 /* HZWaitingView.h */,
+				2FD88C541CCDB955007BE374 /* HZWaitingView.m */,
+			);
+			path = BrowserView;
 			sourceTree = "<group>";
 		};
 		2FD9842E1C488EB3000EB94A /* DJRefresh */ = {
@@ -522,6 +546,7 @@
 		85C0AE511C20F58C0016268A /* View */ = {
 			isa = PBXGroup;
 			children = (
+				2FD88C4D1CCDB947007BE374 /* BrowserView */,
 				2FD8C5211CB5EEC800D0A8F1 /* JSBadgeView.h */,
 				2FD8C5221CB5EEC800D0A8F1 /* JSBadgeView.m */,
 				2F834D491C4651AA0050E4A6 /* BigImageView.h */,
@@ -699,6 +724,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2FDDA1561C61F6F100BAEFEB /* PreferenceViewController.m in Sources */,
+				2FD88C571CCDB955007BE374 /* HZWaitingView.m in Sources */,
 				2FD9843D1C488EB3000EB94A /* DJRefreshTopView.m in Sources */,
 				2FDDA1321C61F6CC00BAEFEB /* ScanViewController.m in Sources */,
 				2FD8C5231CB5EEC800D0A8F1 /* JSBadgeView.m in Sources */,
@@ -711,10 +737,12 @@
 				2FDDA1581C61F6F100BAEFEB /* SuggestViewController.m in Sources */,
 				2F834D361C4648530050E4A6 /* TAAbstractDotView.m in Sources */,
 				45333DD31C22A3120016A357 /* NSObject+HUD.m in Sources */,
+				2FD88C551CCDB955007BE374 /* HZPhotoBrowser.m in Sources */,
 				2FDDA13B1C61F6E900BAEFEB /* LoginViewController.m in Sources */,
 				2FDDA1311C61F6CC00BAEFEB /* ScanRecordViewController.m in Sources */,
 				2FDDA1521C61F6F100BAEFEB /* IntroductionViewController.m in Sources */,
 				2FDDA1331C61F6CC00BAEFEB /* UnknowViewController.m in Sources */,
+				2FD88C561CCDB955007BE374 /* HZPhotoBrowserView.m in Sources */,
 				2FD984411C489884000EB94A /* MessageViewController.m in Sources */,
 				2FC7DB311C476C4A005A60BA /* historyModel.m in Sources */,
 				8566CE0A1C1FF378004693F0 /* ViewController.m in Sources */,

@@ -59,7 +59,7 @@
     
     //设置第一次启动进入欢迎页面
     NSUserDefaults * settings1 = [NSUserDefaults standardUserDefaults];
-    NSString *key1 = [NSString stringWithFormat:@"is_first"];
+    NSString *key1 = [NSString stringWithFormat:@"is_first_1.5.3"];
     NSString *value = [settings1 objectForKey:key1];
     if ([value isEqualToString:@"false"]) {
         self.window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen]bounds]];
@@ -72,7 +72,7 @@
     }
     if (!value) {
         NSUserDefaults * setting = [NSUserDefaults standardUserDefaults];
-        NSString * key = [NSString stringWithFormat:@"is_first"];
+        NSString * key = [NSString stringWithFormat:@"is_first_1.5.3"];
         [setting setObject:[NSString stringWithFormat:@"false"] forKey:key];
         [setting synchronize];
         self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen]bounds]];

@@ -81,7 +81,14 @@
     // 这里真实需要处理交互的地方
     // 获取通知所带的数据
     NSString *productName = [notification.userInfo objectForKey:@"productname"];
-    NSString *notiMess = [NSString stringWithFormat:@"请注意您扫描过的\"%@\"即将过期",productName];
+    NSDate *duedate = [notification.userInfo objectForKey:@"duedate"];
+    NSDate *now = [NSDate date];
+    NSString *notiMess = @"";
+    if ([now isEqualToDate:[duedate laterDate:now]]) {
+        notiMess = [NSString stringWithFormat:@"请注意您扫描过的\"%@\"已过期",productName];
+    }else{
+        notiMess = [NSString stringWithFormat:@"请注意您扫描过的\"%@\"即将过期",productName];
+    }
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"过期提醒"
                                                     message:notiMess
                                                    delegate:nil

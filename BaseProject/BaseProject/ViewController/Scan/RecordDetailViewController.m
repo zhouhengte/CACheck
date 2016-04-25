@@ -18,10 +18,11 @@
 #import "WebViewController.h"
 #import "DueDateView.h"
 #import "JSBadgeView.h"
+#import "HZPhotoBrowser.h"
 //#import "HYBMoveDetailController.h"
 
 
-@interface RecordDetailViewController ()<UITableViewDataSource, UITableViewDelegate,SDCycleScrollViewDelegate>
+@interface RecordDetailViewController ()<UITableViewDataSource, UITableViewDelegate,SDCycleScrollViewDelegate,HZPhotoBrowserDelegate>
 
 @property (nonatomic , strong)UITableView *tableView;
 @property (nonatomic , strong)UIPageControl *pageControl;
@@ -68,6 +69,8 @@
 @property (nonatomic , strong)UIImageView *redPointImageView;//自定义红点，用于缩小后的红点，需要手动添加和移除
 
 @property (nonatomic , assign)CGSize titleSize;//标题大小
+
+@property (nonatomic , strong) UIScrollView *scrollView;//轮播图
 
 @end
 
@@ -1081,7 +1084,7 @@
         
     }
     
-    if (scrollView.contentOffset.y >= scrollView.contentSize.height - scrollView.frame.size.height-1) {
+    if (scrollView.contentOffset.y >= scrollView.contentSize.height - scrollView.frame.size.height-1&&scrollView.contentOffset.y != 0) {
         //滑到底部
         self.naviView.alpha = 1.0;
         self.button.alpha = 0.1;
@@ -1134,7 +1137,7 @@
     }
     //NSLog(@"%@",self.textArray);
 #pragma 手动增加商品评价
-//    [self.textArray addObject:@"商品评价"];//增加商品评价子标题
+    [self.textArray addObject:@"商品评价"];//增加商品评价子标题
     
     
     NSArray * baseInfoArray = [self.wantDic objectForKey:@"BaseInfo"];
@@ -1279,7 +1282,7 @@
         //[self.textArray addObject:@"商品详情"];
         //        NSString * urlStr = nil;
 #pragma 手动增加商品评价
-//        [self.textArray addObject:@"商品评价"];//增加商品评价子标题
+        [self.textArray addObject:@"商品评价"];//增加商品评价子标题
         
         NSArray * baseInfoArray = [responseObject objectForKey:@"BaseInfo"];
         for (NSDictionary * innerDic in baseInfoArray) {
@@ -1493,17 +1496,19 @@
                 
             }
             
-            //如果存在保质期和生产日期，计算并设置过期日期
-            if (productDate && shelfLifeDays != 0) {
-                NSInteger days = shelfLifeDays;
-                NSDate *date = [productDate dateByAddingTimeInterval:days*24*60*60];
-                //NSLog(@"!!!!%@",date);
-                [self sendLocalNotificationWithDate:date];
-            }
+            
             //如果存在过期日期，直接设置过期日期
             if (date) {
                 //NSLog(@"~~~~%@",date);
                 [self sendLocalNotificationWithDate:date];
+            }else{
+                //如果存在保质期和生产日期，计算并设置过期日期
+                if (productDate && shelfLifeDays != 0) {
+                    NSInteger days = shelfLifeDays;
+                    NSDate *date = [productDate dateByAddingTimeInterval:days*24*60*60];
+                    //NSLog(@"!!!!%@",date);
+                    [self sendLocalNotificationWithDate:date];
+                }
             }
 
             
@@ -1796,70 +1801,153 @@
             [self.picArray addObject:dic2];
             
         }
+        [self setTopScrollView];
        // NSLog(@"图片数组 %@",self.picArray);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"%@",error);
     }];
     
     
-    //网络加载 --- 创建带标题的图片轮播器
-    SDCycleScrollView *cycleScrollView2 = [SDCycleScrollView cycleScrollViewWithFrame:CGRectMake(0, 0,self.tableView.tableHeaderView.frame.size.width, self.tableView.tableHeaderView.frame.size.height) imageURLStringsGroup:nil]; // 模拟网络延时情景
-    
-    
-    
-    cycleScrollView2.pageControlAliment = SDCycleScrollViewPageContolAlimentCenter;
-    
-    cycleScrollView2.pageControlStyle = SDCycleScrollViewPageContolStyleClassic;
-    
-    cycleScrollView2.delegate = self;
-    
-    cycleScrollView2.backgroundColor = [UIColor colorWithRed:234/255.0 green:234/255.0 blue:234/255.0 alpha:1.0];
-    //[cycleScrollView2 setDotColor:[UIColor redColor]];
-    
-    
-    UIImageView *imageViewBg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 219/586.0*kScreenHeight, [UIScreen mainScreen].bounds.size.width, 68/586.0*kScreenHeight)];
-    UIImage *imageBg = [UIImage imageNamed:@"图片上阴影"];
-    imageViewBg.image = imageBg;
-    [self.tableView.tableHeaderView addSubview:imageViewBg];
-    
-    //NSLog(@"%@",self.picArray);
-    
-    
-    [imageViewBg addSubview:_pageControl];
-    
-    [self.tableView.tableHeaderView addSubview:cycleScrollView2];
-    
-    cycleScrollView2.infiniteLoop = NO; //关闭循环
-    
-    
-    
-    //             --- 模拟加载延迟
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        
-        if (self.picArray.count == 0) {
-#pragma mark - 如果请求到的图片数组为空， 则从本地请求，加载背景图片
-            [self getLocalPicLoop];
-        }else{
-            cycleScrollView2.imageURLStringsGroup = self.picArray;
-            if (self.picArray.count == 1) {
-                //NSLog(@"%@",cycleScrollView2.subviews);
-                //如果只有一张图片不展示pageControl
-                cycleScrollView2.pageControlStyle = SDCycleScrollViewPageContolStyleNone;
-                
-            }
-            cycleScrollView2.contentMode = UIViewContentModeScaleAspectFit;
-            cycleScrollView2.clipsToBounds = YES;
-            
-        }
-        
-    });
-    cycleScrollView2.autoScrollTimeInterval = 10000;
-    [cycleScrollView2 addSubview:imageViewBg];
-    [self.tableView.tableHeaderView addSubview:imageViewBg];
-    //    [imageViewBg addSubview:_pageControl];
+//    //网络加载 --- 创建带标题的图片轮播器
+//    SDCycleScrollView *cycleScrollView2 = [SDCycleScrollView cycleScrollViewWithFrame:CGRectMake(0, 0,self.tableView.tableHeaderView.frame.size.width, self.tableView.tableHeaderView.frame.size.height) imageURLStringsGroup:nil]; // 模拟网络延时情景
+//    
+//    
+//    
+//    cycleScrollView2.pageControlAliment = SDCycleScrollViewPageContolAlimentCenter;
+//    
+//    cycleScrollView2.pageControlStyle = SDCycleScrollViewPageContolStyleClassic;
+//    
+//    cycleScrollView2.delegate = self;
+//    
+//    cycleScrollView2.backgroundColor = [UIColor colorWithRed:234/255.0 green:234/255.0 blue:234/255.0 alpha:1.0];
+//    //[cycleScrollView2 setDotColor:[UIColor redColor]];
+//    
+//    
+//    UIImageView *imageViewBg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 219/586.0*kScreenHeight, [UIScreen mainScreen].bounds.size.width, 68/586.0*kScreenHeight)];
+//    UIImage *imageBg = [UIImage imageNamed:@"图片上阴影"];
+//    imageViewBg.image = imageBg;
+//    [self.tableView.tableHeaderView addSubview:imageViewBg];
+//    
+//    //NSLog(@"%@",self.picArray);
+//    
+//    
+//    [imageViewBg addSubview:_pageControl];
+//    
+//    [self.tableView.tableHeaderView addSubview:cycleScrollView2];
+//    
+//    cycleScrollView2.infiniteLoop = NO; //关闭循环
+//    
+//    
+//    
+//    //             --- 模拟加载延迟
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        
+//        if (self.picArray.count == 0) {
+//#pragma mark - 如果请求到的图片数组为空， 则从本地请求，加载背景图片
+//            [self getLocalPicLoop];
+//        }else{
+//            cycleScrollView2.imageURLStringsGroup = self.picArray;
+//            if (self.picArray.count == 1) {
+//                //NSLog(@"%@",cycleScrollView2.subviews);
+//                //如果只有一张图片不展示pageControl
+//                cycleScrollView2.pageControlStyle = SDCycleScrollViewPageContolStyleNone;
+//                
+//            }
+//            cycleScrollView2.contentMode = UIViewContentModeScaleAspectFit;
+//            cycleScrollView2.clipsToBounds = YES;
+//            
+//        }
+//        
+//    });
+//    cycleScrollView2.autoScrollTimeInterval = 10000;
+//    [cycleScrollView2 addSubview:imageViewBg];
+//    [self.tableView.tableHeaderView addSubview:imageViewBg];
+//    //    [imageViewBg addSubview:_pageControl];
     
     
 }
+
+-(void)setTopScrollView
+{
+    self.scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 287/586.0*kScreenHeight)];
+    self.scrollView.delegate = self;
+    //self.scrollView.backgroundColor = [UIColor yellowColor];
+    self.scrollView.userInteractionEnabled = YES;
+    
+    //3.向滚动视图中添加多个图片子视图
+    for (int i =0; i<self.picArray.count; i++) {
+        //格式化图片的名称
+        //NSString *imageUrl = [NSString stringWithFormat:@"http://bjtest.ciqca.com/getPhotoList.action?typeid=69377067691&prefix=product&picindex=%d",i];
+        NSString *imageUrl = self.picArray[i];
+        NSURL *url = [NSURL URLWithString:imageUrl];
+        //创建一个图片视图对象
+        UIImageView *imageView = [[UIImageView alloc]init];
+        [imageView setImageWithURL:url];
+        //设置图片视图的位置及大小
+        //声明了一个结构体的变量，其中x和y和w和h初始化为0
+        CGRect iFrame = CGRectZero;
+        iFrame.origin = CGPointMake(self.scrollView.bounds.size.width*i, 0);
+        iFrame.size = self.scrollView.bounds.size;
+        imageView.frame = iFrame;
+        imageView.contentMode = UIViewContentModeScaleAspectFill;
+        imageView.clipsToBounds = YES;
+        imageView.tag = i;
+        imageView.userInteractionEnabled = YES;
+        
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap:)];
+        [imageView addGestureRecognizer:tap];
+        
+        //将图片视图添加到滚动视图中
+        [self.scrollView addSubview:imageView];
+        
+    }
+    
+    //4.设置滚动视图的内容大小
+    self.scrollView.contentSize = CGSizeMake(self.picArray.count*self.view.frame.size.width, 287/586.0*kScreenHeight);
+    //配置滚动视图到达边缘时不弹跳
+    self.scrollView.bounces = NO;
+    //配置滚动视图整页滚动
+    self.scrollView.pagingEnabled = YES;
+    //配置滚动视图不显示水平滚动条提示
+    self.scrollView.showsHorizontalScrollIndicator = NO;
+    [self.tableView.tableHeaderView addSubview:self.scrollView];
+}
+
+-(void)tap:(UITapGestureRecognizer *)tap{
+    NSLog(@"tap:%@",tap.view);
+    //启动图片浏览器
+    HZPhotoBrowser *browser = [[HZPhotoBrowser alloc] init];
+    browser.sourceImagesContainerView = self.scrollView; // 原图的父控件
+    browser.imageCount = self.scrollView.subviews.count-1; // 图片总数
+    browser.currentImageIndex = tap.view.tag;
+    browser.delegate = self;
+    browser.supViewController = self;
+    [browser show];
+}
+
+#pragma mark - 轮播图代理方法
+-(UIImage *)photoBrowser:(HZPhotoBrowser *)browser placeholderImageForIndex:(NSInteger)index
+{
+    UIImageView *imageView = self.scrollView.subviews[index];
+    return imageView.image;
+}
+
+- (NSURL *)photoBrowser:(HZPhotoBrowser *)browser highQualityImageURLForIndex:(NSInteger)index
+{
+    //    NSString *urlStr = [[self.photoItemArray[index] thumbnail_pic] stringByReplacingOccurrencesOfString:@"thumbnail" withString:@"bmiddle"];
+    //    return [NSURL URLWithString:urlStr];
+    
+    NSString *imageUrl = self.picArray[index];
+    
+    NSURL *url = [NSURL URLWithString:imageUrl];
+    return url;
+}
+
+-(void)photoBrowser:(HZPhotoBrowser *)browser returnSetCurrentImageViewIndex:(NSInteger)index
+{
+    [self.scrollView scrollRectToVisible:CGRectMake(index*self.view.frame.size.width , 0, self.view.frame.size.width, 287/586.0*kScreenHeight) animated:NO];
+}
+
 
 -(void)getLocalPicLoop
 {
@@ -1902,9 +1990,9 @@
         return 0;
     }
     
-//    if (section == 3) {
-//        return 55;
-//    }
+    if (section == 3) {
+        return 55;
+    }
     if (section == tableView.numberOfSections - 1   ) {
         return 10;
     }
@@ -1920,9 +2008,9 @@
     
     
     
-    //    if (indexPath.section ==3) {
-    //        return 110;
-    //    }
+        if (indexPath.section ==3) {
+            return 110;
+        }
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
             return 55;
@@ -1951,9 +2039,9 @@
     
     
     
-//    if (indexPath.section ==3) {
-//        return 110;
-//    }
+    if (indexPath.section ==3) {
+        return 110;
+    }
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
             return self.titleSize.height+10;
@@ -2007,9 +2095,9 @@
         
         return [self.productInfoArray.firstObject count];
     }
-//    if (section == 3) {//商品评价返回的cell个数;
-//        return 1;
-//    }
+    if (section == 3) {//商品评价返回的cell个数;
+        return 1;
+    }
     
     else  {
         if (self.productInfoArray.count == 1) {
@@ -2050,7 +2138,7 @@
         cell = [[RecordDetailTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID];
     }
     
-    if (indexPath.section == 3)
+    if (indexPath.section == 4)
     {//中文标签行
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         cell.titleLabel.font = [UIFont boldSystemFontOfSize:14];
@@ -2202,27 +2290,27 @@
         if (self.productInfoArray.count == 1) {
             ;
         }
-//        else{
-//            if (indexPath.section == 3) {
-//                
-//                EvaluateTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"evalueateID"];
-//                
-//                //                  cell.backgroundColor = [UIColor cyanColor];
-//                cell.starImage.image = [UIImage imageNamed:@"星星"];
-//                cell.comment.text = @"挺不错的";
-//                NSString *str = @"18236953178";
-//                
-//                NSString *subStr = [str substringWithRange:NSMakeRange(3,4)];
-//                cell.phoneNumber.text = [str stringByReplacingOccurrencesOfString:subStr withString:@"****"];
-//                
-//                cell.date.text = @"2015-01-02";
-//                [cell.button setTitle:@"查看所有评价" forState:UIControlStateNormal];
-//                
-//                [cell.button addTarget:self action:@selector(cellButtonAction:) forControlEvents:UIControlEventTouchUpInside];
-//                //                    cell.userInteractionEnabled = NO;
-//                //                    cell.backgroundColor = [UIColor cyanColor];
-//                return cell;
-//            }
+        else{
+            if (indexPath.section == 3) {
+                
+                EvaluateTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"evalueateID"];
+                
+                //                  cell.backgroundColor = [UIColor cyanColor];
+                cell.starImage.image = [UIImage imageNamed:@"星星"];
+                cell.comment.text = @"挺不错的";
+                NSString *str = @"18236953178";
+                
+                NSString *subStr = [str substringWithRange:NSMakeRange(3,4)];
+                cell.phoneNumber.text = [str stringByReplacingOccurrencesOfString:subStr withString:@"****"];
+                
+                cell.date.text = @"2015-01-02";
+                [cell.button setTitle:@"查看所有评价" forState:UIControlStateNormal];
+                
+                [cell.button addTarget:self action:@selector(cellButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+                //                    cell.userInteractionEnabled = NO;
+                //                    cell.backgroundColor = [UIColor cyanColor];
+                return cell;
+            }
             else
             {
                 //报检信息
@@ -2241,7 +2329,7 @@
                 [cell setTitleLabelText:productModel.text];
                 [cell setContentLabelText:productModel.value];
             }
-        //}
+        }
         [cell calculateheight];
     }
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
@@ -2256,13 +2344,13 @@
 #warning 评价界面跳转还没做
 -(void)cellButtonAction:(UIButton *)sender
 {
-//    NSLog(@"点击了查看所有评价");
+    NSLog(@"点击了查看所有评价");
 //    EvaluateViewController *evaluateVC = [[EvaluateViewController alloc] init];
 //    [self.navigationController pushViewController:evaluateVC animated:YES];
     
-    
 }
 #pragma mark - 点击
+    
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     //当手指离开某行时，就让某行的选中状态消失
@@ -2292,12 +2380,12 @@
         }
         
     }
-//    else if (indexPath.section == 3){
-//        
-////        //NSLog(@"点击l第三个section");
-////        cell.selectionStyle =UITableViewCellSelectionStyleNone;
-//        
-//    }
+    else if (indexPath.section == 3){
+        
+        //NSLog(@"点击l第三个section");
+        cell.selectionStyle =UITableViewCellSelectionStyleNone;
+        
+    }
     
     else{
         //NSLog(@"%@",cell.titleLabel.text);

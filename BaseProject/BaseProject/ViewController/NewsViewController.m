@@ -204,10 +204,10 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-- (void)backToMainViewController:(id)sender {
+- (void)backToMainViewController:(UIButton *)sender {
     //webView无法后退才跳转到主页面
     if ([self.webView canGoBack]) {
-        
+        sender.alpha = 1.0;
         [self.webView goBack];
         
     } else {
@@ -241,7 +241,7 @@
 
 //成功加载完毕
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
-    [self performSelector:@selector(loadEnd) withObject:nil afterDelay:0];
+    [self performSelector:@selector(loadEnd) withObject:nil afterDelay:1];
 
 }
 
