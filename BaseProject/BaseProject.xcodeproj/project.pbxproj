@@ -31,6 +31,9 @@
 		2FD88C551CCDB955007BE374 /* HZPhotoBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD88C4F1CCDB955007BE374 /* HZPhotoBrowser.m */; };
 		2FD88C561CCDB955007BE374 /* HZPhotoBrowserView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD88C521CCDB955007BE374 /* HZPhotoBrowserView.m */; };
 		2FD88C571CCDB955007BE374 /* HZWaitingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD88C541CCDB955007BE374 /* HZWaitingView.m */; };
+		2FD88C5B1CCDFC24007BE374 /* EmptyCommentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD88C591CCDFC24007BE374 /* EmptyCommentCell.m */; };
+		2FD88C5C1CCDFC24007BE374 /* EmptyCommentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2FD88C5A1CCDFC24007BE374 /* EmptyCommentCell.xib */; };
+		2FD88C5F1CCE0DE5007BE374 /* CommentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD88C5E1CCE0DE5007BE374 /* CommentViewController.m */; };
 		2FD8C5231CB5EEC800D0A8F1 /* JSBadgeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD8C5221CB5EEC800D0A8F1 /* JSBadgeView.m */; };
 		2FD968B51C43A26600A77AB9 /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD968B41C43A26600A77AB9 /* WelcomeViewController.m */; };
 		2FD968B81C43A38300A77AB9 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD968B71C43A38300A77AB9 /* MainViewController.m */; };
@@ -128,6 +131,11 @@
 		2FD88C521CCDB955007BE374 /* HZPhotoBrowserView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZPhotoBrowserView.m; sourceTree = "<group>"; };
 		2FD88C531CCDB955007BE374 /* HZWaitingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZWaitingView.h; sourceTree = "<group>"; };
 		2FD88C541CCDB955007BE374 /* HZWaitingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZWaitingView.m; sourceTree = "<group>"; };
+		2FD88C581CCDFC24007BE374 /* EmptyCommentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmptyCommentCell.h; sourceTree = "<group>"; };
+		2FD88C591CCDFC24007BE374 /* EmptyCommentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmptyCommentCell.m; sourceTree = "<group>"; };
+		2FD88C5A1CCDFC24007BE374 /* EmptyCommentCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EmptyCommentCell.xib; sourceTree = "<group>"; };
+		2FD88C5D1CCE0DE5007BE374 /* CommentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentViewController.h; sourceTree = "<group>"; };
+		2FD88C5E1CCE0DE5007BE374 /* CommentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentViewController.m; sourceTree = "<group>"; };
 		2FD8C5211CB5EEC800D0A8F1 /* JSBadgeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSBadgeView.h; sourceTree = "<group>"; };
 		2FD8C5221CB5EEC800D0A8F1 /* JSBadgeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSBadgeView.m; sourceTree = "<group>"; };
 		2FD968B31C43A26600A77AB9 /* WelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomeViewController.h; sourceTree = "<group>"; };
@@ -349,6 +357,8 @@
 				2FDDA12D1C61F6CC00BAEFEB /* UnrecognizedViewController.m */,
 				2FDDA12E1C61F6CC00BAEFEB /* WebViewController.h */,
 				2FDDA12F1C61F6CC00BAEFEB /* WebViewController.m */,
+				2FD88C5D1CCE0DE5007BE374 /* CommentViewController.h */,
+				2FD88C5E1CCE0DE5007BE374 /* CommentViewController.m */,
 			);
 			path = Scan;
 			sourceTree = "<group>";
@@ -562,6 +572,9 @@
 				2FD66A3C1CB3AAE2004FBFD9 /* MessageTableViewCell.h */,
 				2FD66A3D1CB3AAE2004FBFD9 /* MessageTableViewCell.m */,
 				2FD66A3E1CB3AAE2004FBFD9 /* MessageTableViewCell.xib */,
+				2FD88C581CCDFC24007BE374 /* EmptyCommentCell.h */,
+				2FD88C591CCDFC24007BE374 /* EmptyCommentCell.m */,
+				2FD88C5A1CCDFC24007BE374 /* EmptyCommentCell.xib */,
 				2FDEE2DA1CACC43C00F6FAED /* DueDateView.h */,
 				2FDEE2DB1CACC43C00F6FAED /* DueDateView.m */,
 			);
@@ -661,6 +674,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8566CE121C1FF378004693F0 /* LaunchScreen.storyboard in Resources */,
+				2FD88C5C1CCDFC24007BE374 /* EmptyCommentCell.xib in Resources */,
 				2FD9843A1C488EB3000EB94A /* DJRefresh.bundle in Resources */,
 				2FD66A401CB3AAE2004FBFD9 /* MessageTableViewCell.xib in Resources */,
 				8566CE0F1C1FF378004693F0 /* Assets.xcassets in Resources */,
@@ -727,6 +741,7 @@
 				2FD88C571CCDB955007BE374 /* HZWaitingView.m in Sources */,
 				2FD9843D1C488EB3000EB94A /* DJRefreshTopView.m in Sources */,
 				2FDDA1321C61F6CC00BAEFEB /* ScanViewController.m in Sources */,
+				2FD88C5F1CCE0DE5007BE374 /* CommentViewController.m in Sources */,
 				2FD8C5231CB5EEC800D0A8F1 /* JSBadgeView.m in Sources */,
 				2FDEE2DC1CACC43C00F6FAED /* DueDateView.m in Sources */,
 				2F834D351C4648530050E4A6 /* NSData+SDDataCache.m in Sources */,
@@ -738,6 +753,7 @@
 				2F834D361C4648530050E4A6 /* TAAbstractDotView.m in Sources */,
 				45333DD31C22A3120016A357 /* NSObject+HUD.m in Sources */,
 				2FD88C551CCDB955007BE374 /* HZPhotoBrowser.m in Sources */,
+				2FD88C5B1CCDFC24007BE374 /* EmptyCommentCell.m in Sources */,
 				2FDDA13B1C61F6E900BAEFEB /* LoginViewController.m in Sources */,
 				2FDDA1311C61F6CC00BAEFEB /* ScanRecordViewController.m in Sources */,
 				2FDDA1521C61F6F100BAEFEB /* IntroductionViewController.m in Sources */,
@@ -925,7 +941,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: ZheJiang Cloutech Technology Co., Ltd. (7TW99MF2U5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				GCC_PREFIX_HEADER = "$(PRODUCT_NAME)/PrefixHeader.pch";
 				INFOPLIST_FILE = BaseProject/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;

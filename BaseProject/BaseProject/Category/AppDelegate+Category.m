@@ -85,14 +85,14 @@
     NSDate *now = [NSDate date];
     NSString *notiMess = @"";
     if ([now isEqualToDate:[duedate laterDate:now]]) {
-        notiMess = [NSString stringWithFormat:@"请注意您扫描过的\"%@\"已过期",productName];
+        notiMess = [NSString stringWithFormat:@"您扫描过的\"%@\"已过期",productName];
     }else{
-        notiMess = [NSString stringWithFormat:@"请注意您扫描过的\"%@\"即将过期",productName];
+        notiMess = [NSString stringWithFormat:@"您扫描过的\"%@\"即将过期",productName];
     }
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"过期提醒"
                                                     message:notiMess
                                                    delegate:nil
-                                          cancelButtonTitle:@"OK"
+                                          cancelButtonTitle:@"确定"
                                           otherButtonTitles:nil];
     [alert show];
     

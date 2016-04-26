@@ -87,6 +87,8 @@ static const int ddLogLevel = DDLogLevelError;
 #define kWelcomeUrl @"app_welcomeapi.action"
 //二次认证接口
 #define kSecondAuthenticat @"tcodeapi.action"
+//c码评论查询接口
+#define kGetCCodeCommentUrl @"getccodecomment.action"
 
 
 #define kScreenHeight [UIScreen mainScreen].bounds.size.height

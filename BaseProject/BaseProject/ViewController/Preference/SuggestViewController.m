@@ -106,7 +106,7 @@
     
     UIButton *rightButton = [[UIButton alloc]init];
     [rightButton setTitle:@"提交" forState:UIControlStateNormal];
-    [rightButton addTarget:self action:@selector(rightItemAction) forControlEvents:UIControlEventTouchUpInside];
+    [rightButton addTarget:self action:@selector(rightItemAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:rightButton];
     [rightButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(-15);
@@ -135,8 +135,9 @@
 
 
 
--(void)rightItemAction
+-(void)rightItemAction:(UIButton *)sender
 {
+    sender.alpha = 1;
     if ([self.textView.text isEqualToString:@""]) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"请输入内容" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
         [alert show];
@@ -186,7 +187,6 @@
             }];
         }
     }
-
 }
 
 //日期格式转换

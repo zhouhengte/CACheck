@@ -19,6 +19,8 @@
 #import "DueDateView.h"
 #import "JSBadgeView.h"
 #import "HZPhotoBrowser.h"
+#import "EmptyCommentCell.h"
+#import "CommentViewController.h"
 //#import "HYBMoveDetailController.h"
 
 
@@ -72,6 +74,8 @@
 
 @property (nonatomic , strong) UIScrollView *scrollView;//轮播图
 
+@property (nonatomic , strong)NSMutableArray *commentArray;
+
 @end
 
 @implementation RecordDetailViewController
@@ -109,6 +113,13 @@
         self.localArray = [NSMutableArray array];
     }
     return _localArray;
+}
+-(NSMutableArray *)commentArray
+{
+    if (!_commentArray) {
+        _commentArray = [NSMutableArray array];
+    }
+    return _commentArray;
 }
 
 
@@ -171,7 +182,7 @@
     __anotherBool = true;
     
     [self.tableView registerClass:[EvaluateTableViewCell class] forCellReuseIdentifier:@"evalueateID"];
-
+    [self.tableView registerNib:[UINib nibWithNibName:@"EmptyCommentCell" bundle:nil] forCellReuseIdentifier:@"emptyCommentCell"];
     
     
 
@@ -805,7 +816,7 @@
     
     //获取商品名称
     NSArray *baseInfoArray = [self.wantDic objectForKey:@"BaseInfo"];
-    NSLog(@"!!!!%@",baseInfoArray);
+    //NSLog(@"!!!!%@",baseInfoArray);
     for (NSDictionary *innerDic in baseInfoArray) {
         if ([[innerDic objectForKey:@"key"] isEqualToString:@"ProductName"]) {
             //NSLog(@"%@",[innerDic objectForKey:@"value"]);
@@ -890,7 +901,7 @@
     // 设置触发通知的时间
     
     
-    NSLog(@"fireDate=%@",self.fireDate);
+    //NSLog(@"fireDate=%@",self.fireDate);
     
     notification.fireDate = self.fireDate;
     // 时区
@@ -934,6 +945,13 @@
 //        [self.navigationController popToRootViewControllerAnimated:YES];
 //    }
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+-(void)goToCommentViewController
+{
+    //NSLog(@"点击了我要评价");
+    CommentViewController *commentViewController = [[CommentViewController alloc]init];
+    [self.navigationController pushViewController:commentViewController animated:YES];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -1251,6 +1269,8 @@
     #pragma mark - c码认证接口
         self.requestUrl = [NSString stringWithFormat:@"%@/%@",kUrl,kAuthCodeUrl];
         //NSLog(@"%@",self.requestUrl);
+        
+        
     }else{
         self.str = self.barCode;
         self.requestUrl = [NSString stringWithFormat:@"%@/%@%@",kUrl,kbarCodeUrl,self.barCode];
@@ -1260,13 +1280,14 @@
     
     
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/plain"];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/plain",@"application/json", nil];
     NSUserDefaults* userDefaults = [NSUserDefaults standardUserDefaults];
     NSString *catoken = [userDefaults objectForKey:@"CA-Token"];
     [manager.requestSerializer setValue:catoken forHTTPHeaderField:@"CA-Token"];
     NSString *stringInt = [NSString stringWithFormat:@"%d",0];
     [manager.requestSerializer setValue:stringInt forHTTPHeaderField:@"Client-Flag"];
-    [manager POST:self.requestUrl parameters:self.paramDic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [manager POST:self.requestUrl parameters:self.paramDic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
+    {
         //NSLog(@"!!%@",responseObject);
         if ([responseObject[@"Result"]integerValue] !=0 ) {
             return ;
@@ -1521,6 +1542,21 @@
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"%@",error);
     }];
+    
+    NSString *getCCodeCommentUrl = [NSString stringWithFormat:@"%@/%@",kUrl,kGetCCodeCommentUrl];
+    NSMutableDictionary *getDic = [[NSMutableDictionary alloc]init];
+    [getDic setValue:self.judgeStr forKey:@"typeid"];
+    AFHTTPSessionManager *manager2 = [AFHTTPSessionManager manager];
+    NSString *token = [manager.requestSerializer valueForHTTPHeaderField:@"CA-Token"];
+    NSLog(@"catoken:%@",token);
+    manager2.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/plain",@"application/json", nil];
+
+    [manager2 POST:getCCodeCommentUrl parameters:getDic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSLog(@"评论:%@",responseObject);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        NSLog(@"获取评论失败%@",error);
+    }];
+    
 }
 
 -(void)setBottomButton
@@ -1801,6 +1837,7 @@
             [self.picArray addObject:dic2];
             
         }
+
         [self setTopScrollView];
        // NSLog(@"图片数组 %@",self.picArray);
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
@@ -1869,56 +1906,91 @@
 
 -(void)setTopScrollView
 {
-    self.scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 287/586.0*kScreenHeight)];
-    self.scrollView.delegate = self;
-    //self.scrollView.backgroundColor = [UIColor yellowColor];
-    self.scrollView.userInteractionEnabled = YES;
-    
-    //3.向滚动视图中添加多个图片子视图
-    for (int i =0; i<self.picArray.count; i++) {
-        //格式化图片的名称
-        //NSString *imageUrl = [NSString stringWithFormat:@"http://bjtest.ciqca.com/getPhotoList.action?typeid=69377067691&prefix=product&picindex=%d",i];
-        NSString *imageUrl = self.picArray[i];
-        NSURL *url = [NSURL URLWithString:imageUrl];
-        //创建一个图片视图对象
-        UIImageView *imageView = [[UIImageView alloc]init];
-        [imageView setImageWithURL:url];
-        //设置图片视图的位置及大小
-        //声明了一个结构体的变量，其中x和y和w和h初始化为0
-        CGRect iFrame = CGRectZero;
-        iFrame.origin = CGPointMake(self.scrollView.bounds.size.width*i, 0);
-        iFrame.size = self.scrollView.bounds.size;
-        imageView.frame = iFrame;
-        imageView.contentMode = UIViewContentModeScaleAspectFill;
-        imageView.clipsToBounds = YES;
-        imageView.tag = i;
-        imageView.userInteractionEnabled = YES;
+    if (self.picArray.count == 0) {
+        [self getLocalPicLoop];
+    }else{
+        self.scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 287/586.0*kScreenHeight)];
+        self.scrollView.delegate = self;
+        //self.scrollView.backgroundColor = [UIColor yellowColor];
+        self.scrollView.userInteractionEnabled = YES;
         
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap:)];
-        [imageView addGestureRecognizer:tap];
+        //3.向滚动视图中添加多个图片子视图
+        for (int i =0; i<self.picArray.count; i++) {
+            //格式化图片的名称
+            //NSString *imageUrl = [NSString stringWithFormat:@"http://bjtest.ciqca.com/getPhotoList.action?typeid=69377067691&prefix=product&picindex=%d",i];
+            NSString *imageUrl = self.picArray[i];
+            NSURL *url = [NSURL URLWithString:imageUrl];
+            //创建一个图片视图对象
+            UIImageView *imageView = [[UIImageView alloc]init];
+            [imageView setImageWithURL:url];
+            //设置图片视图的位置及大小
+            //声明了一个结构体的变量，其中x和y和w和h初始化为0
+            CGRect iFrame = CGRectZero;
+            iFrame.origin = CGPointMake(self.scrollView.bounds.size.width*i, 0);
+            iFrame.size = self.scrollView.bounds.size;
+            imageView.frame = iFrame;
+            imageView.contentMode = UIViewContentModeScaleAspectFill;
+            imageView.clipsToBounds = YES;
+            imageView.tag = i;
+            imageView.userInteractionEnabled = YES;
+            
+            UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap:)];
+            [imageView addGestureRecognizer:tap];
+            
+            //将图片视图添加到滚动视图中
+            [self.scrollView addSubview:imageView];
+            
+        }
         
-        //将图片视图添加到滚动视图中
-        [self.scrollView addSubview:imageView];
+        //4.设置滚动视图的内容大小
+        self.scrollView.contentSize = CGSizeMake(self.picArray.count*self.view.frame.size.width, 287/586.0*kScreenHeight);
+        //配置滚动视图到达边缘时不弹跳
+        self.scrollView.bounces = NO;
+        //配置滚动视图整页滚动
+        self.scrollView.pagingEnabled = YES;
+        //配置滚动视图不显示水平滚动条提示
+        self.scrollView.showsHorizontalScrollIndicator = NO;
+        [self.tableView.tableHeaderView addSubview:self.scrollView];
         
+        if (self.picArray.count > 1) {
+            //1.创建pageControl的实例
+            UIPageControl * pageControl = [[UIPageControl alloc]init];
+            self.pageControl = pageControl;
+            
+            //2.设置pageControl的位置和大小
+            //pageControl.frame = CGRectMake(0, self.view.bounds.size.height-50, self.view.bounds.size.width, 30);
+            
+            //3.添加pageControl到控制器的view中
+            [self.tableView.tableHeaderView addSubview:pageControl];
+            [pageControl mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.centerX.mas_equalTo(0);
+                make.size.mas_equalTo(CGSizeMake(49, 5));
+                make.bottom.mas_equalTo(-12);
+            }];
+            //4.配置pageControl
+            pageControl.numberOfPages = self.picArray.count;
+            
+            //5.配置提示符的颜色
+            pageControl.pageIndicatorTintColor = [UIColor colorWithRed:204/255.0 green:204/255.0 blue:204/255.0 alpha:0.6];
+            
+            //6.配置选中的提示符的颜色
+            pageControl.currentPageIndicatorTintColor = UIColorFromRGB(0x1fb0ff);
+            
+            //7.关闭圆点与用户的交互功能
+            pageControl.userInteractionEnabled = NO;
+            
+            pageControl.currentPage = 0;
+        }
+
     }
-    
-    //4.设置滚动视图的内容大小
-    self.scrollView.contentSize = CGSizeMake(self.picArray.count*self.view.frame.size.width, 287/586.0*kScreenHeight);
-    //配置滚动视图到达边缘时不弹跳
-    self.scrollView.bounces = NO;
-    //配置滚动视图整页滚动
-    self.scrollView.pagingEnabled = YES;
-    //配置滚动视图不显示水平滚动条提示
-    self.scrollView.showsHorizontalScrollIndicator = NO;
-    [self.tableView.tableHeaderView addSubview:self.scrollView];
 }
 
 -(void)tap:(UITapGestureRecognizer *)tap{
-    NSLog(@"tap:%@",tap.view);
+    //NSLog(@"tap:%@",tap.view);
     //启动图片浏览器
     HZPhotoBrowser *browser = [[HZPhotoBrowser alloc] init];
     browser.sourceImagesContainerView = self.scrollView; // 原图的父控件
-    browser.imageCount = self.scrollView.subviews.count-1; // 图片总数
+    browser.imageCount = self.picArray.count; // 图片总数
     browser.currentImageIndex = tap.view.tag;
     browser.delegate = self;
     browser.supViewController = self;
@@ -2008,12 +2080,12 @@
     
     
     
-        if (indexPath.section ==3) {
+        if (indexPath.section == self.productInfoArray.count+1) {
             return 110;
         }
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
-            return 55;
+            return self.titleSize.height+10;
             
         }else{
             return 35;
@@ -2038,8 +2110,7 @@
     }
     
     
-    
-    if (indexPath.section ==3) {
+    if (indexPath.section == self.productInfoArray.count+1) {
         return 110;
     }
     if (indexPath.section == 0) {
@@ -2056,11 +2127,11 @@
         [cell calculateheight];
         return cell.frame.size.height;
         //        return 44;
-    }else
-    {
+    }else{
         return 44;
     }
-    
+
+
     
     
     
@@ -2068,7 +2139,7 @@
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    //    return self.productInfoArray.count + 2;
+        //return self.productInfoArray.count + 3;
     return self.textArray.count + 2;
 }
 
@@ -2095,11 +2166,9 @@
         
         return [self.productInfoArray.firstObject count];
     }
-    if (section == 3) {//商品评价返回的cell个数;
+    if (section == self.productInfoArray.count+1) {//商品评价返回的cell个数;
         return 1;
-    }
-    
-    else  {
+    }else  {
         if (self.productInfoArray.count == 1) {
             return 0;
         }else{
@@ -2138,7 +2207,7 @@
         cell = [[RecordDetailTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellID];
     }
     
-    if (indexPath.section == 4)
+    if (indexPath.section == tableView.numberOfSections -1)
     {//中文标签行
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         cell.titleLabel.font = [UIFont boldSystemFontOfSize:14];
@@ -2149,7 +2218,7 @@
         
         if (indexPath.row == 0) {
             //            tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-            if (self.url == nil) {
+            if ([self.url isEqualToString:@""]) {
                 cell.hidden = YES;
                 
             }else{
@@ -2161,7 +2230,7 @@
                 
                 
                 cell.textLabel.hidden = YES;
-                
+                //cell.backgroundColor = [UIColor redColor];
                 //NSLog(@"%@",self.url);
             }
         }
@@ -2199,8 +2268,8 @@
                 if ([self.countKey isEqualToString:@"1"])
                 {
                     UIImageView * aImageView = [[UIImageView alloc] initWithFrame:CGRectMake(cell.textLabel.frame.origin.x + labelSize.width + 20, 6,12, 14)];
-                    NSLog(@"aImageView.frame = %@",NSStringFromCGRect(aImageView.frame));
-                    NSLog(@"width:%f",labelSize.width);
+                    //NSLog(@"aImageView.frame = %@",NSStringFromCGRect(aImageView.frame));
+                    //NSLog(@"width:%f",labelSize.width);
                     if (labelSize.width > 320.0/375.0*kScreenWidth)
                     {
                         labelSize.width = labelSize.width - 25/375.0*kScreenWidth;
@@ -2216,6 +2285,7 @@
             cell.textLabel.font = [UIFont boldSystemFontOfSize:17];
             cell.textLabel.textColor = UIColorFromRGB(0x353535);
             cell.userInteractionEnabled = YES;
+            //cell.backgroundColor = [UIColor orangeColor];
         }
 #pragma mark - 此处做的变更
         //如果type值为1则展示， type值为2则图片链接
@@ -2248,6 +2318,7 @@
 #warning 此处可以获得后台传过来的color值，不用判断，
                 cell.userInteractionEnabled = NO;
                 cell.textLabel.textColor = UIColorFromRGB(value);
+                //cell.backgroundColor = [UIColor yellowColor];
                 
             }
             cell.textLabel.text = baseModel.value;
@@ -2284,14 +2355,28 @@
         //CGRect  originFrame = cell.contentLabel.frame;
         cell.contentLabel.numberOfLines = 0;
         [cell calculateheight];//没看明白，以后再研究
-        
+        //cell.backgroundColor = [UIColor greenColor];
     }else
     {
         if (self.productInfoArray.count == 1) {
-            ;
+            if (indexPath.section == 2) {
+                if (self.commentArray.count == 0) {
+                    EmptyCommentCell *cell = [tableView dequeueReusableCellWithIdentifier:@"emptyCommentCell"];
+                    [cell.commentButton addTarget:self action:@selector(goToCommentViewController) forControlEvents:UIControlEventTouchUpInside];
+                    //cell.backgroundColor = [UIColor blueColor];
+                    return cell;
+                }
+            }
+
         }
         else{
             if (indexPath.section == 3) {
+                if (self.commentArray.count == 0) {
+                    EmptyCommentCell *cell = [tableView dequeueReusableCellWithIdentifier:@"emptyCommentCell"];
+                    [cell.commentButton addTarget:self action:@selector(goToCommentViewController) forControlEvents:UIControlEventTouchUpInside];
+                    //cell.backgroundColor = [UIColor blueColor];
+                    return cell;
+                }
                 
                 EvaluateTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"evalueateID"];
                 
@@ -2328,9 +2413,10 @@
                 //        cell.titleLabel.text = productModel.text;
                 [cell setTitleLabelText:productModel.text];
                 [cell setContentLabelText:productModel.value];
+                //cell.backgroundColor = [UIColor purpleColor];
             }
         }
-        [cell calculateheight];
+        //[cell calculateheight];
     }
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     
@@ -2344,7 +2430,7 @@
 #warning 评价界面跳转还没做
 -(void)cellButtonAction:(UIButton *)sender
 {
-    NSLog(@"点击了查看所有评价");
+    //NSLog(@"点击了查看所有评价");
 //    EvaluateViewController *evaluateVC = [[EvaluateViewController alloc] init];
 //    [self.navigationController pushViewController:evaluateVC animated:YES];
     

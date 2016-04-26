@@ -31,11 +31,11 @@
     int remainingDays = 0;
     if (timeInterval <= 0) {
         remainingDays = 0;
-        self.titleLabel.text = [NSString stringWithFormat:@"请注意您扫描过的\"%@\"已过期", messageDic[@"productname"]];
+        self.titleLabel.text = [NSString stringWithFormat:@"您扫描过的\"%@\"已过期", messageDic[@"productname"]];
     }else{
         remainingDays = ((int)timeInterval)/(3600*24)+1;
         //self.titleLabel.text = [NSString stringWithFormat:@"请注意您扫描过的\"%@\"保质期还剩%d天", messageDic[@"productname"],remainingDays];
-        self.titleLabel.text = [NSString stringWithFormat:@"请注意您扫描过的\"%@\"即将过期", messageDic[@"productname"]];
+        self.titleLabel.text = [NSString stringWithFormat:@"您扫描过的\"%@\"即将过期", messageDic[@"productname"]];
     }
     self.titleLabel.textColor = UIColorFromRGB(0x353535);
     
@@ -45,7 +45,12 @@
     self.leftImageView.contentMode = UIViewContentModeScaleAspectFill;
     self.leftImageView.clipsToBounds = YES;
     
-    NSDate *date = messageDic[@"firedate"];
+    NSDate *date = [NSDate date];
+    if (timeInterval <= 0) {
+        
+    }else{
+        date = messageDic[@"firedate"];
+    }
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     dateFormatter.timeZone = [NSTimeZone localTimeZone];
     [dateFormatter setDateFormat:@"MM-dd HH:mm"];

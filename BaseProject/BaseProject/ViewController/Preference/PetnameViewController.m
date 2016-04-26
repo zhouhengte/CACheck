@@ -122,7 +122,7 @@
     
     UIButton *rightButton = [[UIButton alloc]init];
     [rightButton setTitle:@"提交" forState:UIControlStateNormal];
-    [rightButton addTarget:self action:@selector(rightItemAction) forControlEvents:UIControlEventTouchUpInside];
+    [rightButton addTarget:self action:@selector(rightItemAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:rightButton];
     [rightButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(-15);
@@ -154,8 +154,9 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
--(void)rightItemAction
+-(void)rightItemAction:(UIButton *)sender
 {
+    sender.alpha = 1;
     if ([self.petnameTextField.text length] > 14) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"昵称不能超过14位" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
         [alert show];
