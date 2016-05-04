@@ -15,7 +15,7 @@
 @interface MainViewController ()
 @property (strong, nonatomic) UIImageView *backgroundImageView;
 @property (strong, nonatomic) UIView *bottomView;
-@property (strong, nonatomic) UIButton *scanIconButton;
+
 @property (strong, nonatomic) UIButton *scanRecordButton;
 @property (strong, nonatomic) UIButton *messageButton;
 @property (strong, nonatomic) UIButton *newsButton;

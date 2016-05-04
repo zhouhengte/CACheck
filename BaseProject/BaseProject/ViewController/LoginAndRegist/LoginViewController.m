@@ -218,11 +218,16 @@
             //设置logout为空，不然主页面会弹出2个hud
             [userDefaults setObject:@"" forKey:@"logout"];
             
-            MainViewController *mainVC =[self.storyboard instantiateViewControllerWithIdentifier:@"mainViewController"];
-            mainVC.from = @"登录成功";
-            [self.navigationController pushViewController:mainVC animated:YES];
-            //将mainVC设为导航栏唯一页面，使其无法右滑返回
-            //[self.navigationController setViewControllers:@[mainVC]];
+            if ([self.from isEqualToString:@"comment"]) {
+                [self.navigationController popViewControllerAnimated:YES];
+            }else{
+            
+                MainViewController *mainVC =[self.storyboard instantiateViewControllerWithIdentifier:@"mainViewController"];
+                mainVC.from = @"登录成功";
+                [self.navigationController pushViewController:mainVC animated:YES];
+                //将mainVC设为导航栏唯一页面，使其无法右滑返回
+                //[self.navigationController setViewControllers:@[mainVC]];
+            }
             
             [self.hud hide:YES];
 

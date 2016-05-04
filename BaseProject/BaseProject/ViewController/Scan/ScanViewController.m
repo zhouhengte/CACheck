@@ -109,7 +109,7 @@
     UIBezierPath *redLinePath = [UIBezierPath bezierPath];
     [redLinePath moveToPoint:CGPointMake(0, height/2.0)];
     [redLinePath addLineToPoint:CGPointMake(width, height/2.0)];
-    redLinePath.lineWidth = 2;
+    redLinePath.lineWidth = 1;
 //    CGPathMoveToPoint(redLinePath, NULL, 0, height/2.0);
 //    CGPathAddLineToPoint(redLinePath, NULL, width, height/2.0);
 

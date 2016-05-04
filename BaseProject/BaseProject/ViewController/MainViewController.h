@@ -10,4 +10,5 @@
 
 @interface MainViewController : ViewController
 @property(nonatomic ,strong) NSString *from;
+@property (strong, nonatomic) UIButton *scanIconButton;
 @end

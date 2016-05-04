@@ -139,7 +139,7 @@
         NSString *strParam = [self dictionaryToJson:dic];
         NSDictionary *paramDic = @{@"json":strParam};
         
-        NSString *url = @"http://appserver.ciqca.com/pushcodeapi.action";
+        NSString *url = [NSString stringWithFormat:@"%@/%@",kUrl,kPushCodeUrl];
         
         
         //  AFN POST 请求
@@ -219,7 +219,8 @@
     //    manager.requestSerializer = [AFJSONRequestSerializer serializer];
     //    manager.responseSerializer = [AFJSONResponseSerializer serializer];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/plain"];
-    NSString *url = @"http://appserver.ciqca.com/registeappuserapi.action";
+    NSString *url = [NSString stringWithFormat:@"%@/%@",kUrl,kRegistUrl];
+    
     
     //密码进行md5 加密
     NSString *passwordMd5 = [self.passwordTextField.text MD5];

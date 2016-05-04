@@ -21,6 +21,7 @@
 #import "HZPhotoBrowser.h"
 #import "EmptyCommentCell.h"
 #import "CommentViewController.h"
+#import "CommentNetManager.h"
 //#import "HYBMoveDetailController.h"
 
 
@@ -74,7 +75,9 @@
 
 @property (nonatomic , strong) UIScrollView *scrollView;//轮播图
 
-@property (nonatomic , strong)NSMutableArray *commentArray;
+@property (nonatomic , strong)NSMutableDictionary *commentDic;
+
+@property (nonatomic , strong) NSString *typeid;
 
 @end
 
@@ -114,12 +117,12 @@
     }
     return _localArray;
 }
--(NSMutableArray *)commentArray
+-(NSMutableDictionary *)commentDic
 {
-    if (!_commentArray) {
-        _commentArray = [NSMutableArray array];
+    if (!_commentDic) {
+        _commentDic = [NSMutableDictionary dictionary];
     }
-    return _commentArray;
+    return _commentDic;
 }
 
 
@@ -951,6 +954,14 @@
 {
     //NSLog(@"点击了我要评价");
     CommentViewController *commentViewController = [[CommentViewController alloc]init];
+    commentViewController.commentDic = self.commentDic;
+    commentViewController.productDic = self.wantDic;
+    commentViewController.productCode = self.judgeStr;
+    if (self.barCode != nil) {
+        commentViewController.isBarcode = YES;
+    }else{
+        commentViewController.isBarcode = NO;
+    }
     [self.navigationController pushViewController:commentViewController animated:YES];
 }
 
@@ -958,6 +969,9 @@
 {
     [super viewWillAppear:animated];
     [MobClick beginLogPageView:@"扫描记录详情"];//("PageOne"为页面名称，可自定义)
+    
+    [self getComment];
+
     
 //    
 //    //[self.view bringSubviewToFront:self.button];
@@ -1147,6 +1161,14 @@
     self.wantDic = [array firstObject];
     
     self.textArray = [NSMutableArray array];
+    if (self.codeStr != 0) {
+        self.typeid = self.wantDic[@"typeid"];//获取商品备案号用于获取评论
+        [self getComment];//获取评论
+    }else{
+        [self getBarCodeComment];
+    }
+
+    
     NSArray * a = [self.wantDic objectForKey:@"ProductInfo"];
     for (NSDictionary *dict in a) {
         NSString *b = dict[@"text"];
@@ -1286,13 +1308,26 @@
     [manager.requestSerializer setValue:catoken forHTTPHeaderField:@"CA-Token"];
     NSString *stringInt = [NSString stringWithFormat:@"%d",0];
     [manager.requestSerializer setValue:stringInt forHTTPHeaderField:@"Client-Flag"];
+    NSLog(@"requesturl:%@",self.requestUrl);
+    NSLog(@"requestDic:%@",self.paramDic);
+    
+    
     [manager POST:self.requestUrl parameters:self.paramDic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
     {
-        //NSLog(@"!!%@",responseObject);
+        NSLog(@"responseObject:%@",responseObject);
         if ([responseObject[@"Result"]integerValue] !=0 ) {
             return ;
         }
         self.textArray = [NSMutableArray array];
+        if (self.codeStr != nil) {//c码
+            self.typeid = responseObject[@"typeid"];//获取商品备案号用于获取评论
+            
+            [self getComment];//获取评论
+        }else{//条码
+            [self getBarCodeComment];
+        }
+
+        
         NSArray * a = [responseObject objectForKey:@"ProductInfo"];
         for (NSDictionary *dict in a) {
             NSString *b = dict[@"text"];
@@ -1543,21 +1578,63 @@
         NSLog(@"%@",error);
     }];
     
-    NSString *getCCodeCommentUrl = [NSString stringWithFormat:@"%@/%@",kUrl,kGetCCodeCommentUrl];
-    NSMutableDictionary *getDic = [[NSMutableDictionary alloc]init];
-    [getDic setValue:self.judgeStr forKey:@"typeid"];
-    AFHTTPSessionManager *manager2 = [AFHTTPSessionManager manager];
-    NSString *token = [manager.requestSerializer valueForHTTPHeaderField:@"CA-Token"];
-    NSLog(@"catoken:%@",token);
-    manager2.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/plain",@"application/json", nil];
 
-    [manager2 POST:getCCodeCommentUrl parameters:getDic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    
+}
+
+-(void)getComment
+{
+    //获取评论
+    NSString *getccodeCommentUrl = [NSString stringWithFormat:@"%@/%@",kUrl,kGetCCodeCommentUrl];
+    NSMutableDictionary *getDic = [[NSMutableDictionary alloc]init];
+    //[getDic setValue:@1 forKey:@"typeid"];
+    //[getDic setValue:@"12345678901222" forKey:@"barcode"];
+    
+    [getDic setValue:self.typeid forKey:@"typeid"];
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    [manager.requestSerializer setValue:@"0" forHTTPHeaderField:@"Client-Flag"];
+    //    [manager2.requestSerializer setValue:catoken forHTTPHeaderField:@"CA-Token"];
+    NSString *token = [manager.requestSerializer valueForHTTPHeaderField:@"CA-Tokeƒn"];
+    NSLog(@"catoken:%@",token);
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/plain",@"application/json", nil];
+    
+    NSString *para = [self dictionaryToJson:getDic];
+    
+    NSDictionary *paraDic = @{@"json":para};
+    NSLog(@"参数:%@",paraDic);
+    [manager POST:getccodeCommentUrl parameters:paraDic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         NSLog(@"评论:%@",responseObject);
+        if ([responseObject[@"Result"] integerValue] == 2) {
+            self.commentDic = nil;
+        }else if ([responseObject[@"Result"] integerValue] == 0)
+        {
+            self.commentDic = responseObject;
+            [self.tableView reloadData];
+        }
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"获取评论失败%@",error);
     }];
-    
+
 }
+
+-(void)getBarCodeComment
+{
+    [CommentNetManager getBarCodeCommentWithBarCode:self.barCode CurrentPage:@"0" PageSize:@"10" completionHandle:^(id responseObject, NSError *error) {
+        if (!error) {
+            NSLog(@"%@",responseObject);
+            if ([responseObject[@"Result"] integerValue] == 2) {
+                self.commentDic = nil;
+            }else if ([responseObject[@"Result"] integerValue] == 0)
+            {
+                self.commentDic = responseObject;
+                [self.tableView reloadData];
+            }
+        }else{
+            NSLog(@"获取评论error:%@",error);
+        }
+    }];
+}
+
 
 -(void)setBottomButton
 {
@@ -2063,6 +2140,9 @@
     }
     
     if (section == 3) {
+        if (self.barCode != nil) {
+            return 0;
+        }
         return 55;
     }
     if (section == tableView.numberOfSections - 1   ) {
@@ -2081,7 +2161,7 @@
     
     
         if (indexPath.section == self.productInfoArray.count+1) {
-            return 110;
+            return 90;
         }
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
@@ -2110,10 +2190,10 @@
     }
     
     
-    if (indexPath.section == self.productInfoArray.count+1) {
-        return 110;
+    if (indexPath.section == self.productInfoArray.count+1) {//评价
+        return 90;
     }
-    if (indexPath.section == 0) {
+    if (indexPath.section == 0) {//标题
         if (indexPath.row == 0) {
             return self.titleSize.height+10;
             
@@ -2140,6 +2220,7 @@
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
         //return self.productInfoArray.count + 3;
+
     return self.textArray.count + 2;
 }
 
@@ -2358,12 +2439,22 @@
         //cell.backgroundColor = [UIColor greenColor];
     }else
     {
-        if (self.productInfoArray.count == 1) {
-            if (indexPath.section == 2) {
-                if (self.commentArray.count == 0) {
+        if (self.productInfoArray.count == 1)
+        {
+            if (indexPath.section == 2)
+            {
+                if (self.commentDic.count == 0)
+                {
+                    EmptyCommentCell *cell = [tableView dequeueReusableCellWithIdentifier:@"emptyCommentCell"];
+                    [cell.commentButton addTarget:self action:@selector(goToCommentViewController) forControlEvents:UIControlEventTouchUpInside];
+                    return cell;
+                }else{
                     EmptyCommentCell *cell = [tableView dequeueReusableCellWithIdentifier:@"emptyCommentCell"];
                     [cell.commentButton addTarget:self action:@selector(goToCommentViewController) forControlEvents:UIControlEventTouchUpInside];
                     //cell.backgroundColor = [UIColor blueColor];
+
+                    [cell.commentButton setTitle:@"查看所有评价" forState:UIControlStateNormal];
+                    cell.label.text = self.commentDic[@"Data"][0][@"ccomment"];
                     return cell;
                 }
             }
@@ -2371,30 +2462,39 @@
         }
         else{
             if (indexPath.section == 3) {
-                if (self.commentArray.count == 0) {
+                if (self.commentDic.count == 0)
+                {
                     EmptyCommentCell *cell = [tableView dequeueReusableCellWithIdentifier:@"emptyCommentCell"];
                     [cell.commentButton addTarget:self action:@selector(goToCommentViewController) forControlEvents:UIControlEventTouchUpInside];
-                    //cell.backgroundColor = [UIColor blueColor];
+                    return cell;
+                }else{
+                    EmptyCommentCell *cell = [tableView dequeueReusableCellWithIdentifier:@"emptyCommentCell"];
+                    [cell.commentButton addTarget:self action:@selector(goToCommentViewController) forControlEvents:UIControlEventTouchUpInside];
+
+                    [cell.commentButton setTitle:@"查看所有评价" forState:UIControlStateNormal];
+                    cell.label.text = self.commentDic[@"Data"][0][@"ccomment"];
+                    
                     return cell;
                 }
+
                 
-                EvaluateTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"evalueateID"];
-                
-                //                  cell.backgroundColor = [UIColor cyanColor];
-                cell.starImage.image = [UIImage imageNamed:@"星星"];
-                cell.comment.text = @"挺不错的";
-                NSString *str = @"18236953178";
-                
-                NSString *subStr = [str substringWithRange:NSMakeRange(3,4)];
-                cell.phoneNumber.text = [str stringByReplacingOccurrencesOfString:subStr withString:@"****"];
-                
-                cell.date.text = @"2015-01-02";
-                [cell.button setTitle:@"查看所有评价" forState:UIControlStateNormal];
-                
-                [cell.button addTarget:self action:@selector(cellButtonAction:) forControlEvents:UIControlEventTouchUpInside];
-                //                    cell.userInteractionEnabled = NO;
-                //                    cell.backgroundColor = [UIColor cyanColor];
-                return cell;
+//                EvaluateTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"evalueateID"];
+//                
+//                //                  cell.backgroundColor = [UIColor cyanColor];
+//                cell.starImage.image = [UIImage imageNamed:@"星星"];
+//                cell.comment.text = @"挺不错的";
+//                NSString *str = @"18236953178";
+//                
+//                NSString *subStr = [str substringWithRange:NSMakeRange(3,4)];
+//                cell.phoneNumber.text = [str stringByReplacingOccurrencesOfString:subStr withString:@"****"];
+//                
+//                cell.date.text = @"2015-01-02";
+//                [cell.button setTitle:@"查看所有评价" forState:UIControlStateNormal];
+//                
+//                [cell.button addTarget:self action:@selector(cellButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+//                //                    cell.userInteractionEnabled = NO;
+//                //                    cell.backgroundColor = [UIColor cyanColor];
+//                return cell;
             }
             else
             {
@@ -2427,14 +2527,7 @@
     return cell;
     
 }
-#warning 评价界面跳转还没做
--(void)cellButtonAction:(UIButton *)sender
-{
-    //NSLog(@"点击了查看所有评价");
-//    EvaluateViewController *evaluateVC = [[EvaluateViewController alloc] init];
-//    [self.navigationController pushViewController:evaluateVC animated:YES];
-    
-}
+
 #pragma mark - 点击
     
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -2474,9 +2567,11 @@
     }
     
     else{
-        //NSLog(@"%@",cell.titleLabel.text);
-        webVC.titleStr = cell.titleLabel.text;
-        [self.navigationController pushViewController:webVC animated:YES];
+        if (self.codeStr != nil) {
+            webVC.titleStr = cell.titleLabel.text;
+            [self.navigationController pushViewController:webVC animated:YES];
+        }
+
     }
     
     
@@ -2547,6 +2642,40 @@
         
         [View addSubview:smallView];
         [View addSubview:headerView];
+        
+        if (section == self.productInfoArray.count+1) {
+            if (self.commentDic.count != 0) {
+                UILabel *label = [[UILabel alloc]init];
+                label.font = [UIFont systemFontOfSize:12];
+                //float totalScore = [self.commentDic[@"totalscore1"] floatValue]/[self.commentDic[@"totalcnt"] floatValue];
+                label.text = [NSString stringWithFormat:@"%@分",self.commentDic[@"Data"][0][@"levelscore"]];
+                [View addSubview:label];
+                [label mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.right.mas_equalTo(-12);
+                    make.centerY.mas_equalTo(headerLabel);
+                }];
+                UIImageView *backgroundImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"五星空"]];
+                [View addSubview:backgroundImageView];
+                [backgroundImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.right.mas_equalTo(label.mas_left).mas_equalTo(-7);
+                    make.centerY.mas_equalTo(headerLabel);
+                    make.size.mas_equalTo(CGSizeMake(67, 11));
+                }];
+                UIImageView *foregroundImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"五星全"]];
+                [View addSubview:foregroundImageView];
+                [foregroundImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.right.mas_equalTo(label.mas_left).mas_equalTo(-7);
+                    make.centerY.mas_equalTo(headerLabel);
+                    make.size.mas_equalTo(CGSizeMake(67, 11));
+                }];
+                CAShapeLayer *maskLayer = [CAShapeLayer layer];
+                UIBezierPath *toPath = [UIBezierPath bezierPathWithRect:CGRectMake(0, 0, 68*[self.commentDic[@"Data"][0][@"levelscore"] floatValue]/5, 11)];
+                maskLayer.path = toPath.CGPath;
+                foregroundImageView.layer.mask = maskLayer;
+            }
+
+        }
+        
         return View;
     }
     

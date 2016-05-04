@@ -872,12 +872,14 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
+                        <outlet property="delegate" destination="g0C-Nf-xiH" id="gUb-32-XKe"/>
                         <segue destination="jd0-QF-9Yd" kind="relationship" relationship="rootViewController" id="qgG-11-8jf"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZzV-U5-gbC" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <customObject id="g0C-Nf-xiH" customClass="ZHTNavigationDelegate"/>
             </objects>
-            <point key="canvasLocation" x="1639" y="-397"/>
+            <point key="canvasLocation" x="1639" y="-403"/>
         </scene>
     </scenes>
     <resources>

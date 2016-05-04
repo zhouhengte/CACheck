@@ -43,6 +43,7 @@
         _thirdLabel.text = @"0";
     }else{
         //        _duedateLabel.textColor = UIColorFromRGB(0x34b5fe);
+        self.label.text = @"此商品离过期还有";
         int totaldays = ((int)timeInterval)/(3600*24)+1;
         if (totaldays <= 10) {
             self.label.textColor = [UIColor redColor];

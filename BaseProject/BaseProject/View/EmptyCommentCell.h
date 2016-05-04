@@ -10,5 +10,6 @@
 
 @interface EmptyCommentCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UIButton *commentButton;
+@property (weak, nonatomic) IBOutlet UILabel *label;
 
 @end

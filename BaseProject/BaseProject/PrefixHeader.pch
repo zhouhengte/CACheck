@@ -66,13 +66,17 @@ static const int ddLogLevel = DDLogLevelError;
 
 #endif /* PrefixHeader_pch */
 
-#define kUrl @"http://appserver.ciqca.com"
-//#define kUrl @"http://appserver.cieway.com"
+//#define kUrl @"http://appserver.ciqca.com"
+#define kUrl @"http://appserver.cieway.com"
 //#define kUrl @"http://10.12.0.215:8088/CAAppServer"//祥兴的测试端口
 //authCode 接口 c码认证接口
 #define kAuthCodeUrl @"ccodeapi.action"
 //登陆接口
 #define kLoginUrl @"loginapi.action"
+//注册接口
+#define kRegistUrl @"registeappuserapi.action"
+//发送验证码接口
+#define kPushCodeUrl @"pushcodeapi.action"
 //扫码位置接口
 #define kPositionInfoUrl @"addScanpositionapi.action"
 //条码认证接口
@@ -89,7 +93,12 @@ static const int ddLogLevel = DDLogLevelError;
 #define kSecondAuthenticat @"tcodeapi.action"
 //c码评论查询接口
 #define kGetCCodeCommentUrl @"getccodecomment.action"
-
+//条码评论查询接口
+#define kGetBarCodeCommentUrl @"getbarcodecomment.action"
+//c码评论添加接口
+#define kAddCCodeCommentUrl @"addccodecomment.action"
+//条码评论添加接口
+#define kAddBarCodeCommentUrl @"addbarcodecomment.action"
 
 #define kScreenHeight [UIScreen mainScreen].bounds.size.height
 #define kScreenWidth [UIScreen mainScreen].bounds.size.width

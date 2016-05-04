@@ -15,10 +15,10 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="153"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="消息框" translatesAutoresizingMaskIntoConstraints="NO" id="nEV-fO-xKl">
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="消息框" translatesAutoresizingMaskIntoConstraints="NO" id="nEV-fO-xKl">
                         <rect key="frame" x="0.0" y="39" width="296" height="100"/>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="La0-Gh-Y1r">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="time" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="La0-Gh-Y1r">
                         <rect key="frame" x="0.0" y="14" width="320" height="20"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="20" id="8qR-9u-fx5"/>
@@ -27,14 +27,14 @@
                         <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="voL-ZV-U3b">
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="voL-ZV-U3b">
                         <rect key="frame" x="17" y="51" width="52" height="52"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="52" id="UrB-DJ-Aaf"/>
                             <constraint firstAttribute="width" constant="52" id="bZu-Wd-CTT"/>
                         </constraints>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="具体内容" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="27h-8e-rfn">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="具体内容" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="27h-8e-rfn">
                         <rect key="frame" x="78" y="50" width="205" height="55"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="55" id="ZRZ-IT-3Md"/>
@@ -43,21 +43,21 @@
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NhJ-rY-Fq7">
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NhJ-rY-Fq7">
                         <rect key="frame" x="8" y="112" width="288" height="1"/>
                         <color key="backgroundColor" red="0.92941176470588238" green="0.93333333333333335" blue="0.93725490196078431" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="1" id="jVN-Wt-2nx"/>
                         </constraints>
                     </view>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="消息，箭头" translatesAutoresizingMaskIntoConstraints="NO" id="759-Uj-FIO">
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="消息，箭头" translatesAutoresizingMaskIntoConstraints="NO" id="759-Uj-FIO">
                         <rect key="frame" x="278" y="121" width="8" height="12"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="8" id="PJ8-mX-yJn"/>
                             <constraint firstAttribute="height" constant="12" id="QHv-PV-ftw"/>
                         </constraints>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="商品详情" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ccm-B8-f94">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="商品详情" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ccm-B8-f94">
                         <rect key="frame" x="19" y="116" width="201" height="21"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="21" id="Gnu-Yp-tct"/>

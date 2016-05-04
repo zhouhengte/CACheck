@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2F2991BF1CD9955900B1CB72 /* CommentNetManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F2991BE1CD9955900B1CB72 /* CommentNetManager.m */; };
 		2F834D1E1C46333B0050E4A6 /* Foundation+Log.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F834D1D1C46333B0050E4A6 /* Foundation+Log.m */; };
 		2F834D211C46457A0050E4A6 /* ProductInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F834D201C46457A0050E4A6 /* ProductInfoModel.m */; };
 		2F834D351C4648530050E4A6 /* NSData+SDDataCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F834D251C4648530050E4A6 /* NSData+SDDataCache.m */; };
@@ -28,6 +29,9 @@
 		2FC7DB341C4797B5005A60BA /* NewsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FC7DB331C4797B5005A60BA /* NewsViewController.m */; };
 		2FD66A3F1CB3AAE2004FBFD9 /* MessageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD66A3D1CB3AAE2004FBFD9 /* MessageTableViewCell.m */; };
 		2FD66A401CB3AAE2004FBFD9 /* MessageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2FD66A3E1CB3AAE2004FBFD9 /* MessageTableViewCell.xib */; };
+		2FD84F451CD0561B001A58E6 /* UIButton+EnlargeEdge.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD84F441CD0561B001A58E6 /* UIButton+EnlargeEdge.m */; };
+		2FD84F4C1CD09F5D001A58E6 /* CommentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD84F4A1CD09F5D001A58E6 /* CommentCell.m */; };
+		2FD84F4D1CD09F5D001A58E6 /* CommentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2FD84F4B1CD09F5D001A58E6 /* CommentCell.xib */; };
 		2FD88C551CCDB955007BE374 /* HZPhotoBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD88C4F1CCDB955007BE374 /* HZPhotoBrowser.m */; };
 		2FD88C561CCDB955007BE374 /* HZPhotoBrowserView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD88C521CCDB955007BE374 /* HZPhotoBrowserView.m */; };
 		2FD88C571CCDB955007BE374 /* HZWaitingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD88C541CCDB955007BE374 /* HZWaitingView.m */; };
@@ -43,6 +47,8 @@
 		2FD9843D1C488EB3000EB94A /* DJRefreshTopView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD984371C488EB3000EB94A /* DJRefreshTopView.m */; };
 		2FD9843E1C488EB3000EB94A /* DJRefreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD984391C488EB3000EB94A /* DJRefreshView.m */; };
 		2FD984411C489884000EB94A /* MessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD984401C489884000EB94A /* MessageViewController.m */; };
+		2FDC34591CD3085D006E018E /* ZHTNavigationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDC34581CD3085D006E018E /* ZHTNavigationDelegate.m */; };
+		2FDC345C1CD308CD006E018E /* ZHTTransitionAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDC345B1CD308CD006E018E /* ZHTTransitionAnimator.m */; };
 		2FDDA1221C61F46500BAEFEB /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FDDA1211C61F46500BAEFEB /* libz.tbd */; };
 		2FDDA1301C61F6CC00BAEFEB /* RecordDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDDA1251C61F6CC00BAEFEB /* RecordDetailViewController.m */; };
 		2FDDA1311C61F6CC00BAEFEB /* ScanRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDDA1271C61F6CC00BAEFEB /* ScanRecordViewController.m */; };
@@ -84,6 +90,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2F2991BD1CD9955900B1CB72 /* CommentNetManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentNetManager.h; sourceTree = "<group>"; };
+		2F2991BE1CD9955900B1CB72 /* CommentNetManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentNetManager.m; sourceTree = "<group>"; };
 		2F834D1D1C46333B0050E4A6 /* Foundation+Log.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Foundation+Log.m"; sourceTree = "<group>"; };
 		2F834D1F1C46457A0050E4A6 /* ProductInfoModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductInfoModel.h; sourceTree = "<group>"; };
 		2F834D201C46457A0050E4A6 /* ProductInfoModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductInfoModel.m; sourceTree = "<group>"; };
@@ -124,6 +132,11 @@
 		2FD66A3C1CB3AAE2004FBFD9 /* MessageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageTableViewCell.h; sourceTree = "<group>"; };
 		2FD66A3D1CB3AAE2004FBFD9 /* MessageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageTableViewCell.m; sourceTree = "<group>"; };
 		2FD66A3E1CB3AAE2004FBFD9 /* MessageTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MessageTableViewCell.xib; sourceTree = "<group>"; };
+		2FD84F431CD0561B001A58E6 /* UIButton+EnlargeEdge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+EnlargeEdge.h"; sourceTree = "<group>"; };
+		2FD84F441CD0561B001A58E6 /* UIButton+EnlargeEdge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+EnlargeEdge.m"; sourceTree = "<group>"; };
+		2FD84F491CD09F5D001A58E6 /* CommentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentCell.h; sourceTree = "<group>"; };
+		2FD84F4A1CD09F5D001A58E6 /* CommentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentCell.m; sourceTree = "<group>"; };
+		2FD84F4B1CD09F5D001A58E6 /* CommentCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CommentCell.xib; sourceTree = "<group>"; };
 		2FD88C4E1CCDB955007BE374 /* HZPhotoBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZPhotoBrowser.h; sourceTree = "<group>"; };
 		2FD88C4F1CCDB955007BE374 /* HZPhotoBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HZPhotoBrowser.m; sourceTree = "<group>"; };
 		2FD88C501CCDB955007BE374 /* HZPhotoBrowserConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HZPhotoBrowserConfig.h; sourceTree = "<group>"; };
@@ -154,6 +167,10 @@
 		2FD984391C488EB3000EB94A /* DJRefreshView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DJRefreshView.m; sourceTree = "<group>"; };
 		2FD9843F1C489884000EB94A /* MessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageViewController.h; sourceTree = "<group>"; };
 		2FD984401C489884000EB94A /* MessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageViewController.m; sourceTree = "<group>"; };
+		2FDC34571CD3085D006E018E /* ZHTNavigationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZHTNavigationDelegate.h; sourceTree = "<group>"; };
+		2FDC34581CD3085D006E018E /* ZHTNavigationDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZHTNavigationDelegate.m; sourceTree = "<group>"; };
+		2FDC345A1CD308CD006E018E /* ZHTTransitionAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZHTTransitionAnimator.h; sourceTree = "<group>"; };
+		2FDC345B1CD308CD006E018E /* ZHTTransitionAnimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZHTTransitionAnimator.m; sourceTree = "<group>"; };
 		2FDDA1211C61F46500BAEFEB /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		2FDDA1241C61F6CC00BAEFEB /* RecordDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordDetailViewController.h; sourceTree = "<group>"; };
 		2FDDA1251C61F6CC00BAEFEB /* RecordDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordDetailViewController.m; sourceTree = "<group>"; };
@@ -262,6 +279,7 @@
 		2F834D221C4648420050E4A6 /* Lib */ = {
 			isa = PBXGroup;
 			children = (
+				2FDC34561CD30830006E018E /* ZHTViewControllerAnimationTransition */,
 				2FDDA1591C61F78800BAEFEB /* MD5 */,
 				2FD9842E1C488EB3000EB94A /* DJRefresh */,
 				2F834D3D1C464B540050E4A6 /* Reachability.h */,
@@ -340,6 +358,17 @@
 				2FD984391C488EB3000EB94A /* DJRefreshView.m */,
 			);
 			path = DJRefreshView;
+			sourceTree = "<group>";
+		};
+		2FDC34561CD30830006E018E /* ZHTViewControllerAnimationTransition */ = {
+			isa = PBXGroup;
+			children = (
+				2FDC34571CD3085D006E018E /* ZHTNavigationDelegate.h */,
+				2FDC34581CD3085D006E018E /* ZHTNavigationDelegate.m */,
+				2FDC345A1CD308CD006E018E /* ZHTTransitionAnimator.h */,
+				2FDC345B1CD308CD006E018E /* ZHTTransitionAnimator.m */,
+			);
+			path = ZHTViewControllerAnimationTransition;
 			sourceTree = "<group>";
 		};
 		2FDDA1231C61F6CC00BAEFEB /* Scan */ = {
@@ -492,6 +521,8 @@
 				45333DD51C22EAC40016A357 /* NSObject+MJParse.m */,
 				45333DD61C22EAC40016A357 /* NSObject+Parse.h */,
 				45333DD71C22EAC40016A357 /* NSObject+Parse.m */,
+				2FD84F431CD0561B001A58E6 /* UIButton+EnlargeEdge.h */,
+				2FD84F441CD0561B001A58E6 /* UIButton+EnlargeEdge.m */,
 			);
 			path = Category;
 			sourceTree = "<group>";
@@ -532,6 +563,8 @@
 			children = (
 				85C0AE5A1C20F7590016268A /* BaseNetManager.h */,
 				85C0AE5B1C20F7590016268A /* BaseNetManager.m */,
+				2F2991BD1CD9955900B1CB72 /* CommentNetManager.h */,
+				2F2991BE1CD9955900B1CB72 /* CommentNetManager.m */,
 			);
 			path = NetManager;
 			sourceTree = "<group>";
@@ -575,6 +608,9 @@
 				2FD88C581CCDFC24007BE374 /* EmptyCommentCell.h */,
 				2FD88C591CCDFC24007BE374 /* EmptyCommentCell.m */,
 				2FD88C5A1CCDFC24007BE374 /* EmptyCommentCell.xib */,
+				2FD84F491CD09F5D001A58E6 /* CommentCell.h */,
+				2FD84F4A1CD09F5D001A58E6 /* CommentCell.m */,
+				2FD84F4B1CD09F5D001A58E6 /* CommentCell.xib */,
 				2FDEE2DA1CACC43C00F6FAED /* DueDateView.h */,
 				2FDEE2DB1CACC43C00F6FAED /* DueDateView.m */,
 			);
@@ -679,6 +715,7 @@
 				2FD66A401CB3AAE2004FBFD9 /* MessageTableViewCell.xib in Resources */,
 				8566CE0F1C1FF378004693F0 /* Assets.xcassets in Resources */,
 				8566CE0D1C1FF378004693F0 /* Main.storyboard in Resources */,
+				2FD84F4D1CD09F5D001A58E6 /* CommentCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -770,12 +807,15 @@
 				2FDDA13C1C61F6E900BAEFEB /* RegistViewController.m in Sources */,
 				2FDDA1551C61F6F100BAEFEB /* PetnameViewController.m in Sources */,
 				85C0AE561C20F6350016268A /* BaseViewModel.m in Sources */,
+				2F2991BF1CD9955900B1CB72 /* CommentNetManager.m in Sources */,
 				2FC7DB2E1C476A60005A60BA /* RecordTableViewCell.m in Sources */,
 				2FDDA1571C61F6F100BAEFEB /* ServiceTermViewController.m in Sources */,
 				2FDDA1501C61F6F100BAEFEB /* AboutUsViewController.m in Sources */,
+				2FDC345C1CD308CD006E018E /* ZHTTransitionAnimator.m in Sources */,
 				2F834D3F1C464B540050E4A6 /* Reachability.m in Sources */,
 				2FDDA1531C61F6F100BAEFEB /* PasswordViewController.m in Sources */,
 				2F834D421C464C020050E4A6 /* PictureViewController.m in Sources */,
+				2FDC34591CD3085D006E018E /* ZHTNavigationDelegate.m in Sources */,
 				2F834D4B1C4651AA0050E4A6 /* BigImageView.m in Sources */,
 				85C0AE5F1C20F77D0016268A /* BaseModel.m in Sources */,
 				2F834D3C1C4648530050E4A6 /* UIView+SDExtension.m in Sources */,
@@ -784,6 +824,7 @@
 				85C0AE621C20F7BD0016268A /* Factory.m in Sources */,
 				2F834D481C464DB70050E4A6 /* EvaluateTableViewCell.m in Sources */,
 				2F834D211C46457A0050E4A6 /* ProductInfoModel.m in Sources */,
+				2FD84F451CD0561B001A58E6 /* UIButton+EnlargeEdge.m in Sources */,
 				45ECE8201C215D7B00CEC61F /* UIScrollView+Refresh.m in Sources */,
 				2FDDA1511C61F6F100BAEFEB /* GenderViewController.m in Sources */,
 				2FDDA15C1C61F78800BAEFEB /* NSString+MD5.m in Sources */,
@@ -794,6 +835,7 @@
 				85C0AE5C1C20F7590016268A /* BaseNetManager.m in Sources */,
 				2F834D3A1C4648530050E4A6 /* SDCollectionViewCell.m in Sources */,
 				2FD968B51C43A26600A77AB9 /* WelcomeViewController.m in Sources */,
+				2FD84F4C1CD09F5D001A58E6 /* CommentCell.m in Sources */,
 				45333DD81C22EAC40016A357 /* NSObject+MJParse.m in Sources */,
 				2FD66A3F1CB3AAE2004FBFD9 /* MessageTableViewCell.m in Sources */,
 				2F834D371C4648530050E4A6 /* TAAnimatedDotView.m in Sources */,

@@ -24,6 +24,10 @@
         //定义请求超时时间长度
         manager.requestSerializer.timeoutInterval = 30;
         //还可以设置请求的 头部 httpHeaderField
+        [manager.requestSerializer setValue:@"0" forHTTPHeaderField:@"Client-Flag"];
+        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+        NSString *catoken = [userDefaults valueForKey:@"CA-Token"];
+        [manager.requestSerializer setValue:catoken forHTTPHeaderField:@"CA-Token"];
         //可以设置value为nil，来删除某个key
         //[manager.requestSerializer setValue:@"" forKey:@""];
     });
