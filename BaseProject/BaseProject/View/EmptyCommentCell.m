@@ -16,6 +16,7 @@
 @implementation EmptyCommentCell
 
 - (void)awakeFromNib {
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
     [self.commentButton.layer setMasksToBounds:YES];
     [self.commentButton.layer setCornerRadius:6.0]; //设置矩圆角半径
     [self.commentButton.layer setBorderWidth:1.0];   //边框宽度

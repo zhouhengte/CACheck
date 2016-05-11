@@ -1,96 +1,39 @@
 //
-//  NewsViewController.m
+//  NewsDetailViewController.m
 //  BaseProject
 //
-//  Created by 刘子琨 on 16/1/14.
+//  Created by 刘子琨 on 16/5/11.
 //  Copyright © 2016年 tarena. All rights reserved.
 //
 
-#import "NewsViewController.h"
 #import "NewsDetailViewController.h"
 #import <UMSocial.h>
-//#import "MobClick.h"
 
-@interface NewsViewController ()<UIWebViewDelegate,UMSocialUIDelegate>
-@property (weak, nonatomic) IBOutlet UIWebView *webView;
-@property (nonatomic , copy)NSString *url;
+@interface NewsDetailViewController ()<UIWebViewDelegate,UMSocialUIDelegate>
+@property(nonatomic,strong)UIWebView *webView;
 @property (nonatomic , strong)UIActivityIndicatorView *activityIndicator;
-@property (strong , nonatomic) UIButton *btn;
-//@property (nonatomic , strong)DJRefresh *refresh;
 
 @end
 
-@implementation NewsViewController
+@implementation NewsDetailViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     //去除上方留白
     self.automaticallyAdjustsScrollViewInsets=NO;
+    self.webView = [[UIWebView alloc]init];
+    [self.view addSubview:self.webView];
+    [self.webView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.bottom.right.mas_equalTo(0);
+        make.top.mas_equalTo(64);
+    }];
     self.webView.delegate = self;
+    [self.webView loadRequest:self.request];
     self.webView.backgroundColor = [UIColor groupTableViewBackgroundColor];
     
     //重新设置导航栏，隐藏原生导航栏，手动绘制新的导航栏，使右滑手势跳转时能让导航栏跟着变化
     [self setNavigationBar];
-    
 
-    
-    
-    
-    //顶部刷新
-    __weak UIWebView *wb = _webView;
-    [self.webView.scrollView addHeaderRefresh:^{
-        [wb reload];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [wb.scrollView endHeaderRefresh];
-        });
-        
-    }];
-    
-
-    
-//    _refresh=[[DJRefresh alloc] initWithScrollView:self.webView.scrollView];
-//    _refresh.topEnabled=YES;
-//    [_refresh didRefreshCompletionBlock:^(DJRefresh *refresh, DJRefreshDirection direction, NSDictionary *info) {
-//        
-//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//            [_webView reload];
-//            [_refresh finishRefreshingDirection:direction animation:YES];
-//        });
-//        
-//        
-//    }];
-    
-    
-    
-    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObject:@"text/plain"];
-    
-    NSString *url = [NSString stringWithFormat:@"%@/%@",kUrl,kWelcomeUrl];
-    
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    NSString *catoken = [userDefaults stringForKey:@"CA-Token"];
-    
-    [manager.requestSerializer setValue:catoken forHTTPHeaderField:@"CA-Token"];
-    
-
-    
-    [manager POST:url parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        self.url = responseObject[@"news_tips_link"];
-        NSString  *str = [NSString stringWithFormat:@"%@/%@",kUrl,self.url];
-        NSURL *url = [NSURL URLWithString:str];
-        NSURLRequest *request =[NSURLRequest requestWithURL:url];
-//        NSMutableURLRequest *mutableRequest = [request mutableCopy];
-//        [mutableRequest setValue:@"唯一标示" forHTTPHeaderField:@"uuid"];
-//        request = [mutableRequest copy];
-        //        [self.view addSubview: self.webView];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.webView loadRequest:request];
-        });
-        
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        NSLog(@"%@",error);
-    }];
-    
 }
 
 -(void)setNavigationBar
@@ -136,6 +79,15 @@
     [button addTarget:self action:@selector(tapBack:) forControlEvents:UIControlEventTouchDown];
     [button addTarget:self action:@selector(tapUp:) forControlEvents:UIControlEventTouchUpOutside];
     
+    UIButton *rightButton = [[UIButton alloc]init];
+    [rightButton setTitle:@"分享" forState:UIControlStateNormal];
+    [rightButton addTarget:self action:@selector(share:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:rightButton];
+    [rightButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(5);
+        make.top.mas_equalTo(20);
+        make.size.mas_equalTo(CGSizeMake(80, 44));
+    }];
     
     UIImage *image = [UIImage imageNamed:@"返回箭头"];
     UIImageView *imageView = [[UIImageView alloc] init];
@@ -149,7 +101,7 @@
     
     //由于改写了leftBarButtonItem,所以需要重新定义右滑返回手势
     self.navigationController.interactivePopGestureRecognizer.delegate = (id)self;
-
+    
 }
 
 -(void)tapBack:(UIButton *)button
@@ -165,51 +117,36 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [MobClick beginLogPageView:@"新闻知识"];
-    
-    
-    //[self setNavigationBar];
-    
-    //self.navigationItem.title = @"新闻知识";
-    
-    //[self.navigationController setNavigationBarHidden:YES];
-//    [self.navigationController.navigationBar setBarStyle:UIBarStyleDefault];
-//    self.navigationController.navigationBar.barTintColor = [UIColor colorWithRed:52/255.0 green:181/255.0 blue:254/255.0 alpha:1.0];
-//    
-//    self.btn = [UIButton buttonWithType:UIButtonTypeCustom];
-//    self.btn.frame = CGRectMake(0, 0, 80, 44);
-//    self.btn.userInteractionEnabled = YES;
-//    [self.btn setTitle:@"返回" forState:UIControlStateNormal];
-//    UIImage *image = [UIImage imageNamed:@"返回箭头"];
-//    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(5, 13, 11, 19)];
-//    
-//    imageView.image = image;
-//    [self.btn addSubview:imageView];
-//    
-//    UIBarButtonItem *back=[[UIBarButtonItem alloc]initWithCustomView:self.btn];
-//    self.navigationItem.leftBarButtonItem = back;
-//    
-//    
-//    imageView.userInteractionEnabled = YES;
-//    self.btn.userInteractionEnabled = YES;
-//    //[self.navigationController.navigationBar addSubview:self.btn];
-//    
-//    
-//    [self.btn addTarget: self action: @selector(backToMainViewController:) forControlEvents: UIControlEventTouchUpInside];
-    
+    [MobClick beginLogPageView:@"新闻知识详情"];
 }
 
 -(void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [MobClick endLogPageView:@"新闻知识"];
+    [MobClick endLogPageView:@"新闻知识详情"];
 }
 
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+-(void)share:(UIButton *)sender
+{
+    NSLog(@"%@",self.webView.request.URL.absoluteString);
+    //如果需要分享回调，请将delegate对象设置self，并实现下面的回调方法
+    [UMSocialSnsService presentSnsIconSheetView:self
+                                         appKey:@"507fcab25270157b37000010"
+                                      shareText:@"TEST"
+                                     shareImage:[UIImage imageNamed:@"icon1024"]
+                                shareToSnsNames:@[UMShareToWechatSession,UMShareToWechatTimeline,UMShareToQQ,UMShareToQzone]
+                                       delegate:self];
 }
+-(void)didFinishGetUMSocialDataInViewController:(UMSocialResponseEntity *)response
+{
+    //根据`responseCode`得到发送结果,如果分享成功
+    if(response.responseCode == UMSResponseCodeSuccess)
+    {
+        //得到分享到的平台名
+        NSLog(@"share to sns name is %@",[[response.data allKeys] objectAtIndex:0]);
+    }
+}
+
 - (void)backToMainViewController:(UIButton *)sender {
     //webView无法后退才跳转到主页面
     if ([self.webView canGoBack]) {
@@ -236,7 +173,7 @@
     [self.view addSubview:view];
     
     self.activityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 32.0f, 32.0f)];
-
+    
     
     [_activityIndicator setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleGray];
     
@@ -250,7 +187,7 @@
 //成功加载完毕
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
     [self performSelector:@selector(loadEnd) withObject:nil afterDelay:1];
-
+    
 }
 
 -(void)loadEnd
@@ -272,21 +209,10 @@
     NSLog(@"加载失败:%@", error.userInfo);
 }
 
--(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
-{
-    NSLog(@"%@",request.URL.absoluteString);
-    if ([request.URL.absoluteString isEqualToString:@"http://appserver.ciqca.com/get_message_page.action?type=0"]) {
-        return YES;
-    }
-    NewsDetailViewController *newsDetailVC = [[NewsDetailViewController alloc]init];
-    newsDetailVC.request = request;
-    [self.navigationController pushViewController:newsDetailVC animated:YES];
-    return NO;
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
 }
-
-
-
-
 
 /*
 #pragma mark - Navigation

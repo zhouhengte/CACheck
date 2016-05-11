@@ -38,6 +38,8 @@ pod 'MLTransition'
 pod 'SWTableViewCell'
 #网络或本地 多张图片浏览 控制器
 pod 'MWPhotoBrowser'
+#友盟社会化分享
+pod 'UMengSocialCOM', '~> 5.1'
 end
 
 

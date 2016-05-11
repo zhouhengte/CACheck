@@ -9,6 +9,9 @@
 #import "AppDelegate+Category.h"
 //电池条上网络活动提示
 #import <AFNetworkActivityIndicatorManager.h>
+#import "RecordDetailViewController.h"
+#import "UIAlertView+Blocks.h"
+
 
 @implementation AppDelegate (Category)
 
@@ -89,13 +92,30 @@
     }else{
         notiMess = [NSString stringWithFormat:@"您扫描过的\"%@\"即将过期",productName];
     }
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"过期提醒"
-                                                    message:notiMess
-                                                   delegate:nil
-                                          cancelButtonTitle:@"确定"
-                                          otherButtonTitles:nil];
-    [alert show];
+//    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"过期提醒"
+//                                                    message:notiMess
+//                                                   delegate:self
+//                                          cancelButtonTitle:@"取消"
+//                                          otherButtonTitles:@"查看", nil];
+//
+//    [alert show];
     
+    [[[UIAlertView alloc] initWithTitle:@"过期提醒"
+                                message:notiMess
+                       cancelButtonItem:[RIButtonItem itemWithLabel:@"取消" action:^{
+        // Handle "Cancel"
+    }]
+                       otherButtonItems:[RIButtonItem itemWithLabel:@"查看" action:^{
+        UINavigationController *navigetion = (UINavigationController *)self.window.rootViewController;
+        RecordDetailViewController *recordDetailVC = [[RecordDetailViewController alloc] init];
+        recordDetailVC.judgeStr = [notification.userInfo objectForKey:@"barcode"];
+        recordDetailVC.sugueStr = @"list";
+        recordDetailVC.onlyStr = @"消息";
+        [navigetion pushViewController:recordDetailVC animated:YES];
+
+    }], nil] show];
+
+
     // 更新显示的徽章个数
 //    NSInteger badge = [UIApplication sharedApplication].applicationIconBadgeNumber;
 //    badge--;
@@ -106,6 +126,8 @@
     //[application cancelLocalNotification:notification];
 
 }
+
+
 
 
 

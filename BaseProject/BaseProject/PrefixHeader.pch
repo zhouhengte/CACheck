@@ -66,9 +66,14 @@ static const int ddLogLevel = DDLogLevelError;
 
 #endif /* PrefixHeader_pch */
 
-//#define kUrl @"http://appserver.ciqca.com"
-#define kUrl @"http://appserver.cieway.com"
+#define kUrl @"http://appserver.ciqca.com"
+//#define kUrl @"http://appserver.cieway.com"
 //#define kUrl @"http://10.12.0.215:8088/CAAppServer"//祥兴的测试端口
+
+//appstore链接
+//https://itunes.apple.com/cn/app/yun-jian-jin-kou-shang-pin/id895674234?mt=8
+//[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/cn/app/yun-jian-jin-kou-shang-pin/id895674234?mt=8"]];//打开appstroe更新页面
+
 //authCode 接口 c码认证接口
 #define kAuthCodeUrl @"ccodeapi.action"
 //登陆接口

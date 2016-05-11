@@ -218,7 +218,7 @@
             //设置logout为空，不然主页面会弹出2个hud
             [userDefaults setObject:@"" forKey:@"logout"];
             
-            if ([self.from isEqualToString:@"comment"]) {
+            if ([self.from isEqualToString:@"recordDetail"] || [self.from isEqualToString:@"comment"] ) {
                 [self.navigationController popViewControllerAnimated:YES];
             }else{
             

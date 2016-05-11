@@ -491,7 +491,7 @@
                 NSLog(@"%@",str);
                 self.barCode = str;
 #pragma mark 如果是十三位的纯数字，则说明是条码
-                if ([self isPureFloat:self.barCode]&&self.barCode.length == 13)
+                if ([self isPureFloat:self.barCode] && self.barCode.length >= 10 && self.barCode.length <= 13)
                 {
                     [self getDataWithString:self.barCode];
 #warning 此处代码方法有问题

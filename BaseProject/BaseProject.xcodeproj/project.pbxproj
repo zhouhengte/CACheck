@@ -49,6 +49,17 @@
 		2FD984411C489884000EB94A /* MessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD984401C489884000EB94A /* MessageViewController.m */; };
 		2FDC34591CD3085D006E018E /* ZHTNavigationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDC34581CD3085D006E018E /* ZHTNavigationDelegate.m */; };
 		2FDC345C1CD308CD006E018E /* ZHTTransitionAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDC345B1CD308CD006E018E /* ZHTTransitionAnimator.m */; };
+		2FDCC3241CE2D75A00E18056 /* RIButtonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDCC31F1CE2D75A00E18056 /* RIButtonItem.m */; };
+		2FDCC3251CE2D75A00E18056 /* UIActionSheet+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDCC3211CE2D75A00E18056 /* UIActionSheet+Blocks.m */; };
+		2FDCC3261CE2D75A00E18056 /* UIAlertView+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDCC3231CE2D75A00E18056 /* UIAlertView+Blocks.m */; };
+		2FDCC3281CE304F800E18056 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FDCC3271CE304F800E18056 /* Security.framework */; };
+		2FDCC32A1CE3051300E18056 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FDCC3291CE3051300E18056 /* libiconv.tbd */; };
+		2FDCC32C1CE3052300E18056 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FDCC32B1CE3052300E18056 /* SystemConfiguration.framework */; };
+		2FDCC32E1CE3054500E18056 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FDCC32D1CE3054500E18056 /* CoreGraphics.framework */; };
+		2FDCC3301CE3055900E18056 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FDCC32F1CE3055900E18056 /* libsqlite3.tbd */; };
+		2FDCC3321CE3056400E18056 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FDCC3311CE3056400E18056 /* CoreTelephony.framework */; };
+		2FDCC3341CE3057000E18056 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FDCC3331CE3057000E18056 /* libstdc++.tbd */; };
+		2FDCC3371CE31DD100E18056 /* NewsDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDCC3361CE31DD100E18056 /* NewsDetailViewController.m */; };
 		2FDDA1221C61F46500BAEFEB /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FDDA1211C61F46500BAEFEB /* libz.tbd */; };
 		2FDDA1301C61F6CC00BAEFEB /* RecordDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDDA1251C61F6CC00BAEFEB /* RecordDetailViewController.m */; };
 		2FDDA1311C61F6CC00BAEFEB /* ScanRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDDA1271C61F6CC00BAEFEB /* ScanRecordViewController.m */; };
@@ -171,6 +182,21 @@
 		2FDC34581CD3085D006E018E /* ZHTNavigationDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZHTNavigationDelegate.m; sourceTree = "<group>"; };
 		2FDC345A1CD308CD006E018E /* ZHTTransitionAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZHTTransitionAnimator.h; sourceTree = "<group>"; };
 		2FDC345B1CD308CD006E018E /* ZHTTransitionAnimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZHTTransitionAnimator.m; sourceTree = "<group>"; };
+		2FDCC31E1CE2D75A00E18056 /* RIButtonItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RIButtonItem.h; sourceTree = "<group>"; };
+		2FDCC31F1CE2D75A00E18056 /* RIButtonItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RIButtonItem.m; sourceTree = "<group>"; };
+		2FDCC3201CE2D75A00E18056 /* UIActionSheet+Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIActionSheet+Blocks.h"; sourceTree = "<group>"; };
+		2FDCC3211CE2D75A00E18056 /* UIActionSheet+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIActionSheet+Blocks.m"; sourceTree = "<group>"; };
+		2FDCC3221CE2D75A00E18056 /* UIAlertView+Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+Blocks.h"; sourceTree = "<group>"; };
+		2FDCC3231CE2D75A00E18056 /* UIAlertView+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+Blocks.m"; sourceTree = "<group>"; };
+		2FDCC3271CE304F800E18056 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		2FDCC3291CE3051300E18056 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
+		2FDCC32B1CE3052300E18056 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		2FDCC32D1CE3054500E18056 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		2FDCC32F1CE3055900E18056 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		2FDCC3311CE3056400E18056 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		2FDCC3331CE3057000E18056 /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
+		2FDCC3351CE31DD100E18056 /* NewsDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsDetailViewController.h; sourceTree = "<group>"; };
+		2FDCC3361CE31DD100E18056 /* NewsDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsDetailViewController.m; sourceTree = "<group>"; };
 		2FDDA1211C61F46500BAEFEB /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		2FDDA1241C61F6CC00BAEFEB /* RecordDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordDetailViewController.h; sourceTree = "<group>"; };
 		2FDDA1251C61F6CC00BAEFEB /* RecordDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordDetailViewController.m; sourceTree = "<group>"; };
@@ -258,8 +284,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2FDDA1611C61F79200BAEFEB /* libMobClickLibrary.a in Frameworks */,
 				2FDDA1221C61F46500BAEFEB /* libz.tbd in Frameworks */,
+				2FDCC3341CE3057000E18056 /* libstdc++.tbd in Frameworks */,
+				2FDCC3321CE3056400E18056 /* CoreTelephony.framework in Frameworks */,
+				2FDCC3301CE3055900E18056 /* libsqlite3.tbd in Frameworks */,
+				2FDCC32E1CE3054500E18056 /* CoreGraphics.framework in Frameworks */,
+				2FDCC32C1CE3052300E18056 /* SystemConfiguration.framework in Frameworks */,
+				2FDCC32A1CE3051300E18056 /* libiconv.tbd in Frameworks */,
+				2FDCC3281CE304F800E18056 /* Security.framework in Frameworks */,
+				2FDDA1611C61F79200BAEFEB /* libMobClickLibrary.a in Frameworks */,
 				FB338A88D3D172260308C00B /* libPods-BaseProject.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -450,6 +483,13 @@
 		476F2325F3A137DEE1942D98 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2FDCC3331CE3057000E18056 /* libstdc++.tbd */,
+				2FDCC3311CE3056400E18056 /* CoreTelephony.framework */,
+				2FDCC32F1CE3055900E18056 /* libsqlite3.tbd */,
+				2FDCC32D1CE3054500E18056 /* CoreGraphics.framework */,
+				2FDCC32B1CE3052300E18056 /* SystemConfiguration.framework */,
+				2FDCC3291CE3051300E18056 /* libiconv.tbd */,
+				2FDCC3271CE304F800E18056 /* Security.framework */,
 				2FDDA1211C61F46500BAEFEB /* libz.tbd */,
 				33BFF7A3DE723E978291D521 /* libPods-BaseProject.a */,
 			);
@@ -508,6 +548,12 @@
 		85C0AE4A1C20F58C0016268A /* Category */ = {
 			isa = PBXGroup;
 			children = (
+				2FDCC31E1CE2D75A00E18056 /* RIButtonItem.h */,
+				2FDCC31F1CE2D75A00E18056 /* RIButtonItem.m */,
+				2FDCC3201CE2D75A00E18056 /* UIActionSheet+Blocks.h */,
+				2FDCC3211CE2D75A00E18056 /* UIActionSheet+Blocks.m */,
+				2FDCC3221CE2D75A00E18056 /* UIAlertView+Blocks.h */,
+				2FDCC3231CE2D75A00E18056 /* UIAlertView+Blocks.m */,
 				2F834D1D1C46333B0050E4A6 /* Foundation+Log.m */,
 				450C90D71C21169500AAC504 /* AppDelegate+Category.h */,
 				450C90D81C21169500AAC504 /* AppDelegate+Category.m */,
@@ -631,6 +677,8 @@
 				2FD968B71C43A38300A77AB9 /* MainViewController.m */,
 				2FC7DB321C4797B5005A60BA /* NewsViewController.h */,
 				2FC7DB331C4797B5005A60BA /* NewsViewController.m */,
+				2FDCC3351CE31DD100E18056 /* NewsDetailViewController.h */,
+				2FDCC3361CE31DD100E18056 /* NewsDetailViewController.m */,
 				2FD9843F1C489884000EB94A /* MessageViewController.h */,
 				2FD984401C489884000EB94A /* MessageViewController.m */,
 				2F834D401C464C020050E4A6 /* PictureViewController.h */,
@@ -780,6 +828,7 @@
 				2FDDA1321C61F6CC00BAEFEB /* ScanViewController.m in Sources */,
 				2FD88C5F1CCE0DE5007BE374 /* CommentViewController.m in Sources */,
 				2FD8C5231CB5EEC800D0A8F1 /* JSBadgeView.m in Sources */,
+				2FDCC3241CE2D75A00E18056 /* RIButtonItem.m in Sources */,
 				2FDEE2DC1CACC43C00F6FAED /* DueDateView.m in Sources */,
 				2F834D351C4648530050E4A6 /* NSData+SDDataCache.m in Sources */,
 				2F834D381C4648530050E4A6 /* TADotView.m in Sources */,
@@ -809,6 +858,7 @@
 				85C0AE561C20F6350016268A /* BaseViewModel.m in Sources */,
 				2F2991BF1CD9955900B1CB72 /* CommentNetManager.m in Sources */,
 				2FC7DB2E1C476A60005A60BA /* RecordTableViewCell.m in Sources */,
+				2FDCC3371CE31DD100E18056 /* NewsDetailViewController.m in Sources */,
 				2FDDA1571C61F6F100BAEFEB /* ServiceTermViewController.m in Sources */,
 				2FDDA1501C61F6F100BAEFEB /* AboutUsViewController.m in Sources */,
 				2FDC345C1CD308CD006E018E /* ZHTTransitionAnimator.m in Sources */,
@@ -822,12 +872,14 @@
 				2FD9843C1C488EB3000EB94A /* DJRefreshBottomView.m in Sources */,
 				2FD968B81C43A38300A77AB9 /* MainViewController.m in Sources */,
 				85C0AE621C20F7BD0016268A /* Factory.m in Sources */,
+				2FDCC3261CE2D75A00E18056 /* UIAlertView+Blocks.m in Sources */,
 				2F834D481C464DB70050E4A6 /* EvaluateTableViewCell.m in Sources */,
 				2F834D211C46457A0050E4A6 /* ProductInfoModel.m in Sources */,
 				2FD84F451CD0561B001A58E6 /* UIButton+EnlargeEdge.m in Sources */,
 				45ECE8201C215D7B00CEC61F /* UIScrollView+Refresh.m in Sources */,
 				2FDDA1511C61F6F100BAEFEB /* GenderViewController.m in Sources */,
 				2FDDA15C1C61F78800BAEFEB /* NSString+MD5.m in Sources */,
+				2FDCC3251CE2D75A00E18056 /* UIActionSheet+Blocks.m in Sources */,
 				45333DD91C22EAC40016A357 /* NSObject+Parse.m in Sources */,
 				8566CE071C1FF378004693F0 /* AppDelegate.m in Sources */,
 				2F834D4E1C4651CD0050E4A6 /* zoomScrollView.m in Sources */,
@@ -961,6 +1013,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				GCC_PREFIX_HEADER = "$(PRODUCT_NAME)/PrefixHeader.pch";
 				INFOPLIST_FILE = BaseProject/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
@@ -982,8 +1035,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: ZheJiang Cloutech Technology Co., Ltd. (7TW99MF2U5)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: ZheJiang Cloutech Technology Co., Ltd. (7TW99MF2U5)";
+				ENABLE_BITCODE = NO;
 				GCC_PREFIX_HEADER = "$(PRODUCT_NAME)/PrefixHeader.pch";
 				INFOPLIST_FILE = BaseProject/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;

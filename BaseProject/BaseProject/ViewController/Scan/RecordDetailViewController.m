@@ -9,7 +9,6 @@
 #import "RecordDetailViewController.h"
 #import "BaseModel.h"
 #import "ProductInfoModel.h"
-#import "SDCycleScrollView.h"
 #import "Reachability.h"
 #import "PictureViewController.h"
 #import "RecordDetailTableViewCell.h"
@@ -22,10 +21,11 @@
 #import "EmptyCommentCell.h"
 #import "CommentViewController.h"
 #import "CommentNetManager.h"
+#import "LoginViewController.h"
 //#import "HYBMoveDetailController.h"
 
 
-@interface RecordDetailViewController ()<UITableViewDataSource, UITableViewDelegate,SDCycleScrollViewDelegate,HZPhotoBrowserDelegate>
+@interface RecordDetailViewController ()<UITableViewDataSource, UITableViewDelegate,HZPhotoBrowserDelegate>
 
 @property (nonatomic , strong)UITableView *tableView;
 @property (nonatomic , strong)UIPageControl *pageControl;
@@ -755,7 +755,7 @@
 
 -(void)cancelClick
 {
-    NSLog(@"点击了空白处");
+    //NSLog(@"点击了空白处");
     [UIView animateWithDuration:0.25 animations:^{
         if (self.isSettedBottomView.superview == self.view) {
             [self.isSettedBottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
@@ -913,7 +913,7 @@
     //notification.repeatInterval = kCFCalendarUnitMinute;
     
     // 通知内容
-    notification.alertBody =  @"产品即将过期";
+    notification.alertBody =  @"您扫描过的商品即将过期";
     notification.applicationIconBadgeNumber = 1;
     // 通知被触发时播放的声音
     notification.soundName = UILocalNotificationDefaultSoundName;
@@ -953,16 +953,43 @@
 -(void)goToCommentViewController
 {
     //NSLog(@"点击了我要评价");
-    CommentViewController *commentViewController = [[CommentViewController alloc]init];
-    commentViewController.commentDic = self.commentDic;
-    commentViewController.productDic = self.wantDic;
-    commentViewController.productCode = self.judgeStr;
-    if (self.barCode != nil) {
-        commentViewController.isBarcode = YES;
+    if (self.commentDic.count == 0) {
+        if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"login"] isEqualToString: @"登录成功"]) {
+            //NSLog(@"已登陆");
+            CommentViewController *commentViewController = [[CommentViewController alloc]init];
+            commentViewController.commentDic = [self.commentDic mutableCopy];
+            commentViewController.productDic = self.wantDic;
+            commentViewController.productCode = self.judgeStr;
+            if (self.barCode != nil) {
+                commentViewController.isBarcode = YES;
+            }else{
+                commentViewController.isBarcode = NO;
+            }
+            [self.navigationController pushViewController:commentViewController animated:YES];
+            
+            
+        }else{
+            UIStoryboard *mainStoryBoard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+            LoginViewController *loginVC = [mainStoryBoard instantiateViewControllerWithIdentifier:@"loginViewController"];
+            loginVC.from = @"recordDetail";
+            [self.navigationController pushViewController:loginVC animated:YES];
+        }
+
     }else{
-        commentViewController.isBarcode = NO;
+        CommentViewController *commentViewController = [[CommentViewController alloc]init];
+        commentViewController.commentDic = [self.commentDic mutableCopy];
+        commentViewController.productDic = self.wantDic;
+        commentViewController.productCode = self.judgeStr;
+        if (self.barCode != nil) {
+            commentViewController.isBarcode = YES;
+        }else{
+            commentViewController.isBarcode = NO;
+        }
+        [self.navigationController pushViewController:commentViewController animated:YES];
     }
-    [self.navigationController pushViewController:commentViewController animated:YES];
+    
+    
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -970,7 +997,12 @@
     [super viewWillAppear:animated];
     [MobClick beginLogPageView:@"扫描记录详情"];//("PageOne"为页面名称，可自定义)
     
-    [self getComment];
+    if (self.codeStr != nil) {
+        [self getComment];
+    }else{
+        [self getBarCodeComment];
+    }
+    
 
     
 //    
@@ -1308,13 +1340,13 @@
     [manager.requestSerializer setValue:catoken forHTTPHeaderField:@"CA-Token"];
     NSString *stringInt = [NSString stringWithFormat:@"%d",0];
     [manager.requestSerializer setValue:stringInt forHTTPHeaderField:@"Client-Flag"];
-    NSLog(@"requesturl:%@",self.requestUrl);
-    NSLog(@"requestDic:%@",self.paramDic);
+    //NSLog(@"requesturl:%@",self.requestUrl);
+    //NSLog(@"requestDic:%@",self.paramDic);
     
     
     [manager POST:self.requestUrl parameters:self.paramDic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject)
     {
-        NSLog(@"responseObject:%@",responseObject);
+        //NSLog(@"responseObject:%@",responseObject);
         if ([responseObject[@"Result"]integerValue] !=0 ) {
             return ;
         }
@@ -1593,17 +1625,19 @@
     [getDic setValue:self.typeid forKey:@"typeid"];
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     [manager.requestSerializer setValue:@"0" forHTTPHeaderField:@"Client-Flag"];
-    //    [manager2.requestSerializer setValue:catoken forHTTPHeaderField:@"CA-Token"];
-    NSString *token = [manager.requestSerializer valueForHTTPHeaderField:@"CA-Tokeƒn"];
-    NSLog(@"catoken:%@",token);
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *token = [userDefaults objectForKey:@"CA-Token"];
+    [manager.requestSerializer setValue:token forHTTPHeaderField:@"CA-Token"];
+    //NSString *token = [manager.requestSerializer valueForHTTPHeaderField:@"CA-Tokeƒn"];
+    //NSLog(@"catoken:%@",token);
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/plain",@"application/json", nil];
     
     NSString *para = [self dictionaryToJson:getDic];
     
     NSDictionary *paraDic = @{@"json":para};
-    NSLog(@"参数:%@",paraDic);
+    //NSLog(@"参数:%@",paraDic);
     [manager POST:getccodeCommentUrl parameters:paraDic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        NSLog(@"评论:%@",responseObject);
+        //NSLog(@"评论:%@",responseObject);
         if ([responseObject[@"Result"] integerValue] == 2) {
             self.commentDic = nil;
         }else if ([responseObject[@"Result"] integerValue] == 0)
@@ -1621,7 +1655,7 @@
 {
     [CommentNetManager getBarCodeCommentWithBarCode:self.barCode CurrentPage:@"0" PageSize:@"10" completionHandle:^(id responseObject, NSError *error) {
         if (!error) {
-            NSLog(@"%@",responseObject);
+            //NSLog(@"%@",responseObject);
             if ([responseObject[@"Result"] integerValue] == 2) {
                 self.commentDic = nil;
             }else if ([responseObject[@"Result"] integerValue] == 0)
@@ -1824,36 +1858,36 @@
 
 
 
-#pragma mark - tableViewHeader的点击事件
-- (void)cycleScrollView:(SDCycleScrollView *)cycleScrollView didSelectItemAtIndex:(NSInteger)index
-{
-    //    NSLog(@"---点击了第%ld张图片", (long)index);
-    PictureViewController *picVC = [[PictureViewController alloc] init];
-    [self.navigationController pushViewController:picVC animated:YES];
-    //NSLog(@"%@",self.picArray);
-    //拿到所点击的数组中的元素
-    if (self.picArray.count != 0) {
-        
-        NSString *str = [self.picArray objectAtIndex:index];
-        picVC.url = str;
-        picVC.urlArray = self.picArray;
-        picVC.index = index;
-        //NSLog(@"%@",str);
-        
-    }else{
-        
-        UIImage * aImage = [UIImage imageNamed:@"icon1024"];
-        NSMutableArray *images = [NSMutableArray arrayWithObjects:aImage, nil];
-        
-        picVC.urlArray = images;
-    }
-    //NSLog(@"%@",self.picArray);
-    
-    
-//    id navigationDelegate = self.navigationController.delegate;
-//    HYBMoveDetailController *vc = [[HYBMoveDetailController alloc] init];
-//    vc.image = [UIImage image]
-}
+//#pragma mark - tableViewHeader的点击事件
+//- (void)cycleScrollView:(SDCycleScrollView *)cycleScrollView didSelectItemAtIndex:(NSInteger)index
+//{
+//    //    NSLog(@"---点击了第%ld张图片", (long)index);
+//    PictureViewController *picVC = [[PictureViewController alloc] init];
+//    [self.navigationController pushViewController:picVC animated:YES];
+//    //NSLog(@"%@",self.picArray);
+//    //拿到所点击的数组中的元素
+//    if (self.picArray.count != 0) {
+//        
+//        NSString *str = [self.picArray objectAtIndex:index];
+//        picVC.url = str;
+//        picVC.urlArray = self.picArray;
+//        picVC.index = index;
+//        //NSLog(@"%@",str);
+//        
+//    }else{
+//        
+//        UIImage * aImage = [UIImage imageNamed:@"icon1024"];
+//        NSMutableArray *images = [NSMutableArray arrayWithObjects:aImage, nil];
+//        
+//        picVC.urlArray = images;
+//    }
+//    //NSLog(@"%@",self.picArray);
+//    
+//    
+////    id navigationDelegate = self.navigationController.delegate;
+////    HYBMoveDetailController *vc = [[HYBMoveDetailController alloc] init];
+////    vc.image = [UIImage image]
+//}
 
 
 #pragma 判断是否有网络连接
@@ -2018,6 +2052,12 @@
             [self.scrollView addSubview:imageView];
             
         }
+        
+        //设置下方阴影
+        UIImageView *imageViewBg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 219/586.0*kScreenHeight, [UIScreen mainScreen].bounds.size.width, 68/586.0*kScreenHeight)];
+        UIImage *imageBg = [UIImage imageNamed:@"图片上阴影"];
+        imageViewBg.image = imageBg;
+        [self.scrollView addSubview:imageViewBg];
         
         //4.设置滚动视图的内容大小
         self.scrollView.contentSize = CGSizeMake(self.picArray.count*self.view.frame.size.width, 287/586.0*kScreenHeight);
@@ -2647,8 +2687,12 @@
             if (self.commentDic.count != 0) {
                 UILabel *label = [[UILabel alloc]init];
                 label.font = [UIFont systemFontOfSize:12];
-                //float totalScore = [self.commentDic[@"totalscore1"] floatValue]/[self.commentDic[@"totalcnt"] floatValue];
-                label.text = [NSString stringWithFormat:@"%@分",self.commentDic[@"Data"][0][@"levelscore"]];
+                float totalScore = [self.commentDic[@"totalscore1"] floatValue]/[self.commentDic[@"totalcnt"] floatValue];
+                //NSLog(@"%f",totalScore);
+                //NSLog(@"%@",[self decimalwithFormat:@"0.0" floatV:totalScore]);
+                //label.text = [self decimalwithFormat:@"0.0" floatV:totalScore];
+                label.text = [NSString stringWithFormat:@"%.1f分",round(totalScore*10)/10];
+                //label.text = [NSString stringWithFormat:@"%@分",self.commentDic[@"Data"][0][@"levelscore"]];
                 [View addSubview:label];
                 [label mas_makeConstraints:^(MASConstraintMaker *make) {
                     make.right.mas_equalTo(-12);
@@ -2669,7 +2713,7 @@
                     make.size.mas_equalTo(CGSizeMake(67, 11));
                 }];
                 CAShapeLayer *maskLayer = [CAShapeLayer layer];
-                UIBezierPath *toPath = [UIBezierPath bezierPathWithRect:CGRectMake(0, 0, 68*[self.commentDic[@"Data"][0][@"levelscore"] floatValue]/5, 11)];
+                UIBezierPath *toPath = [UIBezierPath bezierPathWithRect:CGRectMake(0, 0, 68*totalScore/5, 11)];
                 maskLayer.path = toPath.CGPath;
                 foregroundImageView.layer.mask = maskLayer;
             }
@@ -2684,6 +2728,16 @@
     return headerView;
     
     
+}
+
+//格式话小数 四舍五入类型
+- (NSString *) decimalwithFormat:(NSString *)format  floatV:(float)floatV
+{
+    NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+    
+    [numberFormatter setPositiveFormat:format];
+    
+    return  [numberFormatter stringFromNumber:[NSNumber numberWithFloat:floatV]];
 }
 
 

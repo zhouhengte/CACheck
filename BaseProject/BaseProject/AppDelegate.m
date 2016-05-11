@@ -9,9 +9,12 @@
 #import "AppDelegate.h"
 #import "AppDelegate+Category.h"
 #import "MobClick.h"
+#import <UMSocial.h>
+#import <UMSocialWechatHandler.h>
 #import "WelcomeViewController.h"
 #import "RecordDetailViewController.h"
 #import "ScanRecordViewController.h"
+#import "MessageViewController.h"
 #import "MainViewController.h"
 #import <CoreLocation/CoreLocation.h>
 
@@ -29,6 +32,10 @@
     //友盟日活统计key
     [MobClick startWithAppkey:@"564e8ee567e58e64f2003bef" reportPolicy:BATCH channelId:@"Web"];
     //    [MobClick startWithAppkey:@"5660f82e67e58efaa5002135" reportPolicy:BATCH channelId:@"Web"];
+    //友盟社会化分享
+    [UMSocialData setAppKey:@"564e8ee567e58e64f2003bef"];
+    [UMSocialWechatHandler setWXAppId:@"wx1b75fcd340d4f79e" appSecret:@"9bf2df908c85a552b7986f0c96944551" url:@"http://www.umeng.com/social"];
+    
     NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
     [MobClick setAppVersion:version];
 #warning 如果是开发状态，切记要写下方代码，否则应用崩溃就不会出现任何提示,会被传到友盟官网
@@ -141,9 +148,10 @@
         recordDetailVC.judgeStr = [localNotification.userInfo objectForKey:@"barcode"];
         recordDetailVC.sugueStr = @"list";
         recordDetailVC.onlyStr = @"消息";
-        ScanRecordViewController *scanRecordVC = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"scanRecordViewController"];
+        //ScanRecordViewController *scanRecordVC = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"scanRecordViewController"];
+        MessageViewController *messageVC = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"messageViewController"];
         MainViewController *mainVC = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"mainViewController"];
-        NSArray *controllerArray = @[mainVC,scanRecordVC,recordDetailVC];
+        NSArray *controllerArray = @[mainVC,messageVC,recordDetailVC];
         [naviVC setViewControllers:controllerArray];
         [self.window makeKeyAndVisible];
         
@@ -163,6 +171,14 @@
     return YES;
 }
 
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    BOOL result = [UMSocialSnsService handleOpenURL:url];
+    if (result == FALSE) {
+        //调用其他SDK，例如支付宝SDK等
+    }
+    return result;
+}
 
 
 @end

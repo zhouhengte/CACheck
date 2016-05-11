@@ -18,6 +18,7 @@
 @property (nonatomic,strong)UITextView *textView;
 @property (nonatomic,strong)UIView *editView;
 @property (nonatomic,strong)UIView *grayTranslucentView;
+@property (nonatomic,strong)UILabel *label;
 @property (nonatomic,strong)UIButton *firstStar;
 @property (nonatomic,strong)UIButton *secondStar;
 @property (nonatomic,strong)UIButton *thirdStar;
@@ -30,12 +31,14 @@
 @property (nonatomic,strong)NSNumber *totalScore;
 @property (nonatomic,strong)NSString *commentStr;
 @property (nonatomic,strong)UIView *emptyView;
+@property (nonatomic,strong)UILabel *placeholdLabel;
 
 @property (nonatomic,strong)UIImageView *foregroundImageView;
 @property (nonatomic,strong)UILabel *totalScoreLabel;
 
 @property(nonatomic,assign)NSInteger pageCount;
 @property(nonatomic,assign)NSInteger pageCountTotal;
+
 @end
 
 @implementation CommentViewController
@@ -51,9 +54,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    //self.commentArray = [@[@{@"username":@"zhangsan",@"levelscore":@4,@"createtime":@"2016-03-23",@"ccomment":@"很好"},@{@"username":@"lisi",@"levelscore":@0,@"createtime":@"2016-01-21",@"ccomment":@"不好"},@{@"username":@"wangwu",@"levelscore":@4,@"createtime":@"2016-02-22",@"ccomment":@"很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好好很好很好很好很好很好很好很好很好很好很好很好很好好很好很好很好很好很好很好很好很好很好很好很好很好好很好很好很好很好很好很好很好很好很好很好很好很好"},@{@"username":@"zhangsan",@"levelscore":@1,@"createtime":@"2016-03-23",@"ccomment":@"很好"},@{@"username":@"lisi",@"levelscore":@0,@"createtime":@"2016-01-21",@"ccomment":@"不好"},@{@"username":@"wangwu",@"levelscore":@2,@"createtime":@"2016-02-22",@"ccomment":@"很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好好很好很好很好很好很好很好很好很好很好很好很好很好好很好很好很好很好很好很好很好很好很好很好很好很好好很好很好很好很好很好很好很好很好很好很好很好很好"},@{@"username":@"zhangsan",@"levelscore":@2,@"createtime":@"2016-03-23",@"ccomment":@"很好"},@{@"username":@"lisi",@"levelscore":@0,@"createtime":@"2016-01-21",@"ccomment":@"不好"},@{@"username":@"wangwu",@"levelscore":@3,@"createtime":@"2016-02-22",@"ccomment":@"很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好好很好很好很好很好很好很好很好很好很好很好很好很好好很好很好很好很好很好很好很好很好很好很好很好很好好很好很好很好很好很好很好很好很好很好很好很好很好"},@{@"username":@"zhangsan",@"levelscore":@3,@"createtime":@"2016-03-23",@"ccomment":@"很好"},@{@"username":@"lisi",@"levelscore":@0,@"createtime":@"2016-01-21",@"ccomment":@"不好"},@{@"username":@"wangwu",@"levelscore":@0,@"createtime":@"2016-02-22",@"ccomment":@"很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好很好好很好很好很好很好很好很好很好很好很好很好很好很好好很好很好很好很好很好很好很好很好很好很好很好很好好很好很好很好很好很好很好很好很好很好很好很好很好"}] mutableCopy];
-    
-    self.commentArray = self.commentDic[@"Data"];
+    self.commentArray = [self.commentDic[@"Data"] mutableCopy];
     self.pageCountTotal = [self.commentDic[@"totalpage"] integerValue];
     self.pageCount = [self.commentDic[@"currentpage"] integerValue];
     
@@ -131,13 +132,19 @@
 //根据输入框内容改变行数
 -(void)textChanged:(NSNotification *)noti
 {
-    NSLog(@"%f",self.textView.contentSize.height);
+    //NSLog(@"%f",self.textView.contentSize.height);
+    self.placeholdLabel.hidden = self.textView.hasText;
     CGFloat height = self.textView.contentSize.height > 83.0 ? 83.0 : self.textView.contentSize.height;
+    //CGFloat height = self.textView.contentSize.height > 83.0 ? 83.0 : ceilf([_textView sizeThatFits:_textView.frame.size].height);
+    
     [UIView animateWithDuration:0.1 animations:^{
         [self.editView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(height+61);
         }];
     }];
+    //self.textView.scrollEnabled = YES;
+    [self.textView scrollRangeToVisible:NSMakeRange(self.textView.text.length - 2, 1)];
+    
 }
 
 
@@ -243,7 +250,7 @@
 -(void)setBottom
 {
     UIView *view = [[UIView alloc]init];
-    view.layer.borderWidth = 1;
+    view.layer.borderWidth = 0.5;
     view.layer.borderColor = [UIColor colorWithRed:199/255.0 green:199/255.0 blue:199/255.0 alpha:1].CGColor;
     [self.view addSubview:view];
     [view mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -252,9 +259,9 @@
     }];
     
     UIView *centerView = [[UIView alloc]init];
-    centerView.layer.borderWidth = 1;
-    centerView.layer.cornerRadius = 6;
-    centerView.layer.borderColor = [UIColor colorWithRed:174/255.0 green:174/255.0 blue:174/255.0 alpha:1].CGColor;
+    centerView.layer.borderWidth = 0.5;
+    centerView.layer.cornerRadius = 4;
+    centerView.layer.borderColor = UIColorFromRGB(0xcccccc).CGColor;
     centerView.backgroundColor = [UIColor whiteColor];
     [view addSubview:centerView];
     [centerView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -273,16 +280,16 @@
         make.size.mas_equalTo(CGSizeMake(13, 13));
     }];
     
-    UILabel *label = [[UILabel alloc]init];
+    self.label = [[UILabel alloc]init];
     if (self.commentDic.count != 0) {
-        label.text = @"你的评价对其他人帮助很大哦～";
+        _label.text = @"你的评价对其他人帮助很大哦～";
     }else{
-        label.text = @"快来抢第一条评价吧！";
+        _label.text = @"快来抢第一条评价吧！";
     }
-    label.font = [UIFont systemFontOfSize:13];
-    label.textColor = [UIColor colorWithRed:180/255.0 green:180/255.0 blue:180/255.0 alpha:1];
-    [centerView addSubview:label];
-    [label mas_makeConstraints:^(MASConstraintMaker *make) {
+    _label.font = [UIFont systemFontOfSize:13];
+    _label.textColor = [UIColor colorWithRed:180/255.0 green:180/255.0 blue:180/255.0 alpha:1];
+    [centerView addSubview:_label];
+    [_label mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(31);
         make.top.right.bottom.mas_equalTo(0);
     }];
@@ -299,7 +306,7 @@
 
 -(void)click:(UIView *)sender
 {
-    NSLog(@"点击了评价");
+    //NSLog(@"点击了评价");
     if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"login"] isEqualToString: @"登录成功"]) {
         NSLog(@"已登陆");
         self.grayTranslucentView.hidden = NO;
@@ -413,7 +420,7 @@
     //self.textView.contentOffset = CGPointMake(9, 0);
     view.backgroundColor = [UIColor whiteColor];
     view.layer.borderColor = UIColorFromRGB(0xcccccc).CGColor;
-    view.layer.borderWidth = 1;
+    view.layer.borderWidth = 0.5;
     view.layer.cornerRadius = 4;
     view.layer.masksToBounds = YES;
     [self.editView addSubview:view];
@@ -424,22 +431,29 @@
         make.top.mas_equalTo(51);
     }];
     
-//    UILabel *placeholdLabel = [[UILabel alloc]init];
-//    [view addSubview:placeholdLabel];
-//    [placeholdLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.mas_equalTo(6);
-//        make.bottom.right.top.mas_equalTo(0);
-//    }];
-//    placeholdLabel.text = @"快来抢第一条评论吧!";
+    self.placeholdLabel = [[UILabel alloc]init];
+    [view addSubview:_placeholdLabel];
+    [_placeholdLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(10);
+        make.bottom.right.top.mas_equalTo(0);
+    }];
+    if (self.commentDic.count != 0) {
+        _placeholdLabel.text = @"你的评价对其他人帮助很大哦～";
+    }else{
+        _placeholdLabel.text = @"快来抢第一条评价吧！";
+    }
+    _placeholdLabel.font = [UIFont systemFontOfSize:13];
+    _placeholdLabel.textColor = [UIColor colorWithRed:180/255.0 green:180/255.0 blue:180/255.0 alpha:1];
 
     self.textView = [[UITextView alloc]init];
+    self.textView.backgroundColor = [UIColor clearColor];
     [view addSubview:_textView];
     [self.textView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(6);
         make.bottom.right.top.mas_equalTo(0);
     }];
-    //_textView.placeholder = @"快来抢第一条评价吧！";
     _textView.font = [UIFont systemFontOfSize:14];
+    
     
     UIButton *button = [[UIButton alloc]init];
     [self.editView addSubview:button];
@@ -447,7 +461,8 @@
     [button setTitleColor:[UIColor colorWithRed:52/255.0 green:181/255.0 blue:254/255.0 alpha:1] forState:UIControlStateNormal];
     button.titleLabel.font = [UIFont systemFontOfSize:14];
     [button mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(_textView);
+        //make.centerY.mas_equalTo(_textView);
+        make.top.mas_equalTo(50);
         make.right.mas_equalTo(0);
         make.size.mas_equalTo(CGSizeMake(46, 35));
     }];
@@ -514,15 +529,15 @@
 
 -(void)sendClick:(UIButton *)sender
 {
-    NSLog(@"%@",self.productDic);
-    NSLog(@"%@",self.productCode);
+    //NSLog(@"%@",self.productDic);
+    //NSLog(@"%@",self.productCode);
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSString *userName = [userDefaults objectForKey:@"username"];
     NSString *userId = [userDefaults objectForKey:@"userid"];
     NSString *token = [userDefaults objectForKey:@"CA-Token"];
-    NSLog(@"%@",userName);
-    NSLog(@"%@",userId);
-    NSLog(@"%@",token);
+    //NSLog(@"%@",userName);
+    //NSLog(@"%@",userId);
+    //NSLog(@"%@",token);
     
 
     
@@ -545,7 +560,7 @@
     if ([self.textView.text isEqualToString:@""]) {
         MBProgressHUD *Hud = [[MBProgressHUD alloc] initWithView:self.view];
         [self.view addSubview:Hud];
-        Hud.labelText = @"请输入评论内容";
+        Hud.labelText = @"请输入评价内容";
         Hud.labelFont = [UIFont systemFontOfSize:14];
         Hud.mode = MBProgressHUDModeText;
         //            hud.yOffset = 250;
@@ -557,8 +572,24 @@
         }];
         return;
     }
+    if (self.textView.text.length > 500) {
+        MBProgressHUD *Hud = [[MBProgressHUD alloc] initWithView:self.view];
+        [self.view addSubview:Hud];
+        Hud.labelText = @"评价内容不能超过500字";
+        Hud.labelFont = [UIFont systemFontOfSize:14];
+        Hud.mode = MBProgressHUDModeText;
+        //            hud.yOffset = 250;
+        [Hud showAnimated:YES whileExecutingBlock:^{
+            sleep(1.5);
+            
+        } completionBlock:^{
+            [Hud removeFromSuperview];
+        }];
+        return;
+
+    }
     [addDic setValue:self.textView.text forKey:@"ccomment"];
-    NSLog(@"comment length:%lu",(unsigned long)self.textView.text.length);
+    //NSLog(@"comment length:%lu",(unsigned long)self.textView.text.length);
     
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     [manager.requestSerializer setValue:@"0" forHTTPHeaderField:@"Client-Flag"];
@@ -567,6 +598,10 @@
     //    NSLog(@"catoken:%@",token);
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/plain",@"application/json", nil];
 
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+    // Set some text to show the initial status.
+    hud.labelText = @"加载中";
+    hud.yOffset = -20;
     
     if (self.isBarcode == NO) {
         NSString *addccodeCommentUrl = [NSString stringWithFormat:@"%@/%@",kUrl,kAddCCodeCommentUrl];
@@ -577,9 +612,9 @@
         NSString *para = [self dictionaryToJson:addDic];
         
         NSDictionary *paraDic = @{@"json":para};
-        NSLog(@"参数:%@",paraDic);
+        //NSLog(@"参数:%@",paraDic);
         [manager POST:addccodeCommentUrl parameters:paraDic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-            NSLog(@"发送评论:%@",responseObject);
+            //NSLog(@"发送评论:%@",responseObject);
             if ([responseObject[@"Result"] integerValue] == 0) {//发送成功
                 
                 [self getComment];
@@ -592,9 +627,58 @@
                 [self.forthStar setImage:[UIImage imageNamed:@"点击的评分1"] forState:UIControlStateNormal];
                 [self.fifthStar setImage:[UIImage imageNamed:@"点击的评分1"] forState:UIControlStateNormal];
                 self.clickStar = 0;
+                
+
+//                MBProgressHUD *Hud = [[MBProgressHUD alloc] initWithView:self.view];
+//                [self.view addSubview:Hud];
+//                Hud.labelText = @"发送成功";
+//                Hud.labelFont = [UIFont systemFontOfSize:14];
+//                Hud.mode = MBProgressHUDModeCustomView;
+//                UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 50, 50)];
+//                imageView.image = [UIImage imageNamed:@"对勾"];
+//                Hud.customView = imageView;
+//                //            hud.yOffset = 250;
+//                [Hud showAnimated:YES whileExecutingBlock:^{
+//                    sleep(1.5);
+//                    
+//                } completionBlock:^{
+//                    [Hud removeFromSuperview];
+//                }];
+                
+                
+                dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+                    // Do something useful in the background and update the HUD periodically.
+                    //MBProgressHUD *hud = [MBProgressHUD HUDForView:self.navigationController.view];
+                    // Indeterminate mode
+                    UIImage *image = [UIImage imageNamed:@"对勾"];
+                    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
+                    imageView.image = image;
+                    //hud.customView = imageView;
+                    hud.mode = MBProgressHUDModeText;
+                    hud.labelText = @"发送成功";
+                    sleep(1.5);
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [hud hide:YES];
+                        [hud removeFromSuperview];
+                    });
+                });
+                
             }
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-            NSLog(@"发送评论失败%@",error);
+            //NSLog(@"发送评论失败%@",error);
+            dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+                // Do something useful in the background and update the HUD periodically.
+                //MBProgressHUD *hud = [MBProgressHUD HUDForView:self.navigationController.view];
+                // Indeterminate mode
+                hud.mode = MBProgressHUDModeText;
+                hud.labelText = @"发送失败";
+                sleep(1.5);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [hud hide:YES];
+                    [hud removeFromSuperview];
+                });
+            });
+
         }];
 
     }else{
@@ -614,9 +698,35 @@
             [self.forthStar setImage:[UIImage imageNamed:@"点击的评分1"] forState:UIControlStateNormal];
             [self.fifthStar setImage:[UIImage imageNamed:@"点击的评分1"] forState:UIControlStateNormal];
             self.clickStar = 0;
+            
+            
+            dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+                // Do something useful in the background and update the HUD periodically.
+                //MBProgressHUD *hud = [MBProgressHUD HUDForView:self.navigationController.view];
+                hud.mode = MBProgressHUDModeText;
+                hud.labelText = @"发送成功";
+                sleep(1.5);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [hud hide:YES];
+                    [hud removeFromSuperview];
+                });
+            });
 
         } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-            NSLog(@"发送评论失败%@",error);
+            //NSLog(@"发送评论失败%@",error);
+            dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+                // Do something useful in the background and update the HUD periodically.
+                //MBProgressHUD *hud = [MBProgressHUD HUDForView:self.navigationController.view];
+                //hud.customView = imageView;
+                hud.mode = MBProgressHUDModeText;
+                hud.labelText = @"发送失败";
+                sleep(1.5);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [hud hide:YES];
+                    [hud removeFromSuperview];
+                });
+            });
+
         }];
     }
     
@@ -658,7 +768,8 @@
     }];
     
     self.totalScore = [NSNumber numberWithFloat:([self.commentDic[@"totalscore1"] floatValue]/[self.commentDic[@"totalcnt"] floatValue])];
-    NSLog(@"commentDic:%@",self.commentDic);
+    
+    //NSLog(@"commentDic:%@",self.commentDic);
     
     self.foregroundImageView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"五星全"]];
     [headerview addSubview:_foregroundImageView];
@@ -683,7 +794,7 @@
     
     
     self.totalScoreLabel = [[UILabel alloc]init];
-    _totalScoreLabel.text = [NSString stringWithFormat:@"%.1f分",[self.totalScore floatValue]];
+    _totalScoreLabel.text = [NSString stringWithFormat:@"%.1f分",round([self.totalScore floatValue]*10)/10];
     _totalScoreLabel.font = [UIFont systemFontOfSize:14];
     [headerview addSubview:_totalScoreLabel];
     [_totalScoreLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -700,49 +811,56 @@
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
 
-    //下拉刷新
-    __weak typeof(self) weakSelf = self;
-    [self.tableView addHeaderRefresh:^{
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            if (self.isBarcode == NO) {
-                NSString *typeid = [weakSelf.productDic objectForKey:@"typeid"];
-                [CommentNetManager getCcodeCommentWithTypeID:typeid CurrentPage:@"0" PageSize:@"10" completionHandle:^(id responseObject, NSError *error) {
-                    if (!error) {
-                        NSLog(@"%@",responseObject);
-                        if (responseObject[@"Result"] == 0) {
-                            weakSelf.commentDic = responseObject;
-                            weakSelf.commentArray = weakSelf.commentDic[@"Data"];
-                            [weakSelf.tableView reloadData];
-                        }
-                    }else{
-                        NSLog(@"获取评论失败:%@",error);
-                    }
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [weakSelf.tableView endHeaderRefresh];
-                    });
-                }];
+    MJRefreshNormalHeader *header = [MJRefreshNormalHeader headerWithRefreshingTarget:self refreshingAction:@selector(refresh)];
+    [header setTitle:@"下拉刷新评价" forState:MJRefreshStateIdle];
+    [header setTitle:@"释放刷新评价" forState:MJRefreshStatePulling];
+    [header setTitle:@"加载数据中" forState:MJRefreshStateRefreshing];
+    self.tableView.mj_header = header;
 
-            }else{
-                [CommentNetManager getBarCodeCommentWithBarCode:weakSelf.productCode CurrentPage:@"0" PageSize:@"10" completionHandle:^(id responseObject, NSError *error) {
-                    if (!error) {
-                        NSLog(@"%@",responseObject);
-                        if (responseObject[@"Result"] == 0) {
-                            weakSelf.commentDic = responseObject;
-                            weakSelf.commentArray = weakSelf.commentDic[@"Data"];
-                            [weakSelf.tableView reloadData];
-                        }
-                    }else{
-                        NSLog(@"获取评论失败:%@",error);
-                    }
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [weakSelf.tableView endHeaderRefresh];
-                    });
-                }];
-            }
-            
-
-        });
-    }];
+//    //下拉刷新
+//    __weak typeof(self) weakSelf = self;
+//    [self.tableView addHeaderRefresh:^{
+//        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+//            if (self.isBarcode == NO) {
+//                NSString *typeid = [weakSelf.productDic objectForKey:@"typeid"];
+//                [CommentNetManager getCcodeCommentWithTypeID:typeid CurrentPage:@"0" PageSize:@"10" completionHandle:^(id responseObject, NSError *error) {
+//                    if (!error) {
+//                        NSLog(@"%@",responseObject);
+//                        if (responseObject[@"Result"] == 0) {
+//                            weakSelf.commentDic = [responseObject mutableCopy];
+//                            weakSelf.commentArray = [weakSelf.commentDic[@"Data"] mutableCopy];
+//                            [weakSelf.tableView reloadData];
+//                        }
+//                    }else{
+//                        NSLog(@"获取评论失败:%@",error);
+//                    }
+//                    dispatch_async(dispatch_get_main_queue(), ^{
+//                        
+//                        [weakSelf.tableView endHeaderRefresh];
+//                    });
+//                }];
+//
+//            }else{
+//                [CommentNetManager getBarCodeCommentWithBarCode:weakSelf.productCode CurrentPage:@"0" PageSize:@"10" completionHandle:^(id responseObject, NSError *error) {
+//                    if (!error) {
+//                        NSLog(@"%@",responseObject);
+//                        if (responseObject[@"Result"] == 0) {
+//                            weakSelf.commentDic = responseObject;
+//                            weakSelf.commentArray = weakSelf.commentDic[@"Data"];
+//                            [weakSelf.tableView reloadData];
+//                        }
+//                    }else{
+//                        NSLog(@"获取评论失败:%@",error);
+//                    }
+//                    dispatch_async(dispatch_get_main_queue(), ^{
+//                        [weakSelf.tableView endHeaderRefresh];
+//                    });
+//                }];
+//            }
+//            
+//
+//        });
+//    }];
 
     //底部刷新
     //MJRefreshAutoNormalFooter *footer = [MJRefreshAutoNormalFooter footerWithRefreshingTarget:self refreshingAction:@selector(loadOnceData)];
@@ -756,7 +874,7 @@
     //footer.stateLabel.hidden = YES;
     
     // 设置文字
-    [footer setTitle:@"已显示全部评价" forState:MJRefreshStateIdle];
+    [footer setTitle:@"上拉加载更多评价" forState:MJRefreshStateIdle];
     [footer setTitle:@"正在加载数据" forState:MJRefreshStateRefreshing];
     [footer setTitle:@"已显示全部评价" forState:MJRefreshStateNoMoreData];
     
@@ -792,11 +910,11 @@
     NSString *para = [self dictionaryToJson:getDic];
     
     NSDictionary *paraDic = @{@"json":para};
-    NSLog(@"参数:%@",paraDic);
+    //NSLog(@"参数:%@",paraDic);
     [manager POST:getccodeCommentUrl parameters:paraDic progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        NSLog(@"评论:%@",responseObject);
+        //NSLog(@"评论:%@",responseObject);
         if ([responseObject[@"Result"] integerValue] == 0) {
-            self.commentArray = responseObject[@"Data"];
+            self.commentArray = [responseObject[@"Data"] mutableCopy];
             self.totalScore = [NSNumber numberWithFloat:([responseObject[@"totalscore1"] floatValue]/[responseObject[@"totalcnt"] floatValue])];
             
             CAShapeLayer *maskLayer = [CAShapeLayer layer];
@@ -804,14 +922,16 @@
             UIBezierPath *toPath = [UIBezierPath bezierPathWithRect:CGRectMake(0, 0, 84*[self.totalScore floatValue]/5, 12)];
             maskLayer.path = toPath.CGPath;
             _foregroundImageView.layer.mask = maskLayer;
-            _totalScoreLabel.text = [NSString stringWithFormat:@"%.1f分",[self.totalScore floatValue]];
+            _totalScoreLabel.text = [NSString stringWithFormat:@"%.1f分",round([self.totalScore floatValue]*10)/10];
             
             self.tableView.hidden = NO;
+            self.label.text = @"你的评价对其他人很有帮助哦～";
+            self.placeholdLabel.text = @"你的评价对其他人很有帮助哦～";
             [self.tableView reloadData];
             [self.emptyView removeFromSuperview];
         }
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        NSLog(@"获取评论失败%@",error);
+        //NSLog(@"获取评论失败%@",error);
     }];
     
 }
@@ -829,13 +949,15 @@
                 UIBezierPath *toPath = [UIBezierPath bezierPathWithRect:CGRectMake(0, 0, 84*[self.totalScore floatValue]/5, 12)];
                 maskLayer.path = toPath.CGPath;
                 _foregroundImageView.layer.mask = maskLayer;
-                _totalScoreLabel.text = [NSString stringWithFormat:@"%.1f分",[self.totalScore floatValue]];
+                _totalScoreLabel.text = [NSString stringWithFormat:@"%.1f分",round([self.totalScore floatValue]*10)/10];
                 
                 self.tableView.hidden = NO;
+                self.label.text = @"你的评价对其他人很有帮助哦～";
+                self.placeholdLabel.text = @"你的评价对其他人很有帮助哦～";
                 [self.tableView reloadData];
                 [self.emptyView removeFromSuperview];
             }else{
-                NSLog(@"获取评论失败%@",error);
+                //NSLog(@"获取评论失败%@",error);
             }
         }
     }];
@@ -854,12 +976,12 @@
             NSString *page = [NSString stringWithFormat:@"%ld",(long)self.pageCount];
             [CommentNetManager getCcodeCommentWithTypeID:typeid CurrentPage:page PageSize:@"10" completionHandle:^(id responseObject, NSError *error) {
                 if (!error) {
-                    NSLog(@"%@",responseObject);
-                    NSArray *other = responseObject[@"Data"];
+                    //NSLog(@"%@",responseObject);
+                    NSMutableArray *other = [responseObject[@"Data"] mutableCopy];
                     [self.commentArray addObjectsFromArray:other];
                     [self.tableView reloadData];
                 }else{
-                    NSLog(@"获取评论失败:%@",error);
+                    //NSLog(@"获取评论失败:%@",error);
                 }
                 [self.tableView.mj_footer endRefreshing];
             }];
@@ -867,7 +989,8 @@
             [self.tableView.mj_footer endRefreshingWithNoMoreData];
         }
 
-    }else{
+    }else
+    {
         self.pageCount ++;
         if (_pageCount<self.pageCountTotal) {
             NSString *page = [NSString stringWithFormat:@"%ld",(long)self.pageCount];
@@ -877,13 +1000,68 @@
                     [self.commentArray addObjectsFromArray:other];
                     [self.tableView reloadData];
                 }else{
-                    NSLog(@"获取评论失败:%@",error);
+                    //NSLog(@"获取评论失败:%@",error);
                 }
             }];
         }else{
             [self.tableView.mj_footer endRefreshingWithNoMoreData];
         }
     }
+}
+
+-(void)refresh
+{
+    if (self.isBarcode == NO) {
+        NSString *typeid = [self.productDic objectForKey:@"typeid"];
+        [CommentNetManager getCcodeCommentWithTypeID:typeid CurrentPage:@"0" PageSize:@"10" completionHandle:^(id responseObject, NSError *error) {
+            if (!error) {
+                //NSLog(@"%@",responseObject);
+                self.commentArray = [responseObject[@"Data"] mutableCopy];
+                self.totalScore = [NSNumber numberWithFloat:([responseObject[@"totalscore1"] floatValue]/[responseObject[@"totalcnt"] floatValue])];
+                CAShapeLayer *maskLayer = [CAShapeLayer layer];
+                //UIBezierPath *fromPath = [UIBezierPath bezierPathWithRect:CGRectMake(0, 0, 1, 12)];
+                UIBezierPath *toPath = [UIBezierPath bezierPathWithRect:CGRectMake(0, 0, 84*[self.totalScore floatValue]/5, 12)];
+                maskLayer.path = toPath.CGPath;
+                _foregroundImageView.layer.mask = maskLayer;
+                _totalScoreLabel.text = [NSString stringWithFormat:@"%.1f分",round([self.totalScore floatValue]*10)/10];
+                
+                [self.tableView reloadData];
+                
+                self.pageCount = 0;
+                [self.tableView.mj_footer setRefreshingTarget:self refreshingAction:@selector(loadMoreData)];
+                [self.tableView.mj_footer resetNoMoreData];
+            }else{
+                //NSLog(@"获取评论失败:%@",error);
+            }
+            [self.tableView.mj_header endRefreshing];
+        }];
+    }else
+    {
+        [CommentNetManager getBarCodeCommentWithBarCode:self.productCode CurrentPage:@"0" PageSize:@"10" completionHandle:^(id responseObject, NSError *error) {
+            if (!error) {
+                self.commentArray = [responseObject[@"Data"] mutableCopy];
+                self.totalScore = [NSNumber numberWithFloat:([responseObject[@"totalscore1"] floatValue]/[responseObject[@"totalcnt"] floatValue])];
+                CAShapeLayer *maskLayer = [CAShapeLayer layer];
+                //UIBezierPath *fromPath = [UIBezierPath bezierPathWithRect:CGRectMake(0, 0, 1, 12)];
+                UIBezierPath *toPath = [UIBezierPath bezierPathWithRect:CGRectMake(0, 0, 84*[self.totalScore floatValue]/5, 12)];
+                maskLayer.path = toPath.CGPath;
+                _foregroundImageView.layer.mask = maskLayer;
+                _totalScoreLabel.text = [NSString stringWithFormat:@"%.1f分",round([self.totalScore floatValue]*10)/10];
+                [self.tableView reloadData];
+                
+                self.pageCount = 0;
+                [self.tableView.mj_footer setRefreshingTarget:self refreshingAction:@selector(loadMoreData)];
+                [self.tableView.mj_footer resetNoMoreData];
+            }else{
+                //NSLog(@"获取评论失败:%@",error);
+            }
+            [self.tableView.mj_header endRefreshing];
+        }];
+    }
+
+    
+
+
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -896,16 +1074,20 @@
 {
     CommentCell *cell = [tableView dequeueReusableCellWithIdentifier:@"commentCell"];
     cell.commentDic = self.commentArray[indexPath.row];
+    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     return cell;
 }
+
+
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     //UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width-24, 999)];
     NSString *value = [self.commentArray[indexPath.row] objectForKey:@"ccomment"];
     CGSize size = [value sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(self.view.frame.size.width - 24, 999) lineBreakMode:NSLineBreakByCharWrapping];
-    NSLog(@"%@",NSStringFromCGSize(size));
-    return 100-17+(size.height>66.8?66.8:size.height);
+    //NSLog(@"%@",NSStringFromCGSize(size));
+    //return 100-17+(size.height>66.8?66.8:size.height);
+    return 100-17+size.height;
 }
 
 //-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -932,6 +1114,13 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [MobClick beginLogPageView:@"评价页面"];
+}
+
+
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
@@ -941,8 +1130,18 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(closeKeyboard:) name:UIKeyboardWillHideNotification object:nil];
     //增加输入框内容变化通知监听
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textChanged:) name: UITextViewTextDidChangeNotification object:nil];
+    
+    if (self.commentDic.count == 0) {
+        sleep(0.2);
+        [self click:nil];
+    }
 }
 
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [MobClick endLogPageView:@"评价页面"];
+}
 
 //view看不见时,取消注册的键盘监听
 - (void)viewDidDisappear:(BOOL)animated
