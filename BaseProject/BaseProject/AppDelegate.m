@@ -11,6 +11,8 @@
 #import "MobClick.h"
 #import <UMSocial.h>
 #import <UMSocialWechatHandler.h>
+#import <UMSocialQQHandler.h>
+#import <UMSocialSinaSSOHandler.h>
 #import "WelcomeViewController.h"
 #import "RecordDetailViewController.h"
 #import "ScanRecordViewController.h"
@@ -35,6 +37,8 @@
     //友盟社会化分享
     [UMSocialData setAppKey:@"564e8ee567e58e64f2003bef"];
     [UMSocialWechatHandler setWXAppId:@"wx1b75fcd340d4f79e" appSecret:@"9bf2df908c85a552b7986f0c96944551" url:@"http://www.umeng.com/social"];
+    [UMSocialQQHandler setQQWithAppId:@"1104866715" appKey:@"xecOSHVV5mwkLmex" url:@"http://www.umeng.com/social"];
+    [UMSocialSinaSSOHandler openNewSinaSSOWithAppKey:@"967224804" secret:@"6e4eb274f1ee1d3494017707e4c5babb" RedirectURL:@"http://sns.whalecloud.com/sina2/callback"];
     
     NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
     [MobClick setAppVersion:version];
@@ -179,6 +183,7 @@
     }
     return result;
 }
+
 
 
 @end

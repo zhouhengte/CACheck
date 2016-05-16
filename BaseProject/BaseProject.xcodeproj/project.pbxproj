@@ -47,6 +47,10 @@
 		2FD9843D1C488EB3000EB94A /* DJRefreshTopView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD984371C488EB3000EB94A /* DJRefreshTopView.m */; };
 		2FD9843E1C488EB3000EB94A /* DJRefreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD984391C488EB3000EB94A /* DJRefreshView.m */; };
 		2FD984411C489884000EB94A /* MessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FD984401C489884000EB94A /* MessageViewController.m */; };
+		2FDA1A811CE47185000B7778 /* NewsDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDA1A801CE47185000B7778 /* NewsDetailViewController.m */; };
+		2FDA1A9C1CE47564000B7778 /* libGumbo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FDA1A971CE47564000B7778 /* libGumbo.a */; };
+		2FDA1A9D1CE47564000B7778 /* OCGumbo+Query.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDA1A991CE47564000B7778 /* OCGumbo+Query.m */; };
+		2FDA1A9E1CE47564000B7778 /* OCGumbo.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDA1A9B1CE47564000B7778 /* OCGumbo.m */; };
 		2FDC34591CD3085D006E018E /* ZHTNavigationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDC34581CD3085D006E018E /* ZHTNavigationDelegate.m */; };
 		2FDC345C1CD308CD006E018E /* ZHTTransitionAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDC345B1CD308CD006E018E /* ZHTTransitionAnimator.m */; };
 		2FDCC3241CE2D75A00E18056 /* RIButtonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDCC31F1CE2D75A00E18056 /* RIButtonItem.m */; };
@@ -59,7 +63,6 @@
 		2FDCC3301CE3055900E18056 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FDCC32F1CE3055900E18056 /* libsqlite3.tbd */; };
 		2FDCC3321CE3056400E18056 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FDCC3311CE3056400E18056 /* CoreTelephony.framework */; };
 		2FDCC3341CE3057000E18056 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FDCC3331CE3057000E18056 /* libstdc++.tbd */; };
-		2FDCC3371CE31DD100E18056 /* NewsDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDCC3361CE31DD100E18056 /* NewsDetailViewController.m */; };
 		2FDDA1221C61F46500BAEFEB /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FDDA1211C61F46500BAEFEB /* libz.tbd */; };
 		2FDDA1301C61F6CC00BAEFEB /* RecordDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDDA1251C61F6CC00BAEFEB /* RecordDetailViewController.m */; };
 		2FDDA1311C61F6CC00BAEFEB /* ScanRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FDDA1271C61F6CC00BAEFEB /* ScanRecordViewController.m */; };
@@ -178,6 +181,14 @@
 		2FD984391C488EB3000EB94A /* DJRefreshView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DJRefreshView.m; sourceTree = "<group>"; };
 		2FD9843F1C489884000EB94A /* MessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageViewController.h; sourceTree = "<group>"; };
 		2FD984401C489884000EB94A /* MessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageViewController.m; sourceTree = "<group>"; };
+		2FDA1A801CE47185000B7778 /* NewsDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsDetailViewController.m; sourceTree = "<group>"; };
+		2FDA1A951CE47564000B7778 /* gumbo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gumbo.h; sourceTree = "<group>"; };
+		2FDA1A961CE47564000B7778 /* tag_enum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tag_enum.h; sourceTree = "<group>"; };
+		2FDA1A971CE47564000B7778 /* libGumbo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libGumbo.a; sourceTree = "<group>"; };
+		2FDA1A981CE47564000B7778 /* OCGumbo+Query.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OCGumbo+Query.h"; sourceTree = "<group>"; };
+		2FDA1A991CE47564000B7778 /* OCGumbo+Query.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OCGumbo+Query.m"; sourceTree = "<group>"; };
+		2FDA1A9A1CE47564000B7778 /* OCGumbo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCGumbo.h; sourceTree = "<group>"; };
+		2FDA1A9B1CE47564000B7778 /* OCGumbo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCGumbo.m; sourceTree = "<group>"; };
 		2FDC34571CD3085D006E018E /* ZHTNavigationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZHTNavigationDelegate.h; sourceTree = "<group>"; };
 		2FDC34581CD3085D006E018E /* ZHTNavigationDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZHTNavigationDelegate.m; sourceTree = "<group>"; };
 		2FDC345A1CD308CD006E018E /* ZHTTransitionAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZHTTransitionAnimator.h; sourceTree = "<group>"; };
@@ -196,7 +207,6 @@
 		2FDCC3311CE3056400E18056 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		2FDCC3331CE3057000E18056 /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
 		2FDCC3351CE31DD100E18056 /* NewsDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewsDetailViewController.h; sourceTree = "<group>"; };
-		2FDCC3361CE31DD100E18056 /* NewsDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewsDetailViewController.m; sourceTree = "<group>"; };
 		2FDDA1211C61F46500BAEFEB /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		2FDDA1241C61F6CC00BAEFEB /* RecordDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordDetailViewController.h; sourceTree = "<group>"; };
 		2FDDA1251C61F6CC00BAEFEB /* RecordDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordDetailViewController.m; sourceTree = "<group>"; };
@@ -286,6 +296,7 @@
 			files = (
 				2FDDA1221C61F46500BAEFEB /* libz.tbd in Frameworks */,
 				2FDCC3341CE3057000E18056 /* libstdc++.tbd in Frameworks */,
+				2FDA1A9C1CE47564000B7778 /* libGumbo.a in Frameworks */,
 				2FDCC3321CE3056400E18056 /* CoreTelephony.framework in Frameworks */,
 				2FDCC3301CE3055900E18056 /* libsqlite3.tbd in Frameworks */,
 				2FDCC32E1CE3054500E18056 /* CoreGraphics.framework in Frameworks */,
@@ -312,6 +323,7 @@
 		2F834D221C4648420050E4A6 /* Lib */ = {
 			isa = PBXGroup;
 			children = (
+				2FDA1A921CE47564000B7778 /* OCGumboRelease-master */,
 				2FDC34561CD30830006E018E /* ZHTViewControllerAnimationTransition */,
 				2FDDA1591C61F78800BAEFEB /* MD5 */,
 				2FD9842E1C488EB3000EB94A /* DJRefresh */,
@@ -391,6 +403,36 @@
 				2FD984391C488EB3000EB94A /* DJRefreshView.m */,
 			);
 			path = DJRefreshView;
+			sourceTree = "<group>";
+		};
+		2FDA1A921CE47564000B7778 /* OCGumboRelease-master */ = {
+			isa = PBXGroup;
+			children = (
+				2FDA1A931CE47564000B7778 /* gumbo */,
+				2FDA1A981CE47564000B7778 /* OCGumbo+Query.h */,
+				2FDA1A991CE47564000B7778 /* OCGumbo+Query.m */,
+				2FDA1A9A1CE47564000B7778 /* OCGumbo.h */,
+				2FDA1A9B1CE47564000B7778 /* OCGumbo.m */,
+			);
+			path = "OCGumboRelease-master";
+			sourceTree = "<group>";
+		};
+		2FDA1A931CE47564000B7778 /* gumbo */ = {
+			isa = PBXGroup;
+			children = (
+				2FDA1A941CE47564000B7778 /* include */,
+				2FDA1A971CE47564000B7778 /* libGumbo.a */,
+			);
+			path = gumbo;
+			sourceTree = "<group>";
+		};
+		2FDA1A941CE47564000B7778 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				2FDA1A951CE47564000B7778 /* gumbo.h */,
+				2FDA1A961CE47564000B7778 /* tag_enum.h */,
+			);
+			path = include;
 			sourceTree = "<group>";
 		};
 		2FDC34561CD30830006E018E /* ZHTViewControllerAnimationTransition */ = {
@@ -678,7 +720,7 @@
 				2FC7DB321C4797B5005A60BA /* NewsViewController.h */,
 				2FC7DB331C4797B5005A60BA /* NewsViewController.m */,
 				2FDCC3351CE31DD100E18056 /* NewsDetailViewController.h */,
-				2FDCC3361CE31DD100E18056 /* NewsDetailViewController.m */,
+				2FDA1A801CE47185000B7778 /* NewsDetailViewController.m */,
 				2FD9843F1C489884000EB94A /* MessageViewController.h */,
 				2FD984401C489884000EB94A /* MessageViewController.m */,
 				2F834D401C464C020050E4A6 /* PictureViewController.h */,
@@ -858,7 +900,7 @@
 				85C0AE561C20F6350016268A /* BaseViewModel.m in Sources */,
 				2F2991BF1CD9955900B1CB72 /* CommentNetManager.m in Sources */,
 				2FC7DB2E1C476A60005A60BA /* RecordTableViewCell.m in Sources */,
-				2FDCC3371CE31DD100E18056 /* NewsDetailViewController.m in Sources */,
+				2FDA1A811CE47185000B7778 /* NewsDetailViewController.m in Sources */,
 				2FDDA1571C61F6F100BAEFEB /* ServiceTermViewController.m in Sources */,
 				2FDDA1501C61F6F100BAEFEB /* AboutUsViewController.m in Sources */,
 				2FDC345C1CD308CD006E018E /* ZHTTransitionAnimator.m in Sources */,
@@ -882,6 +924,7 @@
 				2FDCC3251CE2D75A00E18056 /* UIActionSheet+Blocks.m in Sources */,
 				45333DD91C22EAC40016A357 /* NSObject+Parse.m in Sources */,
 				8566CE071C1FF378004693F0 /* AppDelegate.m in Sources */,
+				2FDA1A9E1CE47564000B7778 /* OCGumbo.m in Sources */,
 				2F834D4E1C4651CD0050E4A6 /* zoomScrollView.m in Sources */,
 				450C90D91C21169500AAC504 /* AppDelegate+Category.m in Sources */,
 				85C0AE5C1C20F7590016268A /* BaseNetManager.m in Sources */,
@@ -895,6 +938,7 @@
 				2FDDA1351C61F6CC00BAEFEB /* WebViewController.m in Sources */,
 				2FD9843B1C488EB3000EB94A /* DJRefresh.m in Sources */,
 				8566CE041C1FF378004693F0 /* main.m in Sources */,
+				2FDA1A9D1CE47564000B7778 /* OCGumbo+Query.m in Sources */,
 				2F834D451C464D370050E4A6 /* RecordDetailTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1021,6 +1065,8 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/BaseProject/Lib/UMAnalytics_Sdk_3.6.6",
+					"$(PROJECT_DIR)/BaseProject/Lib/gumbo",
+					"$(PROJECT_DIR)/BaseProject/Lib/OCGumboRelease-master/gumbo",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.zjuiti.acscan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1045,6 +1091,8 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/BaseProject/Lib/UMAnalytics_Sdk_3.6.6",
+					"$(PROJECT_DIR)/BaseProject/Lib/gumbo",
+					"$(PROJECT_DIR)/BaseProject/Lib/OCGumboRelease-master/gumbo",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.zjuiti.acscan;
 				PRODUCT_NAME = "$(TARGET_NAME)";
